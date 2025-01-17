@@ -34,4 +34,12 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  //EHHHHHHHHHHHHHHHH pivot constants go brrrrrrr
+  public static final int PIVOT_MOTOR_ONE_ID = 69;
+  public static final int PIVOT_MOTOR_TWO_ID = 420;
+  public static final int PIVOT_MOTOR_THREE_ID = 69420;
+  public static final int PIVOT_MOTOR_FOUR_ID = 96024;
+
+  public static final int EXTENSION_MOTOR_ID = 6328;
 }
