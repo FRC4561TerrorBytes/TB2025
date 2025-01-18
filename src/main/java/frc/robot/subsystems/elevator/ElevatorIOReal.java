@@ -19,10 +19,8 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants;
-import frc.robot.subsystems.drive.ModuleIO;
-import frc.robot.subsystems.elevator.ElevatorIO.ElevatorIOInputs;
 
-public class ElevatorIOReal implements ModuleIO {
+public class ElevatorIOReal implements ElevatorIO {
   private TalonFX pivotMotorOne = new TalonFX(Constants.PIVOT_MOTOR_ONE_ID);
   private TalonFX pivotMotorTwo = new TalonFX(Constants.PIVOT_MOTOR_TWO_ID);
   private TalonFX pivotMotorThree = new TalonFX(Constants.PIVOT_MOTOR_THREE_ID);

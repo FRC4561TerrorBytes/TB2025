@@ -4,9 +4,7 @@
 
 package frc.robot.subsystems.elevator;
 
-import frc.robot.subsystems.drive.ModuleIO;
-
-public class ElevatorIOSim implements ModuleIO {
+public class ElevatorIOSim implements ElevatorIO {
   /** Creates a new ElevatorIOSim. */
   public ElevatorIOSim() {}
 
