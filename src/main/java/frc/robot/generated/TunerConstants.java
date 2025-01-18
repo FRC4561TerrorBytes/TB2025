@@ -11,7 +11,6 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.*;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.*;
 
 // import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -29,7 +28,7 @@ public class TunerConstants {
           .withKI(0)
           .withKD(0.5)
           .withKS(0.1)
-          .withKV(0)
+          .withKV(2.66)
           .withKA(0)
           .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
   // When using closed-loop control, the drive motor uses the control
@@ -81,14 +80,14 @@ public class TunerConstants {
 
   // Theoretical free speed (m/s) at 12 V applied output;
   // This needs to be tuned to your individual robot
-  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(Units.feetToMeters(15.5));
+  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.73);
 
   // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
   // This may need to be tuned to your individual robot
   private static final double kCoupleRatio = 0;
 
   private static final double kDriveGearRatio = 6.75;
-  private static final double kSteerGearRatio = 150 / 7;
+  private static final double kSteerGearRatio = 21.428;
   private static final Distance kWheelRadius = Inches.of(2);
 
   private static final boolean kInvertLeftSide = false;
@@ -161,7 +160,7 @@ public class TunerConstants {
   private static final int kBackLeftDriveMotorId = 2;
   private static final int kBackLeftSteerMotorId = 5;
   private static final int kBackLeftEncoderId = 23;
-  private static final Angle kBackLeftEncoderOffset = Rotations.of(-0.406982421875);
+  private static final Angle kBackLeftEncoderOffset = Rotations.of(0.37744140625);
   private static final boolean kBackLeftSteerMotorInverted = true;
   private static final boolean kBackLeftEncoderInverted = false;
 
