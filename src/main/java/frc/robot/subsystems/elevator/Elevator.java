@@ -42,7 +42,8 @@ public class Elevator extends SubsystemBase {
 
     pivotMotorTwoDisconnectedAlert = new Alert("Pivot Motor Two Disconnected", AlertType.kError);
 
-    pivotMotorThreeDisconnectedAlert = new Alert("Pivot Motor Three Disconnected", AlertType.kError);
+    pivotMotorThreeDisconnectedAlert =
+        new Alert("Pivot Motor Three Disconnected", AlertType.kError);
 
     pivotMotorFourDisconnectedAlert = new Alert("Pivot Motor Four Disconnected", AlertType.kError);
 
@@ -63,28 +64,27 @@ public class Elevator extends SubsystemBase {
     extensionMotorDisconnectedAlert.set(!inputs.extensionMotorConnected);
   }
 
-  public void setPivotSetpoint(double setpoint){
+  public void setPivotSetpoint(double setpoint) {
     io.setPivotSetpoint(setpoint);
   }
 
-  public void setPivotVoltage(double voltage){
+  public void setPivotVoltage(double voltage) {
     io.setPivotVoltage(voltage);
   }
 
-  public double getPivotAngle(){
+  public double getPivotAngle() {
     return inputs.pivotAngle;
   }
 
-
-  public void setExtensionSetpoint(double setpoint){
+  public void setExtensionSetpoint(double setpoint) {
     io.setExtensionPosition(setpoint);
   }
 
-  public void setExtensionVoltage(double voltage){
+  public void setExtensionVoltage(double voltage) {
     io.setExtensionVoltage(voltage);
   }
 
-  public double getExtensionHeight(){
+  public double getExtensionHeight() {
     return inputs.extensionHeight;
   }
 }

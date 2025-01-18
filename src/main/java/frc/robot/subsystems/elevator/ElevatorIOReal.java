@@ -12,7 +12,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -27,7 +26,7 @@ public class ElevatorIOReal implements ElevatorIO {
   private TalonFX pivotMotorFour = new TalonFX(Constants.PIVOT_MOTOR_FOUR_ID);
 
   private TalonFX extensionMotor = new TalonFX(Constants.EXTENSION_MOTOR_ID);
-  
+
   private final StatusSignal<Angle> pivotAngle;
   private final StatusSignal<Current> pivotStatorCurrent;
   private final StatusSignal<Current> pivotSupplyCurrent;
@@ -38,11 +37,10 @@ public class ElevatorIOReal implements ElevatorIO {
   private final StatusSignal<Angle> extensionAngle;
   private final StatusSignal<Current> extensionStatorCurrent;
   private final StatusSignal<Current> extensionSupplyCurrent;
-  private final StatusSignal<AngularVelocity>  extensionSpeed;
+  private final StatusSignal<AngularVelocity> extensionSpeed;
   private final StatusSignal<Voltage> extensionVoltage;
   private final StatusSignal<Temperature> extensionTemp;
 
-  
   /** Creates a new ElevatorIOReal. */
   public ElevatorIOReal() {
 
@@ -50,10 +48,9 @@ public class ElevatorIOReal implements ElevatorIO {
     var extensionPIDConfig = new Slot0Configs();
     // ADD PID Configs
 
-
     var pivotConfig = new TalonFXConfiguration();
     pivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    pivotConfig.Slot0 = pivotPIDConfig;//
+    pivotConfig.Slot0 = pivotPIDConfig; //
     // turnConfig.Feedback.FeedbackRemoteSensorID = constants.EncoderId;
     pivotConfig.Feedback.RotorToSensorRatio = Constants.PIVOT_GEAR_RATIO;
     pivotConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0 / Constants.PIVOT_GEAR_RATIO;
@@ -68,15 +65,14 @@ public class ElevatorIOReal implements ElevatorIO {
     tryUntilOk(5, () -> pivotMotorThree.getConfigurator().apply(pivotConfig, 0.25));
     tryUntilOk(5, () -> pivotMotorFour.getConfigurator().apply(pivotConfig, 0.25));
 
-
     var extensionConfig = new TalonFXConfiguration();
     extensionConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    extensionConfig.Slot0 = extensionPIDConfig;//
+    extensionConfig.Slot0 = extensionPIDConfig; //
     // turnConfig.Feedback.FeedbackRemoteSensorID = constants.EncoderId;
     extensionConfig.Feedback.RotorToSensorRatio = Constants.EXTENSION_GEAR_RATIO;
     extensionConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0 / Constants.EXTENSION_GEAR_RATIO;
     extensionConfig.MotionMagic.MotionMagicAcceleration =
-    extensionConfig.MotionMagic.MotionMagicCruiseVelocity / 0.100;
+        extensionConfig.MotionMagic.MotionMagicCruiseVelocity / 0.100;
     extensionConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * Constants.EXTENSION_GEAR_RATIO;
     extensionConfig.MotionMagic.MotionMagicExpo_kA = 0.1;
     extensionConfig.ClosedLoopGeneral.ContinuousWrap = false;
@@ -99,6 +95,4 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   public void updateInputs(ElevatorIOInputs inputs) {}
-
-
 }

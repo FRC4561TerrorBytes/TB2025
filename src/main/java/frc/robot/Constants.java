@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  * (log replay from a file).
  */
 public final class Constants {
-  public static final Mode simMode = Mode.SIM;
+  public static final Mode simMode = Mode.REAL;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
   public static enum Mode {
@@ -35,7 +35,7 @@ public final class Constants {
     REPLAY
   }
 
-  //EHHHHHHHHHHHHHHHH pivot constants go brrrrrrr
+  // EHHHHHHHHHHHHHHHH pivot constants go brrrrrrr
   public static final int PIVOT_MOTOR_ONE_ID = 69;
   public static final int PIVOT_MOTOR_TWO_ID = 420;
   public static final int PIVOT_MOTOR_THREE_ID = 69420;

@@ -7,6 +7,4 @@ package frc.robot.subsystems.elevator;
 public class ElevatorIOSim implements ElevatorIO {
   /** Creates a new ElevatorIOSim. */
   public ElevatorIOSim() {}
-
-
 }
