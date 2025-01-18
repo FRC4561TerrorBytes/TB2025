@@ -40,6 +40,8 @@ public final class Constants {
   public static final int PIVOT_MOTOR_TWO_ID = 420;
   public static final int PIVOT_MOTOR_THREE_ID = 69420;
   public static final int PIVOT_MOTOR_FOUR_ID = 96024;
+  public static final double PIVOT_GEAR_RATIO = 190;
 
   public static final int EXTENSION_MOTOR_ID = 6328;
+  public static final double EXTENSION_GEAR_RATIO = 10;
 }

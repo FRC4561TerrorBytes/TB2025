@@ -4,21 +4,25 @@
 
 package frc.robot.subsystems.elevator;
 
-import static frc.robot.util.PhoenixUtil.*;
+import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.units.measure.*;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
+import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants;
+import frc.robot.subsystems.drive.ModuleIO;
+import frc.robot.subsystems.elevator.ElevatorIO.ElevatorIOInputs;
 
-public class ElevatorIOReal extends SubsystemBase {
+public class ElevatorIOReal implements ModuleIO {
   private TalonFX pivotMotorOne = new TalonFX(Constants.PIVOT_MOTOR_ONE_ID);
   private TalonFX pivotMotorTwo = new TalonFX(Constants.PIVOT_MOTOR_TWO_ID);
   private TalonFX pivotMotorThree = new TalonFX(Constants.PIVOT_MOTOR_THREE_ID);
@@ -53,25 +57,29 @@ public class ElevatorIOReal extends SubsystemBase {
     pivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     pivotConfig.Slot0 = pivotPIDConfig;//
     // turnConfig.Feedback.FeedbackRemoteSensorID = constants.EncoderId;
-    pivotConfig.Feedback.RotorToSensorRatio = constants.SteerMotorGearRatio;
-    pivotConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0 / constants.SteerMotorGearRatio;
+    pivotConfig.Feedback.RotorToSensorRatio = Constants.PIVOT_GEAR_RATIO;
+    pivotConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0 / Constants.PIVOT_GEAR_RATIO;
     pivotConfig.MotionMagic.MotionMagicAcceleration =
         pivotConfig.MotionMagic.MotionMagicCruiseVelocity / 0.100;
-    pivotConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * constants.SteerMotorGearRatio;
+    pivotConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * Constants.PIVOT_GEAR_RATIO;
     pivotConfig.MotionMagic.MotionMagicExpo_kA = 0.1;
     pivotConfig.ClosedLoopGeneral.ContinuousWrap = false;
     pivotConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     tryUntilOk(5, () -> pivotMotorOne.getConfigurator().apply(pivotConfig, 0.25));
+    tryUntilOk(5, () -> pivotMotorTwo.getConfigurator().apply(pivotConfig, 0.25));
+    tryUntilOk(5, () -> pivotMotorThree.getConfigurator().apply(pivotConfig, 0.25));
+    tryUntilOk(5, () -> pivotMotorFour.getConfigurator().apply(pivotConfig, 0.25));
+
 
     var extensionConfig = new TalonFXConfiguration();
     extensionConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    extensionConfig.Slot0 = pivotPIDConfig;//
+    extensionConfig.Slot0 = extensionPIDConfig;//
     // turnConfig.Feedback.FeedbackRemoteSensorID = constants.EncoderId;
-    extensionConfig.Feedback.RotorToSensorRatio = constants.SteerMotorGearRatio;
-    extensionConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0 / constants.SteerMotorGearRatio;
+    extensionConfig.Feedback.RotorToSensorRatio = Constants.EXTENSION_GEAR_RATIO;
+    extensionConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0 / Constants.EXTENSION_GEAR_RATIO;
     extensionConfig.MotionMagic.MotionMagicAcceleration =
     extensionConfig.MotionMagic.MotionMagicCruiseVelocity / 0.100;
-    extensionConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * constants.SteerMotorGearRatio;
+    extensionConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * Constants.EXTENSION_GEAR_RATIO;
     extensionConfig.MotionMagic.MotionMagicExpo_kA = 0.1;
     extensionConfig.ClosedLoopGeneral.ContinuousWrap = false;
     extensionConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -92,8 +100,7 @@ public class ElevatorIOReal extends SubsystemBase {
     extensionTemp = extensionMotor.getDeviceTemp();
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+  public void updateInputs(ElevatorIOInputs inputs) {}
+
+
 }

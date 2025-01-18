@@ -4,14 +4,11 @@
 
 package frc.robot.subsystems.elevator;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.drive.ModuleIO;
 
-public class ElevatorIOSim extends SubsystemBase {
+public class ElevatorIOSim implements ModuleIO {
   /** Creates a new ElevatorIOSim. */
   public ElevatorIOSim() {}
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+
 }
