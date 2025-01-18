@@ -193,6 +193,4 @@ public class ElevatorIOReal implements ElevatorIO {
   public void setPivotVoltage(double voltage){
     pivotMotorOne.setVoltage(voltage);
   }
-
-
 }
