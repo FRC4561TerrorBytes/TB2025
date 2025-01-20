@@ -15,6 +15,8 @@ import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -50,7 +52,11 @@ public class ElevatorIOReal implements ElevatorIO {
   private double pivotSetpoint = 0.0;
   private double extensionSetpoint = 0.0;
 
-  private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
+  private double pivotFeedForward = 0.0;
+  private double extensionFeedForward = 0.0;
+
+  private final MotionMagicVoltage m_request_pivot = new MotionMagicVoltage(0);
+  private final MotionMagicVoltage m_request_extension = new MotionMagicVoltage(0);
 
   /** Creates a new ElevatorIOReal. */
   public ElevatorIOReal() {
@@ -181,18 +187,21 @@ public class ElevatorIOReal implements ElevatorIO {
     inputs.extensionVoltage = extensionMotor.getMotorVoltage().getValueAsDouble();
     inputs.extensionSetpoint = this.extensionSetpoint;
     inputs.extensionSpeed = extensionMotor.getVelocity().getValueAsDouble();
+
+    m_request_extension.FeedForward = Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * extensionFeedForward;
+    m_request_pivot.FeedForward = Math.cos(Units.degreesToRadians(inputs.pivotAngle)) * pivotFeedForward + inputs.extensionHeight*1; // change 1 to be whatever scalar we find
   }
 
   @Override
   public void setExtensionPosition(double position) {
     extensionSetpoint = position;
-    extensionMotor.setControl(m_request.withPosition(extensionSetpoint).withFeedForward(0));
+    extensionMotor.setControl(m_request_extension.withPosition(extensionSetpoint).withFeedForward(0));
   }
 
   @Override
   public void setPivotSetpoint(double position) {
     pivotSetpoint = position;
-    pivotMotorOne.setControl(m_request.withPosition(pivotSetpoint).withFeedForward(0));
+    pivotMotorOne.setControl(m_request_pivot.withPosition(pivotSetpoint).withFeedForward(0));
   }
 
   @Override
