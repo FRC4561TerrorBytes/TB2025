@@ -100,7 +100,6 @@ public class ElevatorIOReal implements ElevatorIO {
     pivotThreeTemp = pivotMotorThree.getDeviceTemp();
     pivotFourTemp = pivotMotorFour.getDeviceTemp();
 
-
     extensionAngle = extensionMotor.getPosition();
     extensionStatorCurrent = extensionMotor.getStatorCurrent();
     extensionSupplyCurrent = extensionMotor.getSupplyCurrent();
@@ -109,37 +108,50 @@ public class ElevatorIOReal implements ElevatorIO {
     extensionTemp = extensionMotor.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
-      50.0,
-      pivotAngle,
-      pivotStatorCurrent,
-      pivotSupplyCurrent,
-      pivotSpeed,
-      pivotVoltage,
-      pivotOneTemp,
-      pivotTwoTemp,
-      pivotThreeTemp,
-      pivotFourTemp
-    );
+        50.0,
+        pivotAngle,
+        pivotStatorCurrent,
+        pivotSupplyCurrent,
+        pivotSpeed,
+        pivotVoltage,
+        pivotOneTemp,
+        pivotTwoTemp,
+        pivotThreeTemp,
+        pivotFourTemp);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
-      50.0,
-      extensionAngle,
-      extensionStatorCurrent,
-      extensionSupplyCurrent,
-      extensionSpeed,
-      extensionVoltage,
-      extensionTemp
-    );
-    ParentDevice.optimizeBusUtilizationForAll(pivotMotorOne, pivotMotorTwo, pivotMotorThree, pivotMotorFour, extensionMotor);
+        50.0,
+        extensionAngle,
+        extensionStatorCurrent,
+        extensionSupplyCurrent,
+        extensionSpeed,
+        extensionVoltage,
+        extensionTemp);
+    ParentDevice.optimizeBusUtilizationForAll(
+        pivotMotorOne, pivotMotorTwo, pivotMotorThree, pivotMotorFour, extensionMotor);
   }
 
   public void updateInputs(ElevatorIOInputs inputs) {
-    var pivotOneStatus = BaseStatusSignal.refreshAll(pivotAngle, pivotStatorCurrent, pivotSupplyCurrent, pivotSpeed, pivotVoltage, pivotOneTemp);
+    var pivotOneStatus =
+        BaseStatusSignal.refreshAll(
+            pivotAngle,
+            pivotStatorCurrent,
+            pivotSupplyCurrent,
+            pivotSpeed,
+            pivotVoltage,
+            pivotOneTemp);
     var pivotTwoStatus = BaseStatusSignal.refreshAll(pivotTwoTemp);
     var pivotThreeStatus = BaseStatusSignal.refreshAll(pivotThreeTemp);
     var pivotFourStatus = BaseStatusSignal.refreshAll(pivotFourTemp);
 
-    var extensionStatus = BaseStatusSignal.refreshAll(extensionAngle, extensionStatorCurrent, extensionSupplyCurrent, extensionSpeed, extensionVoltage, extensionTemp);
+    var extensionStatus =
+        BaseStatusSignal.refreshAll(
+            extensionAngle,
+            extensionStatorCurrent,
+            extensionSupplyCurrent,
+            extensionSpeed,
+            extensionVoltage,
+            extensionTemp);
 
     inputs.pivotAngle = pivotAngle.getValueAsDouble();
 
@@ -172,25 +184,24 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   @Override
-  public void setExtensionPosition(double position){
+  public void setExtensionPosition(double position) {
     extensionSetpoint = position;
     extensionMotor.setControl(m_request.withPosition(extensionSetpoint).withFeedForward(0));
   }
 
   @Override
-  public void setPivotSetpoint(double position){
+  public void setPivotSetpoint(double position) {
     pivotSetpoint = position;
     pivotMotorOne.setControl(m_request.withPosition(pivotSetpoint).withFeedForward(0));
-    
   }
 
   @Override
-  public void setExtensionVoltage(double voltage){
+  public void setExtensionVoltage(double voltage) {
     extensionMotor.setVoltage(voltage);
   }
 
   @Override
-  public void setPivotVoltage(double voltage){
+  public void setPivotVoltage(double voltage) {
     pivotMotorOne.setVoltage(voltage);
   }
 }
