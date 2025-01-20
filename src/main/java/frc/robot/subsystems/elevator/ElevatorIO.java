@@ -41,9 +41,11 @@ public interface ElevatorIO {
   /** Updates the set of loggable inputs. */
   public default void updateInputs(ElevatorIOInputs inputs) {}
 
-  public default void setExtensionPosition(double position) {}
+  public default void setTargetPosition(double extenstionPosition, double pivotPosition) {}
 
-  public default void setPivotSetpoint(double position) {}
+  public default void setExtensionPosition() {}
+
+  public default void setPivotSetpoint() {}
 
   public default void setExtensionVoltage(double voltage) {}
 

@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
@@ -153,6 +154,9 @@ public class RobotContainer {
             () -> -driverController.getLeftX(),
             () -> -driverController.getRightX()));
 
+    // Default Commands
+    elevator.setDefaultCommand(new InstantCommand(() -> elevator.setPosition(), elevator));
+
     // Lock to 0° when A button is held
     driverController
         .a()
@@ -165,6 +169,8 @@ public class RobotContainer {
 
     // Switch to X pattern when X button is pressed
     driverController.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+
+    driverController.a().onTrue(new InstantCommand(() -> elevator.setSetpoint(1, -50)));
 
     // Reset gyro to 0° when B button is pressed
     driverController

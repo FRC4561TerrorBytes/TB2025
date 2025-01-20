@@ -13,9 +13,9 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -62,6 +62,13 @@ public class ElevatorIOReal implements ElevatorIO {
   public ElevatorIOReal() {
 
     var pivotPIDConfig = new Slot0Configs();
+    pivotPIDConfig.GravityType = GravityTypeValue.Arm_Cosine;
+    // pivotPIDConfig.kS = 0.28;
+    pivotPIDConfig.kV = 0;
+    pivotPIDConfig.kA = 0;
+    pivotPIDConfig.kP = 1;
+    pivotPIDConfig.kI = 0;
+    pivotPIDConfig.kD = 0;
     var extensionPIDConfig = new Slot0Configs();
     // ADD PID Configs
 
@@ -188,20 +195,30 @@ public class ElevatorIOReal implements ElevatorIO {
     inputs.extensionSetpoint = this.extensionSetpoint;
     inputs.extensionSpeed = extensionMotor.getVelocity().getValueAsDouble();
 
-    m_request_extension.FeedForward = Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * extensionFeedForward;
-    m_request_pivot.FeedForward = Math.cos(Units.degreesToRadians(inputs.pivotAngle)) * pivotFeedForward + inputs.extensionHeight*1; // change 1 to be whatever scalar we find
+    m_request_extension.FeedForward =
+        Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * extensionFeedForward;
+    m_request_pivot.FeedForward =
+        Math.cos(Units.degreesToRadians(inputs.pivotAngle)) * pivotFeedForward
+            + inputs.extensionHeight * 1; // change 1 to be whatever scalar we find
   }
 
   @Override
-  public void setExtensionPosition(double position) {
-    extensionSetpoint = position;
-    extensionMotor.setControl(m_request_extension.withPosition(extensionSetpoint).withFeedForward(0));
+  public void setTargetPosition(double extenstionPosition, double pivotPosition) {
+    pivotSetpoint = pivotPosition;
+    extensionSetpoint = extenstionPosition;
   }
 
   @Override
-  public void setPivotSetpoint(double position) {
-    pivotSetpoint = position;
-    pivotMotorOne.setControl(m_request_pivot.withPosition(pivotSetpoint).withFeedForward(0));
+  public void setExtensionPosition() {
+    extensionMotor.setControl(
+        m_request_extension
+            .withPosition(extensionSetpoint)
+            .withFeedForward(m_request_extension.FeedForward));
+  }
+
+  @Override
+  public void setPivotSetpoint() {
+    pivotMotorOne.setControl(m_request_pivot.withPosition(pivotSetpoint));
   }
 
   @Override

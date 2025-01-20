@@ -139,20 +139,15 @@ public class ElevatorIOSim implements ElevatorIO {
     inputs.extensionVoltage = extensionAppliedVolts;
 
     // this is for testing remove later
-    setPivotSetpoint(-70);
-    setExtensionPosition(0.5);
+    setTargetPosition(0.5, -70);
   }
 
   @Override
-  public void setExtensionPosition(double position) {
+  public void setTargetPosition(double extenstionPosition, double pivotPosition) {
     extensionClosedLoop = true;
-    extensionSetpoint = position;
-  }
-
-  @Override
-  public void setPivotSetpoint(double position) {
+    extensionSetpoint = extenstionPosition;
     pivotClosedLoop = true;
-    pivotSetpoint = position;
+    pivotSetpoint = pivotPosition;
   }
 
   @Override

@@ -64,8 +64,13 @@ public class Elevator extends SubsystemBase {
     extensionMotorDisconnectedAlert.set(!inputs.extensionMotorConnected);
   }
 
-  public void setPivotSetpoint(double setpoint) {
-    io.setPivotSetpoint(setpoint);
+  public void setPosition() {
+    io.setPivotSetpoint();
+    io.setExtensionPosition();
+  }
+
+  public void setSetpoint(double extensionSetpoint, double pivotSetpoint) {
+    io.setTargetPosition(extensionSetpoint, pivotSetpoint);
   }
 
   public void setPivotVoltage(double voltage) {
@@ -74,10 +79,6 @@ public class Elevator extends SubsystemBase {
 
   public double getPivotAngle() {
     return inputs.pivotAngle;
-  }
-
-  public void setExtensionSetpoint(double setpoint) {
-    io.setExtensionPosition(setpoint);
   }
 
   public void setExtensionVoltage(double voltage) {
