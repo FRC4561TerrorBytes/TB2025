@@ -19,11 +19,11 @@ public class ElevatorIOSim implements ElevatorIO {
   /** Creates a new ElevatorIOSim. */
   private static final double LOOP_PERIOD_SECS = 0.02;
 
-  private static final double PIVOT_KP = 6;
-  private static final double PIVOT_KD = 7;
+  private static final double PIVOT_KP = 12;
+  private static final double PIVOT_KD = 14;
 
-  private static final double EXTENSION_KP = 1;
-  private static final double EXTENSION_KD = 0;
+  private static final double EXTENSION_KP = 12;
+  private static final double EXTENSION_KD = 3;
 
   private static final DCMotor PIVOT_MOTOR = DCMotor.getFalcon500(1);
   private static final DCMotor EXTENSION_MOTOR = DCMotor.getKrakenX60(1);
@@ -86,7 +86,7 @@ public class ElevatorIOSim implements ElevatorIO {
 
     if (extensionClosedLoop) {
       extensionAppliedVolts =
-          extensionController.calculate(extensionMotorSim.getAngularPositionRad());
+          extensionController.calculate(inputs.extensionHeight, extensionSetpoint);
     } else {
       extensionController.reset();
     }
@@ -106,6 +106,8 @@ public class ElevatorIOSim implements ElevatorIO {
     inputs.pivotAngle =
         Units.rotationsToDegrees(
             pivotMotorOneSim.getAngularPositionRotations() / Constants.PIVOT_GEAR_RATIO);
+    inputs.extensionHeight =
+        extensionMotorSim.getAngularPositionRotations() / Constants.EXTENSION_GEAR_RATIO;
     Logger.recordOutput(
         "FinalComponentPoses",
         new Pose3d[] {
@@ -114,9 +116,18 @@ public class ElevatorIOSim implements ElevatorIO {
               0.05 - 0.2964,
               0,
               0.38 - 0.092,
+              new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0)),
+          new Pose3d(
+              -0.5
+                  + 0.27
+                  + Math.cos(Units.degreesToRadians(inputs.pivotAngle)) * inputs.extensionHeight,
+              0,
+              -0.37
+                  + 0.64
+                  - Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * inputs.extensionHeight,
               new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0))
         });
-    inputs.extensionHeight = 0;
+    // json was -0.05, 0, -0.38
     inputs.pivotMotorOneConnected = true;
     inputs.pivotMotorTwoConnected = true;
     inputs.pivotMotorThreeConnected = true;
@@ -128,7 +139,8 @@ public class ElevatorIOSim implements ElevatorIO {
     inputs.extensionVoltage = extensionAppliedVolts;
 
     // this is for testing remove later
-    setPivotSetpoint(-45);
+    setPivotSetpoint(-70);
+    setExtensionPosition(0.5);
   }
 
   @Override
