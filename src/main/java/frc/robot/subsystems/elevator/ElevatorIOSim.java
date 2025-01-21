@@ -25,7 +25,7 @@ public class ElevatorIOSim implements ElevatorIO {
   private static final double EXTENSION_KP = 12;
   private static final double EXTENSION_KD = 3;
 
-  private static final DCMotor PIVOT_MOTOR = DCMotor.getFalcon500(1);
+  private static final DCMotor PIVOT_MOTOR = DCMotor.getFalcon500(4);
   private static final DCMotor EXTENSION_MOTOR = DCMotor.getKrakenX60(1);
 
   private DCMotorSim pivotMotorOneSim;
@@ -74,6 +74,7 @@ public class ElevatorIOSim implements ElevatorIO {
             LinearSystemId.createDCMotorSystem(
                 EXTENSION_MOTOR, 0.001, Constants.EXTENSION_GEAR_RATIO),
             EXTENSION_MOTOR);
+    setTargetPosition(0.5, -70);
   }
 
   @Override
@@ -139,7 +140,6 @@ public class ElevatorIOSim implements ElevatorIO {
     inputs.extensionVoltage = extensionAppliedVolts;
 
     // this is for testing remove later
-    setTargetPosition(0.5, -70);
   }
 
   @Override
