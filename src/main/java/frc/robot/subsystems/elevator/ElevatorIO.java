@@ -43,9 +43,9 @@ public interface ElevatorIO {
 
   public default void setTargetPosition(double extenstionPosition, double pivotPosition) {}
 
-  public default void setExtensionPosition() {}
+  public default void setExtensionSetpoint(double extensionSetpoint) {}
 
-  public default void setPivotSetpoint() {}
+  public default void setPivotSetpoint(double pivotSetpoint) {}
 
   public default void setExtensionVoltage(double voltage) {}
 

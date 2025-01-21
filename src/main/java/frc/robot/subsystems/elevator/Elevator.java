@@ -9,8 +9,6 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer.elevatorPosition;
-
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
@@ -66,13 +64,8 @@ public class Elevator extends SubsystemBase {
     extensionMotorDisconnectedAlert.set(!inputs.extensionMotorConnected);
   }
 
-  public void setPosition() {
-    io.setPivotSetpoint();
-    io.setExtensionPosition();
-  }
-
-  public void setSetpoint(elevatorPosition position) {
-    io.setTargetPosition(position.extensionPosition, position.pivotPosition);
+  public void setSetpoint(double extensionSetpoint, double pivotSetpoint) {
+    io.setTargetPosition(extensionSetpoint, pivotSetpoint);
   }
 
   public void setPivotVoltage(double voltage) {

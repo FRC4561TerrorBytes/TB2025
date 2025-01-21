@@ -52,7 +52,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
 
-  public enum elevatorPosition{
+  public enum elevatorPosition {
     STOW(0.5, -70.0),
     SOURCE(0.5, -100),
     L1(15.0, -30.0),
@@ -67,7 +67,17 @@ public class RobotContainer {
       this.extensionPosition = extensionPosition;
       this.pivotPosition = pivotPosition;
     }
+
+    public double getExtensionPosition() {
+      return extensionPosition;
+    }
+
+    public double getPivotPosition() {
+      return pivotPosition;
+    }
   }
+
+  public static elevatorPosition elevatorEnum = elevatorPosition.STOW;
 
   // Subsystems
   private final Drive drive;
@@ -173,7 +183,12 @@ public class RobotContainer {
             () -> -driverController.getRightX()));
 
     // Default Commands
-    elevator.setDefaultCommand(new InstantCommand(() -> elevator.setPosition(), elevator));
+    elevator.setDefaultCommand(
+        new InstantCommand(
+            () ->
+                elevator.setSetpoint(
+                    elevatorEnum.getExtensionPosition(), elevatorEnum.getPivotPosition()),
+            elevator));
 
     // Lock to 0° when A button is held
     driverController
@@ -188,7 +203,16 @@ public class RobotContainer {
     // Switch to X pattern when X button is pressed
     driverController.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    driverController.y().onTrue(new InstantCommand(() -> elevator.setSetpoint(elevatorPosition.L1)));
+    driverController
+        .y()
+        .onTrue(
+            new InstantCommand(() -> elevatorEnum = elevatorPosition.L1)
+                .andThen(
+                    new InstantCommand(
+                        () ->
+                            elevator.setSetpoint(
+                                elevatorEnum.getExtensionPosition(),
+                                elevatorEnum.getPivotPosition()))));
 
     // Reset gyro to 0° when B button is pressed
     driverController

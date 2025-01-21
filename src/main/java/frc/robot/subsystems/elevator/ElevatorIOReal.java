@@ -204,20 +204,19 @@ public class ElevatorIOReal implements ElevatorIO {
 
   @Override
   public void setTargetPosition(double extenstionPosition, double pivotPosition) {
-    pivotSetpoint = pivotPosition;
-    extensionSetpoint = extenstionPosition;
+    setExtensionSetpoint(extenstionPosition);
+    setPivotSetpoint(pivotPosition);
   }
 
   @Override
-  public void setExtensionPosition() {
-    extensionMotor.setControl(
-        m_request_extension
-            .withPosition(extensionSetpoint)
-            .withFeedForward(m_request_extension.FeedForward));
+  public void setExtensionSetpoint(double setpoint) {
+    extensionSetpoint = setpoint;
+    extensionMotor.setControl(m_request_extension.withPosition(extensionSetpoint));
   }
 
   @Override
-  public void setPivotSetpoint() {
+  public void setPivotSetpoint(double setpoint) {
+    pivotSetpoint = setpoint;
     pivotMotorOne.setControl(m_request_pivot.withPosition(pivotSetpoint));
   }
 
