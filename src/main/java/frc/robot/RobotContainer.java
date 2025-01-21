@@ -51,6 +51,24 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+  public enum elevatorPosition{
+    STOW(0.5, -70.0),
+    SOURCE(0.5, -100),
+    L1(15.0, -30.0),
+    L2(30.0, -20.0),
+    L3(45.0, -20.0),
+    L4(100.0, -10.0);
+
+    public double extensionPosition;
+    public double pivotPosition;
+
+    private elevatorPosition(double extensionPosition, double pivotPosition) {
+      this.extensionPosition = extensionPosition;
+      this.pivotPosition = pivotPosition;
+    }
+  }
+
   // Subsystems
   private final Drive drive;
   private final Elevator elevator;
@@ -170,7 +188,7 @@ public class RobotContainer {
     // Switch to X pattern when X button is pressed
     driverController.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    driverController.y().onTrue(new InstantCommand(() -> elevator.setSetpoint(1, 50)));
+    driverController.y().onTrue(new InstantCommand(() -> elevator.setSetpoint(elevatorPosition.L1)));
 
     // Reset gyro to 0° when B button is pressed
     driverController
