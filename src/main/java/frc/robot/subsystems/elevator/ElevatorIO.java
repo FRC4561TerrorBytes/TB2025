@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.elevator;
 
+import frc.robot.RobotContainer.ElevatorPosition;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ElevatorIO {
@@ -41,7 +42,11 @@ public interface ElevatorIO {
   /** Updates the set of loggable inputs. */
   public default void updateInputs(ElevatorIOInputs inputs) {}
 
-  public default void setTargetPosition(double extenstionPosition, double pivotPosition) {}
+  public default void setTargetPosition(ElevatorPosition position) {}
+
+  public default ElevatorPosition getCurrentSetpoint() {
+    return null;
+  }
 
   public default void setExtensionSetpoint(double extensionSetpoint) {}
 

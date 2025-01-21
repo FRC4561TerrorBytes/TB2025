@@ -23,6 +23,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants;
+import frc.robot.RobotContainer.ElevatorPosition;
 
 public class ElevatorIOReal implements ElevatorIO {
   private TalonFX pivotMotorOne = new TalonFX(Constants.PIVOT_MOTOR_ONE_ID);
@@ -54,6 +55,8 @@ public class ElevatorIOReal implements ElevatorIO {
 
   private double pivotFeedForward = 0.0;
   private double extensionFeedForward = 0.0;
+
+  private ElevatorPosition lastPosition = null;
 
   private final MotionMagicVoltage m_request_pivot = new MotionMagicVoltage(0);
   private final MotionMagicVoltage m_request_extension = new MotionMagicVoltage(0);
@@ -203,9 +206,15 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   @Override
-  public void setTargetPosition(double extenstionPosition, double pivotPosition) {
-    setExtensionSetpoint(extenstionPosition);
-    setPivotSetpoint(pivotPosition);
+  public void setTargetPosition(ElevatorPosition position) {
+    setExtensionSetpoint(position.extensionPosition);
+    setPivotSetpoint(position.pivotPosition);
+
+    lastPosition = position;
+  }
+
+  public ElevatorPosition getCurrentSetpoint() {
+    return lastPosition;
   }
 
   @Override

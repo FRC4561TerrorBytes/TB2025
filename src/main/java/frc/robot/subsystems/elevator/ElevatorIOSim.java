@@ -13,6 +13,7 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants;
+import frc.robot.RobotContainer.ElevatorPosition;
 import org.littletonrobotics.junction.Logger;
 
 public class ElevatorIOSim implements ElevatorIO {
@@ -44,6 +45,8 @@ public class ElevatorIOSim implements ElevatorIO {
   private double pivotSetpoint = 0.0;
   private double extensionSetpoint = 0.0;
 
+  private ElevatorPosition lastPosition = null;
+
   public ElevatorIOSim() {
     pivotMotorOneSim =
         new DCMotorSim(
@@ -74,7 +77,7 @@ public class ElevatorIOSim implements ElevatorIO {
             LinearSystemId.createDCMotorSystem(
                 EXTENSION_MOTOR, 0.001, Constants.EXTENSION_GEAR_RATIO),
             EXTENSION_MOTOR);
-    setTargetPosition(0.5, -70);
+    setTargetPosition(ElevatorPosition.STOW);
   }
 
   @Override
@@ -143,11 +146,17 @@ public class ElevatorIOSim implements ElevatorIO {
   }
 
   @Override
-  public void setTargetPosition(double extenstionPosition, double pivotPosition) {
+  public void setTargetPosition(ElevatorPosition position) {
     extensionClosedLoop = true;
-    extensionSetpoint = extenstionPosition;
+    extensionSetpoint = position.extensionPosition;
     pivotClosedLoop = true;
-    pivotSetpoint = pivotPosition;
+    pivotSetpoint = position.pivotPosition;
+
+    lastPosition = position;
+  }
+
+  public ElevatorPosition getCurrentSetpoint() {
+    return lastPosition;
   }
 
   @Override

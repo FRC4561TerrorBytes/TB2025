@@ -13,7 +13,10 @@
 
 package frc.robot;
 
-import static frc.robot.subsystems.vision.VisionConstants.*;
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
+import static frc.robot.subsystems.vision.VisionConstants.robotToCamera0;
+import static frc.robot.subsystems.vision.VisionConstants.robotToCamera1;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -52,7 +55,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
 
-  public enum elevatorPosition {
+  public enum ElevatorPosition {
     STOW(0.5, -70.0),
     SOURCE(0.5, -100),
     L1(15.0, -30.0),
@@ -63,21 +66,11 @@ public class RobotContainer {
     public double extensionPosition;
     public double pivotPosition;
 
-    private elevatorPosition(double extensionPosition, double pivotPosition) {
+    private ElevatorPosition(double extensionPosition, double pivotPosition) {
       this.extensionPosition = extensionPosition;
       this.pivotPosition = pivotPosition;
     }
-
-    public double getExtensionPosition() {
-      return extensionPosition;
-    }
-
-    public double getPivotPosition() {
-      return pivotPosition;
-    }
   }
-
-  public static elevatorPosition elevatorEnum = elevatorPosition.STOW;
 
   // Subsystems
   private final Drive drive;
@@ -183,12 +176,6 @@ public class RobotContainer {
             () -> -driverController.getRightX()));
 
     // Default Commands
-    elevator.setDefaultCommand(
-        new InstantCommand(
-            () ->
-                elevator.setSetpoint(
-                    elevatorEnum.getExtensionPosition(), elevatorEnum.getPivotPosition()),
-            elevator));
 
     // Lock to 0° when A button is held
     driverController
@@ -205,14 +192,7 @@ public class RobotContainer {
 
     driverController
         .y()
-        .onTrue(
-            new InstantCommand(() -> elevatorEnum = elevatorPosition.L1)
-                .andThen(
-                    new InstantCommand(
-                        () ->
-                            elevator.setSetpoint(
-                                elevatorEnum.getExtensionPosition(),
-                                elevatorEnum.getPivotPosition()))));
+        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L1)));
 
     // Reset gyro to 0° when B button is pressed
     driverController
