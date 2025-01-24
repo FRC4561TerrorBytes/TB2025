@@ -206,6 +206,13 @@ public class Vision extends SubsystemBase {
         Matrix<N3, N1> visionMeasurementStdDevs);
   }
 
+  public boolean seenTagId(int id) {
+    for (var tagId : inputs[1].tagIds) {
+      if (tagId == id) return true;
+    }
+    return false;
+  }
+
   @AutoLogOutput
   public Pose2d getFieldPoseUsingTag(int camera, double cameraAngleX, double cameraAngleY) {
     double xAngle = inputs[camera].latestTargetObservation.tx().getDegrees() + cameraAngleX;

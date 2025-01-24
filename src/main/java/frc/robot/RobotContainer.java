@@ -21,14 +21,17 @@ import static frc.robot.subsystems.vision.VisionConstants.robotToCamera1;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveToPose;
 import frc.robot.commands.goToPose;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -173,7 +176,7 @@ public class RobotContainer {
             drive,
             () -> -driverController.getLeftY(),
             () -> -driverController.getLeftX(),
-            () -> -driverController.getRightX()));
+            () -> 0));
 
     // Default Commands
 
@@ -207,6 +210,20 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    driverController
+        .povDown()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    drive.setSelectedPose(
+                        new Pose2d(
+                            Units.inchesToMeters(100),
+                            Units.inchesToMeters(158.500),
+                            Rotation2d.fromDegrees(180))),
+                drive));
+
+    driverController.a().whileTrue(new DriveToPose(drive, vision, 18)).onFalse(new InstantCommand(() -> drive.stop(), drive));
   }
 
   /**

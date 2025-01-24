@@ -94,6 +94,8 @@ public class Drive extends SubsystemBase {
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
 
+  private Pose2d selectedPose = new Pose2d();
+
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private Rotation2d rawGyroRotation = new Rotation2d();
   private SwerveModulePosition[] lastModulePositions = // For delta tracking
@@ -325,6 +327,15 @@ public class Drive extends SubsystemBase {
   @AutoLogOutput(key = "Odometry/Robot")
   public Pose2d getPose() {
     return poseEstimator.getEstimatedPosition();
+  }
+
+  @AutoLogOutput(key = "Auto Lineup/Selected Pose")
+  public Pose2d getSelectedPose() {
+    return selectedPose;
+  }
+
+  public void setSelectedPose(Pose2d pose) {
+    selectedPose = pose;
   }
 
   /** Returns the current odometry rotation. */
