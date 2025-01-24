@@ -129,16 +129,17 @@ public class VisionIOLimelight implements VisionIO {
 
               // Observation type
               PoseObservationType.MEGATAG_2));
+    }
 
-    inputs.latestFiducialsObservations = new FiducialsObservation(
-      (int)rawFiducialsSubscriber.get()[0], 
-      rawFiducialsSubscriber.get()[1], 
-      rawFiducialsSubscriber.get()[2], 
-      rawFiducialsSubscriber.get()[3], 
-      rawFiducialsSubscriber.get()[4], 
-      rawFiducialsSubscriber.get()[5], 
-      rawFiducialsSubscriber.get()[6]
-      );
+    inputs.latestFiducialsObservations =
+        new FiducialsObservation(
+            (int) rawFiducialsSubscriber.get()[0],
+            rawFiducialsSubscriber.get()[1],
+            rawFiducialsSubscriber.get()[2],
+            rawFiducialsSubscriber.get()[3],
+            rawFiducialsSubscriber.get()[4],
+            rawFiducialsSubscriber.get()[5],
+            rawFiducialsSubscriber.get()[6]);
 
     // Save pose observations to inputs object
     inputs.poseObservations = new PoseObservation[poseObservations.size()];

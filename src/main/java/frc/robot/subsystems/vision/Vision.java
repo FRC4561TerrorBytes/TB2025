@@ -26,7 +26,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.vision.VisionIO.FiducialsObservation;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 import java.util.LinkedList;
 import java.util.List;
@@ -188,7 +187,7 @@ public class Vision extends SubsystemBase {
         Matrix<N3, N1> visionMeasurementStdDevs);
   }
 
-  public Pose2d getLocalPoseToTag(int camera, double cameraAngleX, double cameraAngleY){
+  public Pose2d getLocalPoseToTag(int camera, double cameraAngleX, double cameraAngleY) {
     double xAngle = inputs[camera].latestTargetObservation.tx().getDegrees() + cameraAngleX;
     double yAngle = inputs[camera].latestTargetObservation.ty().getDegrees() + cameraAngleY;
     double distanceToTag = inputs[camera].latestFiducialsObservations.distToRobot();
