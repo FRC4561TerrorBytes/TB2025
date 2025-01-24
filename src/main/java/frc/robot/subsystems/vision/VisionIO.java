@@ -24,7 +24,10 @@ public interface VisionIO {
     public TargetObservation latestTargetObservation =
         new TargetObservation(new Rotation2d(), new Rotation2d());
     public PoseObservation[] poseObservations = new PoseObservation[0];
+    public FiducialsObservation latestFiducialsObservations = new FiducialsObservation(0, 0, 0, 0, 0, 0,0 );
     public int[] tagIds = new int[0];
+    public Pose3d poseToTag = new Pose3d();
+    public double distanceToTag = 0.0;
   }
 
   /** Represents the angle to a simple target, not used for pose estimation. */
@@ -38,6 +41,16 @@ public interface VisionIO {
       int tagCount,
       double averageTagDistance,
       PoseObservationType type) {}
+
+  public static record FiducialsObservation(
+    int id,
+    double txnc,
+    double tync,
+    double ta,
+    double distToCamera,
+    double distToRobot,
+    double ambiguity
+  ) {}
 
   public static enum PoseObservationType {
     MEGATAG_1,
