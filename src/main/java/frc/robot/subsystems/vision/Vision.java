@@ -213,13 +213,24 @@ public class Vision extends SubsystemBase {
     return false;
   }
 
-  @AutoLogOutput
-  public Pose2d getFieldPoseUsingTag(int camera, double cameraAngleX, double cameraAngleY) {
-    double xAngle = inputs[camera].latestTargetObservation.tx().getDegrees() + cameraAngleX;
-    double yAngle = inputs[camera].latestTargetObservation.ty().getDegrees() + cameraAngleY;
-    double distanceToTag = inputs[camera].latestFiducialsObservations.distToRobot();
+  @AutoLogOutput(key = "Vision/DistanceToTag")
+  public double getDistanceToTag(int camera) {
+    return inputs[camera].latestFiducialsObservations.distToRobot();
+  }
 
-    double yDist = Math.cos(Units.degreesToRadians(cameraAngleY + yAngle)) * distanceToTag;
+  @AutoLogOutput(key = "Vision/RobotPoseWithTag")
+  public Pose2d getFieldPoseUsingTag(int camera) {
+    double xAngle =
+        inputs[camera].latestTargetObservation.tx().getDegrees()
+            + VisionConstants.cameraOffsetsX[camera];
+    double yAngle =
+        inputs[camera].latestTargetObservation.ty().getDegrees()
+            + VisionConstants.cameraOffsetsY[camera];
+    double distanceToTag = getDistanceToTag(camera);
+
+    double yDist =
+        Math.cos(Units.degreesToRadians(VisionConstants.cameraOffsetsY[camera] + yAngle))
+            * distanceToTag;
     double xDist = yDist * Math.tan(Units.degreesToRadians(xAngle));
 
     Pose2d robotLocalPose = new Pose2d(xDist, yDist, new Rotation2d());

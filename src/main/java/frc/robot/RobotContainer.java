@@ -29,10 +29,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPose;
-import frc.robot.commands.goToPose;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -48,6 +48,7 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.util.AllianceFlipUtil;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -72,6 +73,74 @@ public class RobotContainer {
     private ElevatorPosition(double extensionPosition, double pivotPosition) {
       this.extensionPosition = extensionPosition;
       this.pivotPosition = pivotPosition;
+    }
+  }
+
+  private static double distanceAway = 1;
+
+  private static Pose2d[] reefFaces = {
+    new Pose2d(
+        Units.inchesToMeters(144.003), Units.inchesToMeters(158.500), Rotation2d.fromDegrees(180)),
+    new Pose2d(
+        Units.inchesToMeters(160.373), Units.inchesToMeters(186.857), Rotation2d.fromDegrees(120)),
+    new Pose2d(
+        Units.inchesToMeters(193.116), Units.inchesToMeters(186.858), Rotation2d.fromDegrees(60)),
+    new Pose2d(
+        Units.inchesToMeters(209.489), Units.inchesToMeters(158.502), Rotation2d.fromDegrees(0)),
+    new Pose2d(
+        Units.inchesToMeters(193.118), Units.inchesToMeters(130.145), Rotation2d.fromDegrees(-60)),
+    new Pose2d(
+        Units.inchesToMeters(160.375), Units.inchesToMeters(130.144), Rotation2d.fromDegrees(-120))
+  };
+
+  public enum ReefScorePositions {
+    FRONT(
+        new Pose2d(
+            Math.cos(reefFaces[0].getRotation().getRadians()) * distanceAway
+                + reefFaces[0].getTranslation().getX(),
+            Math.sin(reefFaces[0].getRotation().getRadians()) * distanceAway
+                + reefFaces[0].getTranslation().getY(),
+            reefFaces[0].getRotation())),
+    FRONTLEFT(
+        new Pose2d(
+            Math.cos(reefFaces[1].getRotation().getRadians()) * distanceAway
+                + reefFaces[1].getTranslation().getX(),
+            Math.sin(reefFaces[1].getRotation().getRadians()) * distanceAway
+                + reefFaces[1].getTranslation().getY(),
+            reefFaces[1].getRotation())),
+
+    BACKLEFT(
+        new Pose2d(
+            Math.cos(reefFaces[2].getRotation().getRadians()) * distanceAway
+                + reefFaces[2].getTranslation().getX(),
+            Math.sin(reefFaces[2].getRotation().getRadians()) * distanceAway
+                + reefFaces[2].getTranslation().getY(),
+            reefFaces[2].getRotation())),
+    BACK(
+        new Pose2d(
+            Math.cos(reefFaces[3].getRotation().getRadians()) * distanceAway
+                + reefFaces[3].getTranslation().getX(),
+            Math.sin(reefFaces[3].getRotation().getRadians()) * distanceAway
+                + reefFaces[3].getTranslation().getY(),
+            reefFaces[3].getRotation())),
+    BACKRIGHT(
+        new Pose2d(
+            Math.cos(reefFaces[4].getRotation().getRadians()) * distanceAway
+                + reefFaces[4].getTranslation().getX(),
+            Math.sin(reefFaces[4].getRotation().getRadians()) * distanceAway
+                + reefFaces[4].getTranslation().getY(),
+            reefFaces[4].getRotation())),
+    FRONTRIGHT(
+        new Pose2d(
+            Math.cos(reefFaces[5].getRotation().getRadians()) * distanceAway
+                + reefFaces[5].getTranslation().getX(),
+            Math.sin(reefFaces[5].getRotation().getRadians()) * distanceAway
+                + reefFaces[5].getTranslation().getY(),
+            reefFaces[5].getRotation()));
+    Pose2d scorePosition;
+
+    private ReefScorePositions(Pose2d pose) {
+      this.scorePosition = AllianceFlipUtil.apply(pose);
     }
   }
 
@@ -176,7 +245,7 @@ public class RobotContainer {
             drive,
             () -> -driverController.getLeftY(),
             () -> -driverController.getLeftX(),
-            () -> 0));
+            () -> -driverController.getRightX()));
 
     // Default Commands
 
@@ -192,13 +261,13 @@ public class RobotContainer {
 
     // Switch to X pattern when X button is pressed
     // driverController.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    driverController
-        .y()
-        .whileTrue(new goToPose(drive, vision, new Pose2d(3, 3, Rotation2d.fromDegrees(30))));
-
     // driverController
     //     .y()
-    //     .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L1)));
+    //     .whileTrue(new goToPose(drive, vision, new Pose2d(3, 3, Rotation2d.fromDegrees(30))));
+
+    driverController
+        .y()
+        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L1)));
 
     // Reset gyro to 0° when B button is pressed
     driverController
@@ -211,19 +280,44 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    driverController
-        .povDown()
-        .onTrue(
-            Commands.runOnce(
-                () ->
-                    drive.setSelectedPose(
-                        new Pose2d(
-                            Units.inchesToMeters(100),
-                            Units.inchesToMeters(158.500),
-                            Rotation2d.fromDegrees(180))),
-                drive));
+    
+    driverController.povUpLeft().onTrue(Commands.runOnce(() -> drive.setSelectedPose(ReefScorePositions.BACKLEFT.scorePosition)));
+    driverController.povUpRight().onTrue(Commands.runOnce(() -> drive.setSelectedPose(ReefScorePositions.BACKRIGHT.scorePosition)));
+    driverController.povDownLeft().onTrue(Commands.runOnce(() -> drive.setSelectedPose(ReefScorePositions.FRONTLEFT.scorePosition)));
+    driverController.povDownRight().onTrue(Commands.runOnce(() -> drive.setSelectedPose(ReefScorePositions.FRONTRIGHT.scorePosition)));
+    driverController.povUp().onTrue(Commands.runOnce(() -> drive.setSelectedPose(ReefScorePositions.BACK.scorePosition)));
+    driverController.povDown().onTrue(Commands.runOnce(() -> drive.setSelectedPose(ReefScorePositions.FRONT.scorePosition)));
+    
+    // new Trigger(() -> driverController.getHID().getPOV() != -1)
+    //     .onChange(
+    //         new InstantCommand(
+    //             () -> {
+    //               switch (driverController.getHID().getPOV()) {
+    //                 case 0:
+    //                   drive.setSelectedPose(ReefScorePositions.BACK.scorePosition);
+    //                   break;
+    //                 case 45:
+    //                   drive.setSelectedPose(ReefScorePositions.BACKRIGHT.scorePosition);
+    //                   break;
+    //                 case 135:
+    //                   drive.setSelectedPose(ReefScorePositions.FRONTRIGHT.scorePosition);
+    //                   break;
+    //                 case 180:
+    //                   drive.setSelectedPose(ReefScorePositions.FRONT.scorePosition);
+    //                   break;
+    //                 case 225:
+    //                   drive.setSelectedPose(ReefScorePositions.FRONTLEFT.scorePosition);
+    //                   break;
+    //                 case 315:
+    //                   drive.setSelectedPose(ReefScorePositions.BACKLEFT.scorePosition);
+    //                   break;
+    //               }
+    //             }));
 
-    driverController.a().whileTrue(new DriveToPose(drive, vision, 18)).onFalse(new InstantCommand(() -> drive.stop(), drive));
+    driverController
+        .a()
+        .whileTrue(new DriveToPose(drive, vision, 18))
+        .onFalse(new InstantCommand(() -> drive.stop(), drive));
   }
 
   /**

@@ -4,13 +4,13 @@
 
 package frc.robot.commands;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.Vision;
+import org.littletonrobotics.junction.Logger;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DriveToPose extends Command {
@@ -27,7 +27,7 @@ public class DriveToPose extends Command {
     this.vision = vision;
     this.endTagId = endTagId;
 
-    addRequirements(drive);
+    addRequirements(vision);
   }
 
   // Called when the command is initially scheduled.
@@ -37,14 +37,15 @@ public class DriveToPose extends Command {
     seenEndTag = false;
 
     pathCommand =
-        AutoBuilder.pathfindToPose(drive.getSelectedPose(), new PathConstraints(1, 1, 360, 360));
+        AutoBuilder.pathfindToPose(drive.getSelectedPose(), new PathConstraints(2.5, 3, 360, 360));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pathCommand.schedule();
     seenEndTag = vision.seenTagId(endTagId);
+
+    pathCommand.schedule();
     Logger.recordOutput("Auto Lineup/Seen Tag", seenEndTag);
   }
 
@@ -57,6 +58,14 @@ public class DriveToPose extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return pathCommand.isFinished() || seenEndTag;
+    switch (Constants.currentMode) {
+      case REAL:
+        return pathCommand.isFinished() || (seenEndTag && vision.getDistanceToTag(1) < 1);
+      case SIM:
+        return pathCommand.isFinished() || seenEndTag;
+      case REPLAY:
+        return true;
+    }
+    return true;
   }
 }
