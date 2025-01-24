@@ -56,5 +56,20 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
   public void updateInputs(VisionIOInputs inputs) {
     visionSim.update(poseSupplier.get());
     super.updateInputs(inputs);
+    inputs.latestFiducialsObservations =
+        new FiducialsObservation(
+            0,
+            0,
+            0,
+            0,
+            Math.sqrt(
+                Math.pow(visionSim.getCameraPose(cameraSim).get().getX(), 2)
+                    + Math.pow(visionSim.getCameraPose(cameraSim).get().getY(), 2)
+                    + Math.pow(visionSim.getCameraPose(cameraSim).get().getZ(), 2)),
+            Math.sqrt(
+                Math.pow(visionSim.getRobotPose().getX(), 2)
+                    + Math.pow(visionSim.getRobotPose().getY(), 2)
+                    + Math.pow(visionSim.getRobotPose().getZ(), 2)),
+            0);
   }
 }

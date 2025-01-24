@@ -26,10 +26,10 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.goToPose;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -188,11 +188,14 @@ public class RobotContainer {
                 () -> new Rotation2d()));
 
     // Switch to X pattern when X button is pressed
-    driverController.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
+    // driverController.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
     driverController
         .y()
-        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L1)));
+        .whileTrue(new goToPose(drive, vision, new Pose2d(3, 3, Rotation2d.fromDegrees(30))));
+
+    // driverController
+    //     .y()
+    //     .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L1)));
 
     // Reset gyro to 0° when B button is pressed
     driverController

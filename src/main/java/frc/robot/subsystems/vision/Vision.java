@@ -20,15 +20,20 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.FieldConstants;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
@@ -36,6 +41,20 @@ public class Vision extends SubsystemBase {
   private final VisionIO[] io;
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
+
+  private static final Map<Integer, Pose2d> tagPoses2d = new HashMap<>();
+
+  static {
+    for (int i = 1; i <= FieldConstants.aprilTagCount; i++) {
+      tagPoses2d.put(
+          i,
+          FieldConstants.defaultAprilTagType
+              .getLayout()
+              .getTagPose(i)
+              .map(Pose3d::toPose2d)
+              .orElse(new Pose2d()));
+    }
+  }
 
   public Vision(VisionConsumer consumer, VisionIO... io) {
     this.consumer = consumer;
@@ -187,7 +206,8 @@ public class Vision extends SubsystemBase {
         Matrix<N3, N1> visionMeasurementStdDevs);
   }
 
-  public Pose2d getLocalPoseToTag(int camera, double cameraAngleX, double cameraAngleY) {
+  @AutoLogOutput
+  public Pose2d getFieldPoseUsingTag(int camera, double cameraAngleX, double cameraAngleY) {
     double xAngle = inputs[camera].latestTargetObservation.tx().getDegrees() + cameraAngleX;
     double yAngle = inputs[camera].latestTargetObservation.ty().getDegrees() + cameraAngleY;
     double distanceToTag = inputs[camera].latestFiducialsObservations.distToRobot();
@@ -195,6 +215,9 @@ public class Vision extends SubsystemBase {
     double yDist = Math.cos(Units.degreesToRadians(cameraAngleY + yAngle)) * distanceToTag;
     double xDist = yDist * Math.tan(Units.degreesToRadians(xAngle));
 
-    return new Pose2d(xDist, yDist, new Rotation2d());
+    Pose2d robotLocalPose = new Pose2d(xDist, yDist, new Rotation2d());
+    Pose2d aprilTagFieldPose = tagPoses2d.get(inputs[camera].latestFiducialsObservations.id());
+
+    return aprilTagFieldPose.transformBy(new Transform2d(robotLocalPose, aprilTagFieldPose));
   }
 }
