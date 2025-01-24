@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPose;
@@ -48,7 +47,6 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
-import frc.robot.util.AllianceFlipUtil;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -100,14 +98,16 @@ public class RobotContainer {
                 + reefFaces[0].getTranslation().getX(),
             Math.sin(reefFaces[0].getRotation().getRadians()) * distanceAway
                 + reefFaces[0].getTranslation().getY(),
-            reefFaces[0].getRotation())),
+            reefFaces[0].getRotation()),
+        18),
     FRONTLEFT(
         new Pose2d(
             Math.cos(reefFaces[1].getRotation().getRadians()) * distanceAway
                 + reefFaces[1].getTranslation().getX(),
             Math.sin(reefFaces[1].getRotation().getRadians()) * distanceAway
                 + reefFaces[1].getTranslation().getY(),
-            reefFaces[1].getRotation())),
+            reefFaces[1].getRotation()),
+        19),
 
     BACKLEFT(
         new Pose2d(
@@ -115,32 +115,38 @@ public class RobotContainer {
                 + reefFaces[2].getTranslation().getX(),
             Math.sin(reefFaces[2].getRotation().getRadians()) * distanceAway
                 + reefFaces[2].getTranslation().getY(),
-            reefFaces[2].getRotation())),
+            reefFaces[2].getRotation()),
+        20),
     BACK(
         new Pose2d(
             Math.cos(reefFaces[3].getRotation().getRadians()) * distanceAway
                 + reefFaces[3].getTranslation().getX(),
             Math.sin(reefFaces[3].getRotation().getRadians()) * distanceAway
                 + reefFaces[3].getTranslation().getY(),
-            reefFaces[3].getRotation())),
+            reefFaces[3].getRotation()),
+        21),
     BACKRIGHT(
         new Pose2d(
             Math.cos(reefFaces[4].getRotation().getRadians()) * distanceAway
                 + reefFaces[4].getTranslation().getX(),
             Math.sin(reefFaces[4].getRotation().getRadians()) * distanceAway
                 + reefFaces[4].getTranslation().getY(),
-            reefFaces[4].getRotation())),
+            reefFaces[4].getRotation()),
+        22),
     FRONTRIGHT(
         new Pose2d(
             Math.cos(reefFaces[5].getRotation().getRadians()) * distanceAway
                 + reefFaces[5].getTranslation().getX(),
             Math.sin(reefFaces[5].getRotation().getRadians()) * distanceAway
                 + reefFaces[5].getTranslation().getY(),
-            reefFaces[5].getRotation()));
-    Pose2d scorePosition;
+            reefFaces[5].getRotation()),
+        17);
+    public Pose2d scorePosition;
+    public int aprilTagID;
 
-    private ReefScorePositions(Pose2d pose) {
-      this.scorePosition = AllianceFlipUtil.apply(pose);
+    private ReefScorePositions(Pose2d pose, int aprilTagID) {
+      this.scorePosition = pose;
+      this.aprilTagID = aprilTagID;
     }
   }
 
@@ -280,43 +286,32 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    
-    driverController.povUpLeft().onTrue(Commands.runOnce(() -> drive.setSelectedPose(ReefScorePositions.BACKLEFT.scorePosition)));
-    driverController.povUpRight().onTrue(Commands.runOnce(() -> drive.setSelectedPose(ReefScorePositions.BACKRIGHT.scorePosition)));
-    driverController.povDownLeft().onTrue(Commands.runOnce(() -> drive.setSelectedPose(ReefScorePositions.FRONTLEFT.scorePosition)));
-    driverController.povDownRight().onTrue(Commands.runOnce(() -> drive.setSelectedPose(ReefScorePositions.FRONTRIGHT.scorePosition)));
-    driverController.povUp().onTrue(Commands.runOnce(() -> drive.setSelectedPose(ReefScorePositions.BACK.scorePosition)));
-    driverController.povDown().onTrue(Commands.runOnce(() -> drive.setSelectedPose(ReefScorePositions.FRONT.scorePosition)));
-    
-    // new Trigger(() -> driverController.getHID().getPOV() != -1)
-    //     .onChange(
-    //         new InstantCommand(
-    //             () -> {
-    //               switch (driverController.getHID().getPOV()) {
-    //                 case 0:
-    //                   drive.setSelectedPose(ReefScorePositions.BACK.scorePosition);
-    //                   break;
-    //                 case 45:
-    //                   drive.setSelectedPose(ReefScorePositions.BACKRIGHT.scorePosition);
-    //                   break;
-    //                 case 135:
-    //                   drive.setSelectedPose(ReefScorePositions.FRONTRIGHT.scorePosition);
-    //                   break;
-    //                 case 180:
-    //                   drive.setSelectedPose(ReefScorePositions.FRONT.scorePosition);
-    //                   break;
-    //                 case 225:
-    //                   drive.setSelectedPose(ReefScorePositions.FRONTLEFT.scorePosition);
-    //                   break;
-    //                 case 315:
-    //                   drive.setSelectedPose(ReefScorePositions.BACKLEFT.scorePosition);
-    //                   break;
-    //               }
-    //             }));
+    driverController
+        .povUpLeft()
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKLEFT)));
+    driverController
+        .povUpRight()
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKRIGHT)));
+    driverController
+        .povDownLeft()
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTLEFT)));
+    driverController
+        .povDownRight()
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTRIGHT)));
+    driverController
+        .povUp()
+        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACK)));
+    driverController
+        .povDown()
+        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT)));
 
     driverController
         .a()
-        .whileTrue(new DriveToPose(drive, vision, 18))
+        .whileTrue(new DriveToPose(drive, vision))
         .onFalse(new InstantCommand(() -> drive.stop(), drive));
   }
 

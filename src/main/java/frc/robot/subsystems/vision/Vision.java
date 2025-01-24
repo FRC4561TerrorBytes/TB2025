@@ -206,8 +206,8 @@ public class Vision extends SubsystemBase {
         Matrix<N3, N1> visionMeasurementStdDevs);
   }
 
-  public boolean seenTagId(int id) {
-    for (var tagId : inputs[1].tagIds) {
+  public boolean seenTagId(int id, int camera) {
+    for (var tagId : inputs[camera].tagIds) {
       if (tagId == id) return true;
     }
     return false;

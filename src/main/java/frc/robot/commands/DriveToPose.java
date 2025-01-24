@@ -8,8 +8,10 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.RobotContainer.ReefScorePositions;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.Vision;
+import frc.robot.util.AllianceFlipUtil;
 import org.littletonrobotics.junction.Logger;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -22,10 +24,9 @@ public class DriveToPose extends Command {
   private Command pathCommand;
 
   /** Creates a new DriveToPose. */
-  public DriveToPose(Drive drive, Vision vision, int endTagId) {
+  public DriveToPose(Drive drive, Vision vision) {
     this.drive = drive;
     this.vision = vision;
-    this.endTagId = endTagId;
 
     addRequirements(vision);
   }
@@ -35,18 +36,35 @@ public class DriveToPose extends Command {
   public void initialize() {
     drive.stop();
     seenEndTag = false;
+    endTagId = drive.getSelectedScorePosition().aprilTagID;
+
+    if (AllianceFlipUtil.shouldFlip()) {
+      if (drive.getSelectedScorePosition().equals(ReefScorePositions.FRONT)
+          || drive.getSelectedScorePosition().equals(ReefScorePositions.BACK)) {
+        endTagId -= 11;
+      } else if (drive.getSelectedScorePosition().equals(ReefScorePositions.BACKLEFT)
+          || drive.getSelectedScorePosition().equals(ReefScorePositions.FRONTRIGHT)) {
+        endTagId -= 9;
+      } else if (drive.getSelectedScorePosition().equals(ReefScorePositions.BACKRIGHT)
+          || drive.getSelectedScorePosition().equals(ReefScorePositions.FRONTLEFT)) {
+        endTagId -= 13;
+      }
+    }
 
     pathCommand =
-        AutoBuilder.pathfindToPose(drive.getSelectedPose(), new PathConstraints(2.5, 3, 360, 360));
+        AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(drive.getSelectedScorePosition().scorePosition),
+            new PathConstraints(2.5, 3, 360, 360));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    seenEndTag = vision.seenTagId(endTagId);
+    seenEndTag = vision.seenTagId(endTagId, 1);
 
     pathCommand.schedule();
     Logger.recordOutput("Auto Lineup/Seen Tag", seenEndTag);
+    Logger.recordOutput("Auto Lineup/Tag ID", endTagId);
   }
 
   // Called once the command ends or is interrupted.
