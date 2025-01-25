@@ -21,6 +21,7 @@ import static frc.robot.subsystems.vision.VisionConstants.robotToCamera1;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -28,10 +29,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.DriveToPose;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -58,12 +59,12 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
 
   public enum ElevatorPosition {
-    STOW(0.5, -70.0),
-    SOURCE(0.5, -100),
-    L1(15.0, -30.0),
-    L2(30.0, -20.0),
-    L3(45.0, -20.0),
-    L4(100.0, -10.0);
+    STOW(0, 60.0),
+    SOURCE(0.15, 47),
+    L1(0, 120.0),
+    L2(0.1, 100.0),
+    L3(0.45, 92.0),
+    L4(0.5, 10.0);
 
     public double extensionPosition;
     public double pivotPosition;
@@ -256,14 +257,14 @@ public class RobotContainer {
     // Default Commands
 
     // Lock to 0° when A button is held
-    driverController
-        .a()
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -driverController.getLeftY(),
-                () -> -driverController.getLeftX(),
-                () -> new Rotation2d()));
+    // driverController
+    //     .a()
+    //     .whileTrue(
+    //         DriveCommands.joystickDriveAtAngle(
+    //             drive,
+    //             () -> -driverController.getLeftY(),
+    //             () -> -driverController.getLeftX(),
+    //             () -> new Rotation2d()));
 
     // Switch to X pattern when X button is pressed
     // driverController.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
@@ -272,47 +273,74 @@ public class RobotContainer {
     //     .whileTrue(new goToPose(drive, vision, new Pose2d(3, 3, Rotation2d.fromDegrees(30))));
 
     driverController
-        .y()
+        .a()
         .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L1)));
-
-    // Reset gyro to 0° when B button is pressed
     driverController
         .b()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                    drive)
-                .ignoringDisable(true));
+        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L2)));
+    driverController
+        .y()
+        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L3)));
 
     driverController
+        .x()
+        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.STOW)));
+
+    driverController
+        .back()
+        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.SOURCE)));
+
+    driverController
+        .povDown()
+        .whileTrue(new RunCommand(() -> drive.runVelocity(new ChassisSpeeds(-1, 0, 0))));
+    driverController
+        .povUp()
+        .whileTrue(new RunCommand(() -> drive.runVelocity(new ChassisSpeeds(1, 0, 0))));
+    driverController
+        .povLeft()
+        .whileTrue(new RunCommand(() -> drive.runVelocity(new ChassisSpeeds(0, 1, 0))));
+    driverController
+        .povRight()
+        .whileTrue(new RunCommand(() -> drive.runVelocity(new ChassisSpeeds(0, -1, 0))));
+
+    // Reset gyro to 0° when B button is pressed
+    // driverController
+    //     .b()
+    //     .onTrue(
+    //         Commands.runOnce(
+    //                 () ->
+    //                     drive.setPose(
+    //                         new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+    //                 drive)
+    //             .ignoringDisable(true));
+
+    operatorController
         .povUpLeft()
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKLEFT)));
-    driverController
+    operatorController
         .povUpRight()
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKRIGHT)));
-    driverController
+    operatorController
         .povDownLeft()
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTLEFT)));
-    driverController
+    operatorController
         .povDownRight()
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTRIGHT)));
-    driverController
+    operatorController
         .povUp()
         .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACK)));
-    driverController
+    operatorController
         .povDown()
         .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT)));
 
-    driverController
-        .a()
-        .whileTrue(new DriveToPose(drive, vision))
-        .onFalse(new InstantCommand(() -> drive.stop(), drive));
+    // driverController
+    //     .a()
+    //     .whileTrue(new DriveToPose(drive, vision))
+    //     .onFalse(new InstantCommand(() -> drive.stop(), drive));
   }
 
   /**
