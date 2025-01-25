@@ -129,9 +129,9 @@ public class ElevatorIOSim implements ElevatorIO {
               -0.37
                   + 0.64
                   - Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * inputs.extensionHeight,
-              new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0))
+              new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0)),
+          new Pose3d(0.11 - 0.34 + Math.cos(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight+0.5), 0, 0.7 - 0.415 - Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight+0.5), new Rotation3d(0, Units.degreesToRadians(50) + Units.degreesToRadians(inputs.pivotAngle), 0))
         });
-    // json was -0.05, 0, -0.38
     inputs.pivotMotorOneConnected = true;
     inputs.pivotMotorTwoConnected = true;
     inputs.pivotMotorThreeConnected = true;
@@ -141,8 +141,6 @@ public class ElevatorIOSim implements ElevatorIO {
     inputs.extensionSetpoint = this.extensionSetpoint;
     inputs.pivotVoltage = pivotAppliedVolts;
     inputs.extensionVoltage = extensionAppliedVolts;
-
-    // this is for testing remove later
   }
 
   @Override
