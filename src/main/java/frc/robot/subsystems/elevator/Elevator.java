@@ -71,16 +71,11 @@ public class Elevator extends SubsystemBase {
         "FinalComponentPoses",
         new Pose3d[] {
           new Pose3d(
-              -0.245944,
-              0,
-              0.271169,
-              new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0)),
+              0.03 - 0.2782, 0, 0.37 - 0.095, new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0)),
           new Pose3d(
-              -0.245944
-                  + Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
+              0.03 - 0.2782 + Math.cos(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
               0,
-              0.271169
-                  - Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
+              0.37 - 0.095 - Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
               new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0))
         });
 
