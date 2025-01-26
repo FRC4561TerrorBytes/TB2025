@@ -5,6 +5,9 @@
 package frc.robot.subsystems.elevator;
 
 import com.ctre.phoenix6.SignalLogger;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -63,6 +66,25 @@ public class Elevator extends SubsystemBase {
     pivotMotorFourDisconnectedAlert.set(!inputs.pivotMotorFourConnected);
 
     extensionMotorDisconnectedAlert.set(!inputs.extensionMotorConnected);
+
+    Logger.recordOutput(
+        "FinalComponentPoses",
+        new Pose3d[] {
+          new Pose3d(
+              -0.245944,
+              0,
+              0.271169,
+              new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0)),
+          new Pose3d(
+              -0.245944
+                  + Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
+              0,
+              0.271169
+                  - Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
+              new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0))
+        });
+
+    Logger.recordOutput("ZeroesComponentPoses", new Pose3d[] {new Pose3d(), new Pose3d()});
   }
 
   public void setSetpoint(ElevatorPosition position) {

@@ -1,5 +1,5 @@
 {
-  "name": "frodo",
+  "name": "TB2025",
   "rotations": [
     {
       "axis": "x",
@@ -32,51 +32,9 @@
         }
       ],
       "zeroedPosition": [
+        0.245944,
         0,
-        0,
-        0
-      ]
-    },
-    {
-      "zeroedRotations": [
-        {
-          "axis": "x",
-          "degrees": 140
-        },
-        {
-          "axis": "y",
-          "degrees": 0
-        },
-        {
-          "axis": "z",
-          "degrees": 90
-        }
-      ],
-      "zeroedPosition": [
-        -0.05,
-        0,
-        -0.38
-      ]
-    },
-    {
-      "zeroedRotations": [
-        {
-          "axis": "x",
-          "degrees": -40
-        },
-        {
-          "axis": "y",
-          "degrees": 0
-        },
-        {
-          "axis": "z",
-          "degrees": 90
-        }
-      ],
-      "zeroedPosition": [
-        0.5,
-        0,
-        0.37
+        -0.271169
       ]
     },
     {
@@ -95,9 +53,9 @@
         }
       ],
       "zeroedPosition": [
-        0.3,
+        0.245944,
         0,
-        0.4
+        -0.271169
       ]
     }
   ]

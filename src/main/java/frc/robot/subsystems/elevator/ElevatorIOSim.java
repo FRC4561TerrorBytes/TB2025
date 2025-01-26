@@ -6,15 +6,12 @@ package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants;
 import frc.robot.RobotContainer.ElevatorPosition;
-import org.littletonrobotics.junction.Logger;
 
 public class ElevatorIOSim implements ElevatorIO {
   /** Creates a new ElevatorIOSim. */
@@ -112,37 +109,7 @@ public class ElevatorIOSim implements ElevatorIO {
             pivotMotorOneSim.getAngularPositionRotations() / Constants.PIVOT_GEAR_RATIO);
     inputs.extensionHeight =
         extensionMotorSim.getAngularPositionRotations() / Constants.EXTENSION_GEAR_RATIO;
-    Logger.recordOutput(
-        "FinalComponentPoses",
-        new Pose3d[] {
-          new Pose3d(),
-          new Pose3d(
-              0.05 - 0.2964,
-              0,
-              0.38 - 0.092,
-              new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0)),
-          new Pose3d(
-              -0.5
-                  + 0.27
-                  + Math.cos(Units.degreesToRadians(inputs.pivotAngle)) * inputs.extensionHeight,
-              0,
-              -0.37
-                  + 0.64
-                  - Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * inputs.extensionHeight,
-              new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0)),
-          new Pose3d(
-              0.11
-                  - 0.34
-                  + Math.cos(Units.degreesToRadians(inputs.pivotAngle))
-                      * (inputs.extensionHeight + 0.5),
-              0,
-              0.7
-                  - 0.415
-                  - Math.sin(Units.degreesToRadians(inputs.pivotAngle))
-                      * (inputs.extensionHeight + 0.5),
-              new Rotation3d(
-                  0, Units.degreesToRadians(50) + Units.degreesToRadians(inputs.pivotAngle), 0))
-        });
+
     inputs.pivotMotorOneConnected = true;
     inputs.pivotMotorTwoConnected = true;
     inputs.pivotMotorThreeConnected = true;
