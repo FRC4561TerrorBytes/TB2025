@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  * (log replay from a file).
  */
 public final class Constants {
+
   public static final Mode simMode = Mode.REAL;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
@@ -34,4 +35,7 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  public static final int pivotMotorID = 13;
+  public static final double PIVOT_GEAR_RATIO = 256;
 }
