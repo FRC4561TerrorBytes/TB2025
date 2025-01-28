@@ -14,8 +14,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -134,20 +132,23 @@ public class RobotContainer {
             () -> -controller.getRightX()));
 
     // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Reset gyro to 0° when B button is pressed
-    controller
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                    drive)
-                .ignoringDisable(true));
+    // controller
+    //     .b()
+    //     .onTrue(
+    //         Commands.runOnce(
+    //                 () ->
+    //                     drive.setPose(
+    //                         new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+    //                 drive)
+    //             .ignoringDisable(true));
 
-    controller.a().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(15), pivot));
+    controller.y().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(40), pivot));
+    controller.b().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(25), pivot));
+    controller.a().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(5), pivot));
+    controller.x().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(90), pivot));
   }
 
   /**
