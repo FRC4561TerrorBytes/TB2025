@@ -9,6 +9,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
@@ -37,13 +38,14 @@ public class PivotIOReal implements PivotIO {
 
   public PivotIOReal() {
     var pivotPIDConfig = new Slot0Configs();
-    // pivotPIDConfig.GravityType = GravityTypeValue.Arm_Cosine;
+    pivotPIDConfig.GravityType = GravityTypeValue.Arm_Cosine;
     pivotPIDConfig.kS = 0.25;
-    pivotPIDConfig.kV = 0.12;
+    pivotPIDConfig.kV = 0.08;
     pivotPIDConfig.kA = 0;
     pivotPIDConfig.kP = 100;
     pivotPIDConfig.kI = 4;
     pivotPIDConfig.kD = 0;
+    pivotPIDConfig.kG = 0.25;
 
     var pivotConfig = new TalonFXConfiguration();
     pivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -101,9 +103,6 @@ public class PivotIOReal implements PivotIO {
     inputs.pivotSpeed = pivotMotor.getVelocity().getValueAsDouble();
     inputs.pivotVoltage = pivotMotor.getMotorVoltage().getValueAsDouble();
     inputs.pivotSetpoint = this.pivotSetpoint;
-
-    m_request_pivot.FeedForward =
-        Math.cos(Units.rotationsToRadians(inputs.pivotAngle)) * pivotFeedForward;
   }
 
   public void setPivotPosition(double angle) {
