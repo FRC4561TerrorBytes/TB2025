@@ -218,6 +218,11 @@ public class Vision extends SubsystemBase {
     return inputs[camera].latestFiducialsObservations.distToRobot();
   }
 
+  @AutoLogOutput(key = "Vision/Score Ready")
+  public boolean scoreReady() {
+    return false;
+  }
+
   @AutoLogOutput(key = "Vision/RobotPoseWithTag")
   public Pose2d getFieldPoseUsingTag(int camera) {
     double xAngle =

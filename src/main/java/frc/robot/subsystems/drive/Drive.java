@@ -48,6 +48,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.RobotContainer.ElevatorPosition;
 import frc.robot.RobotContainer.ReefScorePositions;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.AllianceFlipUtil;
@@ -178,6 +179,8 @@ public class Drive extends SubsystemBase {
         module.stop();
       }
     }
+
+    Logger.recordOutput("testing", ElevatorPosition.L1.toString());
 
     // Log empty setpoint states when disabled
     if (DriverStation.isDisabled()) {

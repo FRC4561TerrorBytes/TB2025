@@ -26,13 +26,17 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AutomatedScore;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveToPose;
+import frc.robot.commands.goToPose;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -235,6 +239,8 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
+    SmartDashboard.putData(CommandScheduler.getInstance());
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -274,21 +280,18 @@ public class RobotContainer {
 
     driverController
         .a()
-        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L1)));
+        .whileTrue(
+            Commands.sequence(
+                new DriveToPose(drive, vision),
+                Commands.parallel(
+                    new AutomatedScore(elevator, vision),
+                    new goToPose(drive, vision, drive.getPose()))))
+        .onFalse(Commands.runOnce(() -> drive.stop(), drive));
+
     driverController
         .b()
-        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L2)));
-    driverController
-        .y()
-        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L3)));
-
-    driverController
-        .x()
-        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.STOW)));
-
-    driverController
-        .back()
-        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.SOURCE)));
+        .whileTrue(new DriveToPose(drive, vision))
+        .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
     driverController
         .povDown()
@@ -337,10 +340,27 @@ public class RobotContainer {
         .povDown()
         .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT)));
 
-    // driverController
-    //     .a()
-    //     .whileTrue(new DriveToPose(drive, vision))
-    //     .onFalse(new InstantCommand(() -> drive.stop(), drive));
+    operatorController
+        .a()
+        .onTrue(
+            Commands.runOnce(
+                () -> elevator.requestElevatorPosition(ElevatorPosition.L1), elevator));
+
+    operatorController
+        .b()
+        .onTrue(
+            Commands.runOnce(
+                () -> elevator.requestElevatorPosition(ElevatorPosition.L2), elevator));
+
+    operatorController
+        .y()
+        .onTrue(
+            Commands.runOnce(
+                () -> elevator.requestElevatorPosition(ElevatorPosition.L3), elevator));
+
+    operatorController
+        .x()
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator));
   }
 
   /**

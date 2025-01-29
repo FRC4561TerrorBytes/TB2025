@@ -54,7 +54,7 @@ public class goToPose extends Command {
     this.vision = vision;
     targetPose = target;
 
-    addRequirements(drive, vision);
+    addRequirements(drive);
   }
 
   // Called when the command is initially scheduled.
@@ -82,14 +82,21 @@ public class goToPose extends Command {
     //         drivePIDController.calculate(robotPose.getY(), targetPose.getY()),
     //         rotationPIDController.calculate(
     //             robotPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())));
-    drive.runVelocity(
-        ChassisSpeeds.fromFieldRelativeSpeeds(
-            drivePIDController.calculate(robotPose.getX(), targetPose.getX()),
-            drivePIDController.calculate(robotPose.getY(), targetPose.getY()),
-            Units.degreesToRadians(
-                rotationPIDController.calculate(
-                    robotPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())),
-            robotPose.getRotation()));
+    // drive.runVelocity(
+    //     ChassisSpeeds.fromFieldRelativeSpeeds(
+    //         drivePIDController.calculate(robotPose.getX(), targetPose.getX()),
+    //         drivePIDController.calculate(robotPose.getY(), targetPose.getY()),
+    //         Units.degreesToRadians(
+    //             rotationPIDController.calculate(
+    //                 robotPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())),
+    //         robotPose.getRocity(
+    //     ChassisSpeeds.fromFieldRelativeSpeeds(
+    //         drivePIDController.calculate(robotPose.getX(), targetPose.getX()),
+    //         drivePIDController.calculate(robotPose.getY(), targetPose.getY()),
+    //         Units.degreesToRadians(
+    //             rotationPIDController.calculate(
+    //                 robotPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())),
+    //         robotPose.getRotation()));
   }
 
   // Called once the command ends or is interrupted.

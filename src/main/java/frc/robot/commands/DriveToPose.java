@@ -63,6 +63,7 @@ public class DriveToPose extends Command {
     seenEndTag = vision.seenTagId(endTagId, 1);
 
     pathCommand.schedule();
+
     Logger.recordOutput("Auto Lineup/Seen Tag", seenEndTag);
     Logger.recordOutput("Auto Lineup/Tag ID", endTagId);
   }

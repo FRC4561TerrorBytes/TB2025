@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer.ElevatorPosition;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
@@ -25,6 +26,8 @@ public class Elevator extends SubsystemBase {
   private final Alert pivotMotorThreeDisconnectedAlert;
   private final Alert pivotMotorFourDisconnectedAlert;
   private final Alert extensionMotorDisconnectedAlert;
+
+  private ElevatorPosition selectedElevatorPosition = ElevatorPosition.STOW;
 
   /** Creates a new Elevator. */
   public Elevator(ElevatorIO io) {
@@ -71,11 +74,18 @@ public class Elevator extends SubsystemBase {
         "FinalComponentPoses",
         new Pose3d[] {
           new Pose3d(
-              0.03 - 0.2782, 0, 0.37 - 0.095, new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0)),
-          new Pose3d(
-              0.03 - 0.2782 + Math.cos(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
+              0.03 - 0.2782,
               0,
-              0.37 - 0.095 - Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
+              0.37 - 0.095,
+              new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0)),
+          new Pose3d(
+              0.03
+                  - 0.2782
+                  + Math.cos(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
+              0,
+              0.37
+                  - 0.095
+                  - Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
               new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0))
         });
 
@@ -104,5 +114,26 @@ public class Elevator extends SubsystemBase {
 
   public double getExtensionHeight() {
     return inputs.extensionHeight;
+  }
+
+  public void requestElevatorPosition(ElevatorPosition position) {
+    selectedElevatorPosition = position;
+  }
+
+  @AutoLogOutput(key = "Elevator/Selected Position")
+  public ElevatorPosition getRequestedElevatorPosition() {
+    return selectedElevatorPosition;
+  }
+
+  @AutoLogOutput(key = "Elevator/Elevator At Setpoint")
+  public boolean elevatorAtSetpoint() {
+    if (inputs.extensionHeight == inputs.extensionSetpoint) return true;
+    else return false;
+  }
+
+  @AutoLogOutput(key = "Elevator/Pivot At Setpoint")
+  public boolean pivotAtSetpoint() {
+    if (inputs.pivotAngle == inputs.pivotSetpoint) return true;
+    else return false;
   }
 }
