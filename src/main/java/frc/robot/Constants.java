@@ -38,4 +38,6 @@ public final class Constants {
 
   public static final int pivotMotorID = 13;
   public static final double PIVOT_GEAR_RATIO = 256;
+
+  public static final int intakeMotorID = 33;
 }
