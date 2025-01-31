@@ -56,7 +56,7 @@ public class VisionIOLimelight implements VisionIO {
     megatag1Subscriber = table.getDoubleArrayTopic("botpose_wpiblue").subscribe(new double[] {});
     megatag2Subscriber =
         table.getDoubleArrayTopic("botpose_orb_wpiblue").subscribe(new double[] {});
-    rawFiducialsSubscriber = table.getDoubleArrayTopic("rawFiducials").subscribe(new double[] {});
+    rawFiducialsSubscriber = table.getDoubleArrayTopic("rawfiducials").subscribe(new double[] {});
   }
 
   @Override
@@ -131,15 +131,19 @@ public class VisionIOLimelight implements VisionIO {
               PoseObservationType.MEGATAG_2));
     }
 
-    inputs.latestFiducialsObservations =
-        new FiducialsObservation(
-            (int) rawFiducialsSubscriber.get()[0],
-            rawFiducialsSubscriber.get()[1],
-            rawFiducialsSubscriber.get()[2],
-            rawFiducialsSubscriber.get()[3],
-            rawFiducialsSubscriber.get()[4],
-            rawFiducialsSubscriber.get()[5],
-            rawFiducialsSubscriber.get()[6]);
+    try {
+      inputs.latestFiducialsObservations =
+          new FiducialsObservation(
+              (int) rawFiducialsSubscriber.get()[0],
+              rawFiducialsSubscriber.get()[1],
+              rawFiducialsSubscriber.get()[2],
+              rawFiducialsSubscriber.get()[3],
+              rawFiducialsSubscriber.get()[4],
+              rawFiducialsSubscriber.get()[5],
+              rawFiducialsSubscriber.get()[6]);
+    } catch (Exception e) {
+      System.out.println(e);
+    }
 
     // Save pose observations to inputs object
     inputs.poseObservations = new PoseObservation[poseObservations.size()];

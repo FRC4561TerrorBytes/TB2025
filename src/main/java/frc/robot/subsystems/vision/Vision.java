@@ -42,7 +42,7 @@ public class Vision extends SubsystemBase {
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
 
-  private static final Map<Integer, Pose2d> tagPoses2d = new HashMap<>();
+  public static final Map<Integer, Pose2d> tagPoses2d = new HashMap<>();
 
   static {
     for (int i = 1; i <= FieldConstants.aprilTagCount; i++) {
@@ -223,7 +223,7 @@ public class Vision extends SubsystemBase {
     return false;
   }
 
-  @AutoLogOutput(key = "Vision/RobotPoseWithTag")
+  // @AutoLogOutput(key = "Vision/RobotPoseWithTag")
   public Pose2d getFieldPoseUsingTag(int camera) {
     double xAngle =
         inputs[camera].latestTargetObservation.tx().getDegrees()

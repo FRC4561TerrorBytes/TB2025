@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -22,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.SingleTagAlign;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -35,6 +38,9 @@ import frc.robot.subsystems.intake.IntakeIOReal;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.pivot.PivotIO;
 import frc.robot.subsystems.pivot.PivotIOReal;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOLimelight;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -48,6 +54,7 @@ public class RobotContainer {
   private final Drive drive;
   private final Pivot pivot;
   private final Intake intake;
+  private final Vision vision;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -70,6 +77,10 @@ public class RobotContainer {
 
         pivot = new Pivot(new PivotIOReal());
         intake = new Intake(new IntakeIOReal());
+        vision =
+            new Vision(
+                drive::addVisionMeasurement,
+                new VisionIOLimelight(camera0Name, drive::getRotation));
         break;
 
       case SIM:
@@ -84,6 +95,7 @@ public class RobotContainer {
 
         pivot = new Pivot(null);
         intake = new Intake(null);
+        vision = null;
         break;
 
       default:
@@ -98,6 +110,7 @@ public class RobotContainer {
 
         pivot = new Pivot(new PivotIO() {});
         intake = new Intake(new IntakeIO() {});
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
 
@@ -155,11 +168,13 @@ public class RobotContainer {
     //                 drive)
     //             .ignoringDisable(true));
 
-    controller.leftBumper().whileTrue(new RunCommand(() -> intake.setOutput(1), intake));
+    controller.leftBumper().whileTrue(new RunCommand(() -> intake.setOutput(0.3), intake));
 
-    controller.rightBumper().whileTrue(new RunCommand(() -> intake.setOutput(-1), intake));
+    controller.povDown().whileTrue(new SingleTagAlign(drive, vision));
 
-    controller.y().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(40), pivot));
+    controller.rightBumper().whileTrue(new RunCommand(() -> intake.setOutput(-0.3), intake));
+
+    controller.y().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(57), pivot));
     controller.b().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(25), pivot));
     controller.a().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(5), pivot));
     controller.x().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(90), pivot));

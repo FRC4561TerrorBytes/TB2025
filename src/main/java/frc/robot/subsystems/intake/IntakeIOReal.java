@@ -18,7 +18,7 @@ public class IntakeIOReal implements IntakeIO {
     var intakeConfig = new SparkMaxConfig();
 
     intakeConfig.idleMode(IdleMode.kBrake);
-    intakeConfig.smartCurrentLimit(20);
+    // intakeConfig.smartCurrentLimit(20);
     intakeConfig.voltageCompensation(12.0);
     intakeConfig.inverted(false);
 
