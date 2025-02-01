@@ -131,7 +131,7 @@ public class VisionIOLimelight implements VisionIO {
               PoseObservationType.MEGATAG_2));
     }
 
-    try {
+    if (!tagIds.isEmpty()) {
       inputs.latestFiducialsObservations =
           new FiducialsObservation(
               (int) rawFiducialsSubscriber.get()[0],
@@ -141,8 +141,6 @@ public class VisionIOLimelight implements VisionIO {
               rawFiducialsSubscriber.get()[4],
               rawFiducialsSubscriber.get()[5],
               rawFiducialsSubscriber.get()[6]);
-    } catch (Exception e) {
-      System.out.println(e);
     }
 
     // Save pose observations to inputs object

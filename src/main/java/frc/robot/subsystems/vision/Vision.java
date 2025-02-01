@@ -213,7 +213,7 @@ public class Vision extends SubsystemBase {
     return false;
   }
 
-  @AutoLogOutput(key = "Vision/DistanceToTag")
+  @AutoLogOutput(key = "Vision/Distance To Tag")
   public double getDistanceToTag(int camera) {
     return inputs[camera].latestFiducialsObservations.distToRobot();
   }
@@ -224,7 +224,7 @@ public class Vision extends SubsystemBase {
   }
 
   // @AutoLogOutput(key = "Vision/RobotPoseWithTag")
-  public Pose2d getFieldPoseUsingTag(int camera) {
+  public Pose2d getFieldPoseUsingTag(int camera, Rotation2d rotation) {
     double xAngle =
         inputs[camera].latestTargetObservation.tx().getDegrees()
             - VisionConstants.cameraAngleOffsetsYaw[camera];
@@ -233,14 +233,15 @@ public class Vision extends SubsystemBase {
             - VisionConstants.cameraAngleOffsetsPitch[camera];
     double distanceToTag = getDistanceToTag(camera);
 
-    double yDist =
-        Math.cos(Units.degreesToRadians(yAngle))
-            * distanceToTag;
+    double yDist = Math.cos(Units.degreesToRadians(yAngle)) * distanceToTag;
     double xDist = yDist * Math.tan(Units.degreesToRadians(xAngle));
 
-    Pose2d robotLocalPose = new Pose2d(xDist, yDist, new Rotation2d());
+    Pose2d robotLocalPose = new Pose2d(yDist, xDist, rotation);
     Pose2d aprilTagFieldPose = tagPoses2d.get(inputs[camera].latestFiducialsObservations.id());
 
-    return aprilTagFieldPose.transformBy(new Transform2d(robotLocalPose.getTranslation(), robotLocalPose.getRotation()));
+    return aprilTagFieldPose.transformBy(
+        new Transform2d(
+            robotLocalPose.getTranslation(),
+            robotLocalPose.getRotation().rotateBy(Rotation2d.fromDegrees(180))));
   }
 }

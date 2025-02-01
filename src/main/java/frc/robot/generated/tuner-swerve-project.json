@@ -22,7 +22,9 @@
         "CANbusFriendly": "",
         "SelectedMotorType": {
           "Name": "WCP Kraken x60",
-          "FreeSpeedRps": 96.7
+          "FreeSpeedRps": 96.7,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
         },
         "IsStandaloneFx": false
       },
@@ -34,65 +36,23 @@
         "CANbusFriendly": "",
         "SelectedMotorType": {
           "Name": "WCP Kraken x60",
-          "FreeSpeedRps": 96.7
+          "FreeSpeedRps": 96.7,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
         },
         "IsStandaloneFx": false
       },
       "IsEncoderInverted": false,
       "IsSteerInverted": true,
       "SelectedEncoderType": "CANcoder",
-      "EncoderOffset": 0.1708984375,
+      "EncoderOffset": 0.171142578125,
       "DriveMotorSelectionState": 1,
       "SteerMotorSelectionState": 1,
       "SteerEncoderSelectionState": 1,
       "IsModuleValidationComplete": true,
       "ValidatedSteerId": 8,
       "ValidatedDriveId": 6,
-      "ValidatedEncoderId": 24,
-      "AvailEncoders": [
-        {
-          "Id": 21,
-          "Name": "BACK_RIGHT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        },
-        {
-          "Id": 22,
-          "Name": "FRONT_RIGHT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        },
-        {
-          "Id": 23,
-          "Name": "BACK_LEFT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        },
-        {
-          "Id": 24,
-          "Name": "FRONT_LEFT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        }
-      ],
-      "IsEncoderTypeCAN": true,
-      "IsDeviceSelectionCompleted": true,
-      "IsConfigurationCompleted": true,
-      "AvailEncoderTypes": [
-        "CANcoder"
-      ]
+      "ValidatedEncoderId": 24
     },
     {
       "ModuleName": "Front Right",
@@ -114,7 +74,9 @@
         "CANbusFriendly": "",
         "SelectedMotorType": {
           "Name": "WCP Kraken x60",
-          "FreeSpeedRps": 96.7
+          "FreeSpeedRps": 96.7,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
         },
         "IsStandaloneFx": false
       },
@@ -126,65 +88,23 @@
         "CANbusFriendly": "",
         "SelectedMotorType": {
           "Name": "WCP Kraken x60",
-          "FreeSpeedRps": 96.7
+          "FreeSpeedRps": 96.7,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
         },
         "IsStandaloneFx": false
       },
       "IsEncoderInverted": false,
       "IsSteerInverted": true,
       "SelectedEncoderType": "CANcoder",
-      "EncoderOffset": -0.26953125,
+      "EncoderOffset": -0.27001953125,
       "DriveMotorSelectionState": 1,
       "SteerMotorSelectionState": 1,
       "SteerEncoderSelectionState": 1,
       "IsModuleValidationComplete": true,
       "ValidatedSteerId": 3,
       "ValidatedDriveId": 9,
-      "ValidatedEncoderId": 22,
-      "AvailEncoders": [
-        {
-          "Id": 21,
-          "Name": "BACK_RIGHT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        },
-        {
-          "Id": 22,
-          "Name": "FRONT_RIGHT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        },
-        {
-          "Id": 23,
-          "Name": "BACK_LEFT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        },
-        {
-          "Id": 24,
-          "Name": "FRONT_LEFT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        }
-      ],
-      "IsEncoderTypeCAN": true,
-      "IsDeviceSelectionCompleted": true,
-      "IsConfigurationCompleted": true,
-      "AvailEncoderTypes": [
-        "CANcoder"
-      ]
+      "ValidatedEncoderId": 22
     },
     {
       "ModuleName": "Back Left",
@@ -206,7 +126,9 @@
         "CANbusFriendly": "",
         "SelectedMotorType": {
           "Name": "WCP Kraken x60",
-          "FreeSpeedRps": 96.7
+          "FreeSpeedRps": 96.7,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
         },
         "IsStandaloneFx": false
       },
@@ -218,65 +140,23 @@
         "CANbusFriendly": "",
         "SelectedMotorType": {
           "Name": "WCP Kraken x60",
-          "FreeSpeedRps": 96.7
+          "FreeSpeedRps": 96.7,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
         },
         "IsStandaloneFx": false
       },
       "IsEncoderInverted": false,
       "IsSteerInverted": true,
       "SelectedEncoderType": "CANcoder",
-      "EncoderOffset": -0.386962890625,
+      "EncoderOffset": -0.379150390625,
       "DriveMotorSelectionState": 1,
       "SteerMotorSelectionState": 1,
       "SteerEncoderSelectionState": 1,
       "IsModuleValidationComplete": true,
       "ValidatedSteerId": 5,
       "ValidatedDriveId": 2,
-      "ValidatedEncoderId": 23,
-      "AvailEncoders": [
-        {
-          "Id": 21,
-          "Name": "BACK_RIGHT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        },
-        {
-          "Id": 22,
-          "Name": "FRONT_RIGHT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        },
-        {
-          "Id": 23,
-          "Name": "BACK_LEFT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        },
-        {
-          "Id": 24,
-          "Name": "FRONT_LEFT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        }
-      ],
-      "IsEncoderTypeCAN": true,
-      "IsDeviceSelectionCompleted": true,
-      "IsConfigurationCompleted": true,
-      "AvailEncoderTypes": [
-        "CANcoder"
-      ]
+      "ValidatedEncoderId": 23
     },
     {
       "ModuleName": "Back Right",
@@ -298,7 +178,9 @@
         "CANbusFriendly": "",
         "SelectedMotorType": {
           "Name": "WCP Kraken x60",
-          "FreeSpeedRps": 96.7
+          "FreeSpeedRps": 96.7,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
         },
         "IsStandaloneFx": false
       },
@@ -310,69 +192,27 @@
         "CANbusFriendly": "",
         "SelectedMotorType": {
           "Name": "WCP Kraken x60",
-          "FreeSpeedRps": 96.7
+          "FreeSpeedRps": 96.7,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
         },
         "IsStandaloneFx": false
       },
       "IsEncoderInverted": false,
       "IsSteerInverted": true,
       "SelectedEncoderType": "CANcoder",
-      "EncoderOffset": 0.33203125,
+      "EncoderOffset": 0.33154296875,
       "DriveMotorSelectionState": 1,
       "SteerMotorSelectionState": 1,
       "SteerEncoderSelectionState": 1,
       "IsModuleValidationComplete": true,
       "ValidatedSteerId": 1,
       "ValidatedDriveId": 4,
-      "ValidatedEncoderId": 21,
-      "AvailEncoders": [
-        {
-          "Id": 21,
-          "Name": "BACK_RIGHT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        },
-        {
-          "Id": 22,
-          "Name": "FRONT_RIGHT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        },
-        {
-          "Id": 23,
-          "Name": "BACK_LEFT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        },
-        {
-          "Id": 24,
-          "Name": "FRONT_LEFT_CANCoder",
-          "Model": "CANCoder vers. H",
-          "CANbus": "rio",
-          "CANbusFriendly": "",
-          "SelectedMotorType": null,
-          "IsStandaloneFx": false
-        }
-      ],
-      "IsEncoderTypeCAN": true,
-      "IsDeviceSelectionCompleted": true,
-      "IsConfigurationCompleted": true,
-      "AvailEncoderTypes": [
-        "CANcoder"
-      ]
+      "ValidatedEncoderId": 21
     }
   ],
   "SwerveOptions": {
-    "kSpeedAt12Volts": "Infinity",
+    "kSpeedAt12Volts": 4.72867872006997,
     "Gyro": {
       "Id": 20,
       "Name": "Pigeon 2 (Device ID 20)",
@@ -397,7 +237,8 @@
       "CustomName": null
     },
     "HasVerifiedSteer": true,
+    "SelectedModuleManufacturer": "Swerve Drive Specialties (SDS)",
     "HasVerifiedDrive": true,
-    "IsValidConfiguration": false
+    "IsValidConfiguration": true
   }
 }

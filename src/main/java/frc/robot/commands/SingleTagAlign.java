@@ -4,13 +4,11 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.Vision;
@@ -22,32 +20,11 @@ public class SingleTagAlign extends Command {
   private Drive drive;
   private Vision vision;
 
+  private Command pathCommand;
+
   private Pose2d targetPose;
-  private double DRIVE_KP = 1;
-  private double DRIVE_KD = 0;
-  private double DRIVE_MAX_VELOCITY = 1;
-  private double DRIVE_MAX_ACCELERATION = 1;
-
-  private double ROTATION_KP = 1;
-  private double ROTATION_KD = 2;
-  private double ROTATION_MAX_VELOCITY = 10;
-  private double ROTATION_MAX_ACCELERATION = 5;
-
   private Pose2d robotPose;
 
-  private ProfiledPIDController drivePIDController =
-      new ProfiledPIDController(
-          DRIVE_KP,
-          0.0,
-          DRIVE_KD,
-          new TrapezoidProfile.Constraints(DRIVE_MAX_VELOCITY, DRIVE_MAX_ACCELERATION));
-
-  private ProfiledPIDController rotationPIDController =
-      new ProfiledPIDController(
-          ROTATION_KP,
-          0.0,
-          ROTATION_KD,
-          new TrapezoidProfile.Constraints(ROTATION_MAX_VELOCITY, ROTATION_MAX_ACCELERATION));
   /** Creates a new goToPose. */
   public SingleTagAlign(Drive drive, Vision vision) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -61,43 +38,52 @@ public class SingleTagAlign extends Command {
   @Override
   public void initialize() {
     targetPose =
-        Vision.tagPoses2d.get(18).transformBy(new Transform2d(1, 0, Rotation2d.fromDegrees(180)));
+        Vision.tagPoses2d.get(18).transformBy(new Transform2d(0.49, 0, Rotation2d.fromDegrees(0)));
 
     Logger.recordOutput("AutoLineup/Target Pose", targetPose);
+
+    robotPose = vision.getFieldPoseUsingTag(0, drive.getPose().getRotation());
+    Logger.recordOutput("AutoLineup/robotPose", robotPose);
+
+    drive.setPose(robotPose);
+    pathCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(1, 1, 360, 360));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    robotPose = vision.getFieldPoseUsingTag(0);
-    Logger.recordOutput("AutoLineup/robotPose", robotPose);
-
     // drive.runVelocity(
     //     new ChassisSpeeds(
     //         drivePIDController.calculate(robotPose.getX(), targetPose.getX()),
     //         drivePIDController.calculate(robotPose.getY(), targetPose.getY()),
     //         rotationPIDController.calculate(
     //             robotPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())));
-    drive.runVelocity(
-        ChassisSpeeds.fromFieldRelativeSpeeds(
-            drivePIDController.calculate(robotPose.getX(), targetPose.getX()),
-            drivePIDController.calculate(robotPose.getY(), targetPose.getY()),
-            Units.degreesToRadians(
-                rotationPIDController.calculate(
-                    robotPose.getRotation().getDegrees(), targetPose.getRotation().getDegrees())),
-            robotPose.getRotation()));
+    // drive.runVelocity(
+    //     ChassisSpeeds.fromFieldRelativeSpeeds(
+    //         drivePIDController.calculate(robotPose.getX(), targetPose.getX()),
+    //         drivePIDController.calculate(robotPose.getY(), targetPose.getY()),
+    //         Units.degreesToRadians(
+    //             rotationPIDController.calculate(
+    //                 robotPose.getRotation().getDegrees(),
+    // targetPose.getRotation().getDegrees())),
+    //         robotPose.getRotation()));
+    pathCommand.schedule();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     drive.stop();
+    pathCommand.end(interrupted);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return drive.getPose().getTranslation().getDistance(targetPose.getTranslation()) < 0.1
-        && Math.abs(drive.getRotation().getDegrees() - targetPose.getRotation().getDegrees()) < 0.5;
+    return pathCommand
+        .isFinished(); // drive.getPose().getTranslation().getDistance(targetPose.getTranslation())
+    // < 0.1
+    //     && Math.abs(drive.getRotation().getDegrees() - targetPose.getRotation().getDegrees()) <
+    // 0.5;
   }
 }
