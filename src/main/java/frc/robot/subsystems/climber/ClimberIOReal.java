@@ -5,8 +5,12 @@
 package frc.robot.subsystems.climber;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import frc.robot.Constants;
 
 public class ClimberIOReal implements ClimberIO {
@@ -17,6 +21,11 @@ public class ClimberIOReal implements ClimberIO {
   /** Creates a new CimberIOReal. */
   public ClimberIOReal() {
     var climberConfig = new SparkMaxConfig();
+    climberConfig.idleMode(IdleMode.kBrake);
+    climberConfig.smartCurrentLimit(2345678);
+    climberConfig.inverted(false);
+
+    climberMotor.configure(climberConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
