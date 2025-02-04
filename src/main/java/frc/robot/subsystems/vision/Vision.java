@@ -20,7 +20,11 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -29,6 +33,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.FieldConstants;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
+import frc.robot.util.GeomUtil;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -215,7 +220,7 @@ public class Vision extends SubsystemBase {
 
   @AutoLogOutput(key = "Vision/Distance To Tag")
   public double getDistanceToTag(int camera) {
-    return inputs[camera].latestFiducialsObservations.distToRobot();
+    return inputs[camera].latestFiducialsObservations.distToCamera();
   }
 
   @AutoLogOutput(key = "Vision/Score Ready")
@@ -251,32 +256,48 @@ public class Vision extends SubsystemBase {
             robotLocalPose.getRotation().rotateBy(Rotation2d.fromDegrees(180))));
   }
 
-  // public Pose2d getFieldPoseUsingTag2(int camera, Rotation2d rot) {
-  //   double tx = inputs[camera].latestTargetObservation.tx().getDegrees();
-  //   double ty = inputs[camera].latestTargetObservation.ty().getDegrees();
-  //   Pose2d tagPose2d = tagPoses2d.get(inputs[camera].latestFiducialsObservations.id());
+  public Pose2d getFieldPoseUsingTag2(int camera, Rotation2d rot) {
+    double tx = inputs[camera].latestTargetObservation.tx().getRadians();
+    double ty = inputs[camera].latestTargetObservation.ty().getRadians();
+    Pose2d tagPose2d = tagPoses2d.get(inputs[camera].latestFiducialsObservations.id());
+    if (tagPose2d == null) return new Pose2d();
+    Pose3d cameraPose =
+        new Pose3d(
+            -Units.inchesToMeters(12),
+            -Units.inchesToMeters(13),
+            0.0,
+            new Rotation3d(0, Units.degreesToRadians(15), Units.degreesToRadians(165)));
 
-  //   double distance2d =
-  //       getDistanceToTag(camera) * Math.cos(-VisionConstants.cameraAngleOffsetsPitch[camera] -
-  // ty);
-  //   Rotation2d camToTagRotation =
-  //       rot.plus(
-  //           Rotation2d.fromDegrees(VisionConstants.cameraAngleOffsetsYaw[camera])
-  //               .plus(Rotation2d.fromDegrees(-tx)));
-  //   Translation2d fieldToCameraTranslation =
-  //       new Pose2d(tagPose2d.getTranslation(), camToTagRotation.plus(Rotation2d.kPi))
-  //           .transformBy(GeomUtil.toTransform2d(distance2d, 0.0))
-  //           .getTranslation();
-  //   Pose2d robotPose =
-  //       new Pose2d(
-  //               fieldToCameraTranslation,
-  //               rot.plus(Rotation2d.fromDegrees(VisionConstants.cameraAngleOffsetsYaw[camera])))
-  //           .transformBy(
-  //               new Transform2d(new Pose2d(-0.280509, 0.257131, new Rotation2d()),
-  // Pose2d.kZero));
-  //   // Use gyro angle at time for robot rotation
-  //   robotPose = new Pose2d(robotPose.getTranslation(), rot);
+    Translation2d camToTagTranslation =
+        new Pose3d(Translation3d.kZero, new Rotation3d(0, ty, tx))
+            .transformBy(
+                new Transform3d(
+                    new Translation3d(getDistanceToTag(camera), 0, 0), Rotation3d.kZero))
+            .getTranslation()
+            .rotateBy(new Rotation3d(0, cameraPose.getRotation().getY(), 0))
+            .toTranslation2d();
 
-  //   return robotPose;
-  // }
+    Rotation2d camToTagRotation =
+        rot.plus(cameraPose.toPose2d().getRotation().plus(camToTagTranslation.getAngle()));
+
+    Translation2d fieldToCameraTranslation =
+        new Pose2d(tagPose2d.getTranslation(), camToTagRotation.plus(Rotation2d.kPi))
+            .transformBy(GeomUtil.toTransform2d(camToTagTranslation.getNorm(), 0.0))
+            .getTranslation();
+
+    Logger.recordOutput(
+        "AutoLineup/camToTagTranslation",
+        new Pose2d(camToTagTranslation.getX(), camToTagTranslation.getY(), rot));
+    Logger.recordOutput(
+        "AutoLineup/fieldToCameraTranslation",
+        new Pose2d(fieldToCameraTranslation.getX(), fieldToCameraTranslation.getY(), rot));
+
+    Pose2d robotPose =
+        new Pose2d(fieldToCameraTranslation, rot.plus(cameraPose.toPose2d().getRotation()))
+            .transformBy(new Transform2d(cameraPose.toPose2d(), Pose2d.kZero));
+
+    robotPose = new Pose2d(robotPose.getTranslation(), rot);
+
+    return robotPose;
+  }
 }

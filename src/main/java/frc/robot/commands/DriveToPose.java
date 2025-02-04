@@ -79,7 +79,7 @@ public class DriveToPose extends Command {
   public boolean isFinished() {
     switch (Constants.currentMode) {
       case REAL:
-        return pathCommand.isFinished() || (seenEndTag && vision.getDistanceToTag(0) < 1.25);
+        return pathCommand.isFinished() || (seenEndTag && vision.getDistanceToTag(0) < 1);
       case SIM:
         return pathCommand.isFinished() || seenEndTag;
       case REPLAY:

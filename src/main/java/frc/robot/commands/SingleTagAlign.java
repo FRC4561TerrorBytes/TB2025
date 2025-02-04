@@ -54,10 +54,10 @@ public class SingleTagAlign extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    robotPose = vision.getFieldPoseUsingTag(0, drive.getPose().getRotation());
+    robotPose = vision.getFieldPoseUsingTag2(0, drive.getPose().getRotation());
     Logger.recordOutput("AutoLineup/robotPose", robotPose);
 
-    drive.setPose(robotPose);
+    if (robotPose != new Pose2d()) drive.setPose(robotPose);
 
     pathCommand.schedule();
   }
@@ -71,6 +71,7 @@ public class SingleTagAlign extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return pathCommand.isFinished();
+    return pathCommand.isFinished()
+        || !vision.seenTagId(drive.getSelectedScorePosition().aprilTagID, 0);
   }
 }
