@@ -48,16 +48,17 @@ public class SingleTagAlign extends Command {
 
     Logger.recordOutput("AutoLineup/Target Pose", targetPose);
 
-    robotPose = vision.getFieldPoseUsingTag(0, drive.getPose().getRotation());
-    Logger.recordOutput("AutoLineup/robotPose", robotPose);
-
-    drive.setPose(robotPose);
     pathCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(1, 1, 180, 180));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    robotPose = vision.getFieldPoseUsingTag(0, drive.getPose().getRotation());
+    Logger.recordOutput("AutoLineup/robotPose", robotPose);
+
+    drive.setPose(robotPose);
+
     pathCommand.schedule();
   }
 
