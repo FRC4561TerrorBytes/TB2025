@@ -23,7 +23,7 @@ public class AlgaeManipulator extends SubsystemBase {
     io.setOutput(speed);
   }
 
-  public Command stopAlgaeManipulator(){
-     return new RunCommand(() -> this.setOutput(0), this);
+  public Command stopAlgaeManipulator() {
+    return new RunCommand(() -> this.setOutput(0), this);
   }
 }
