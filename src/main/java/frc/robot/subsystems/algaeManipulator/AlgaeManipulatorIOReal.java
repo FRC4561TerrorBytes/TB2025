@@ -20,7 +20,7 @@ public class AlgaeManipulatorIOReal implements AlgaeManipulatorIO {
     var algaeManipulatorConfig = new SparkMaxConfig();
 
     algaeManipulatorConfig.idleMode(IdleMode.kBrake);
-    // algaemanipulatorConfig.smartCurrentLimit(20);
+    algaeManipulatorConfig.smartCurrentLimit(20);
     algaeManipulatorConfig.voltageCompensation(12.0);
     algaeManipulatorConfig.inverted(false);
 
