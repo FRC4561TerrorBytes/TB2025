@@ -40,4 +40,5 @@ public final class Constants {
   public static final double PIVOT_GEAR_RATIO = 256;
 
   public static final int intakeMotorID = 33;
+  public static final int algaeManipulatorMotorID = 61;
 }
