@@ -1,6 +1,6 @@
 package frc.robot.subsystems.intake;
 
-import static frc.robot.util.SparkUtil.*;
+import static frc.robot.util.SparkUtil.tryUntilOk;
 
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -31,9 +31,11 @@ public class IntakeIOReal implements IntakeIO {
   }
 
   public void updateInputs(IntakeIOInputs inputs) {
+
     inputs.intakeVelocity = intakeMotor.getEncoder().getVelocity();
     inputs.intakeCurrentAmps = intakeMotor.getOutputCurrent();
     inputs.intakeVoltage = intakeMotor.getBusVoltage();
+    inputs.intakeConnected = !intakeMotor.hasActiveFault();
   }
 
   public void setOutput(double speed) {

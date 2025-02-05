@@ -9,6 +9,7 @@ public interface AlgaeManipulatorIO {
     public double algaeManipulatorVelocity = 0.0;
     public double algaeManipulatorCurrentAmps = 0.0;
     public double algaeManipulatorVoltage = 0.0;
+    public boolean algaeManipulatorConnected = true;
   }
 
   public default void updateInputs(AlgaeManipulatorIOInputs inputs) {}

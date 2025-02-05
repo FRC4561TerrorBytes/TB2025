@@ -13,7 +13,8 @@ public class AlgaeManipulatorIOSim implements AlgaeManipulatorIO {
 
   private DCMotorSim algaeManipulatorMotorSim =
       new DCMotorSim(
-          LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.01, 1.0), DCMotor.getNEO(1));
+          LinearSystemId.createDCMotorSystem(DCMotor.getNeo550(1), 0.01, 1.0),
+          DCMotor.getNeo550(1));
 
   @Override
   public void updateInputs(AlgaeManipulatorIOInputs Inputs) {

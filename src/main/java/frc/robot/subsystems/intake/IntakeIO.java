@@ -9,6 +9,7 @@ public interface IntakeIO {
     public double intakeVelocity = 0.0;
     public double intakeCurrentAmps = 0.0;
     public double intakeVoltage = 0.0;
+    public boolean intakeConnected = true;
   }
 
   public default void updateInputs(IntakeIOInputs inputs) {}

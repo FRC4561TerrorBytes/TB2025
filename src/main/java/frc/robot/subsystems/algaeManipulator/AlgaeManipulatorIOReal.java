@@ -38,6 +38,7 @@ public class AlgaeManipulatorIOReal implements AlgaeManipulatorIO {
     inputs.algaeManipulatorVelocity = algaeManipulatorMotor.getEncoder().getVelocity();
     inputs.algaeManipulatorCurrentAmps = algaeManipulatorMotor.getOutputCurrent();
     inputs.algaeManipulatorVoltage = algaeManipulatorMotor.getBusVoltage();
+    inputs.algaeManipulatorConnected = !algaeManipulatorMotor.hasActiveFault();
   }
 
   public void setOutput(double speed) {
