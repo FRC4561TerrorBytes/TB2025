@@ -261,12 +261,7 @@ public class Vision extends SubsystemBase {
     double ty = inputs[camera].latestTargetObservation.ty().getRadians();
     Pose2d tagPose2d = tagPoses2d.get(inputs[camera].latestFiducialsObservations.id());
     if (tagPose2d == null) return new Pose2d();
-    Pose3d cameraPose =
-        new Pose3d(
-            -Units.inchesToMeters(12),
-            -Units.inchesToMeters(13),
-            0.0,
-            new Rotation3d(0, Units.degreesToRadians(15), Units.degreesToRadians(165)));
+    Pose3d cameraPose = VisionConstants.cameraOffsets[camera];
 
     Translation2d camToTagTranslation =
         new Pose3d(Translation3d.kZero, new Rotation3d(0, ty, tx))

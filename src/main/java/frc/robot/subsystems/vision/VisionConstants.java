@@ -15,8 +15,9 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
 
 public class VisionConstants {
   // AprilTag layout
@@ -27,12 +28,13 @@ public class VisionConstants {
   public static String camera0Name = "limelight-vanap";
   public static String camera1Name = "limelight-2";
 
-  // Robot to camera transforms
-  // (Not used by Limelight, configure in web UI instead)
-  public static Transform3d robotToCamera0 =
-      new Transform3d(0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, 0.0));
-  public static Transform3d robotToCamera1 =
-      new Transform3d(-0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, Math.PI));
+  public static Pose3d[] cameraOffsets = {
+    new Pose3d(
+        -Units.inchesToMeters(12),
+        -Units.inchesToMeters(13),
+        0.0,
+        new Rotation3d(0.0, Units.degreesToRadians(15), Units.degreesToRadians(165)))
+  };
 
   public static double[] cameraAngleOffsetsYaw = {15, 0};
   public static double[] cameraAngleOffsetsPitch = {15, 0};
