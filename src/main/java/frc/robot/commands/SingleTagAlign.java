@@ -36,7 +36,7 @@ public class SingleTagAlign extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Pose2d selectedPosition = drive.getSelectedScorePosition().scorePosition;
+    Pose2d selectedPosition = drive.getSelectedPose();
 
     targetPose =
         new Pose2d(
