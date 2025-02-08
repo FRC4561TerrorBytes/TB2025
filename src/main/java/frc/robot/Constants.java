@@ -41,4 +41,5 @@ public final class Constants {
 
   public static final int intakeMotorID = 33;
   public static final int algaeManipulatorMotorID = 61;
+  public static final int INTAKE_CURRENT_LIMIT = 20;
 }

@@ -2,7 +2,11 @@ package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.Mode;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -24,5 +28,25 @@ public class Intake extends SubsystemBase {
 
   public void setOutput(double speed) {
     io.setOutput(speed);
+  }
+
+  public Command intakeCoral() {
+    return new RunCommand(() -> this.setOutput(0.75), this)
+        .until(() -> inputs.intakeLimitSwitch)
+        .withTimeout(2.0);
+  }
+
+  public Command outtakeCoral() {
+    if (Constants.currentMode == Mode.REAL) {
+      io.disableLimitSwitch();
+    }
+    return new RunCommand(() -> this.setOutput(0.75), this)
+        .withTimeout(2.0)
+        .andThen(
+            () -> {
+              if (Constants.currentMode == Mode.REAL) {
+                io.enableLimitSwitch();
+              }
+            });
   }
 }
