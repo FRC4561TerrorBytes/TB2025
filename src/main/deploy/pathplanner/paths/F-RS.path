@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.258989726027397,
-        "y": 2.905586472602739
+        "x": 5.274590163934427,
+        "y": 2.99405737704918
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.582833904109589,
-        "y": 1.8537885273972596
+        "x": 4.108784032038712,
+        "y": 1.8365015126807913
       },
       "isLocked": false,
       "linkedName": "F"
     },
     {
       "anchor": {
-        "x": 1.552,
-        "y": 0.76
+        "x": 1.4984631147540983,
+        "y": 0.7523565573770474
       },
       "prevControl": {
-        "x": 2.4791971973720996,
-        "y": 0.906679305283758
+        "x": 1.6403067427580518,
+        "y": 1.062616472049768
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,7 +38,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -47,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -125.33133133891633
+    "rotation": -126.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Right Source Pickup",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -57.26477372789231
+    "rotation": -59.99999999999999
   },
   "useDefaultConstraints": true
 }

@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.842538265306123,
-        "y": 4.140656887755101
+        "x": 5.779999999999999,
+        "y": 4.19
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.790178571428572,
-        "y": 4.021269132653061
+        "x": 6.49733606557377,
+        "y": 3.137909836065574
       },
       "isLocked": false,
       "linkedName": "H"
     },
     {
       "anchor": {
-        "x": 4.857589285714286,
-        "y": 1.8797512755102037
+        "x": 4.08780737704918,
+        "y": 2.071004098360655
       },
       "prevControl": {
-        "x": 6.678252551020409,
-        "y": 2.513998724489793
+        "x": 5.176481403752514,
+        "y": 2.590718906129326
       },
       "nextControl": {
-        "x": 3.249137996217436,
-        "y": 1.3194301295789246
+        "x": 1.3303772327885222,
+        "y": 0.7546529756104077
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.5520408163265307,
-        "y": 0.7604910714285711
+        "x": 1.4984631147540983,
+        "y": 0.7523565573770474
       },
       "prevControl": {
-        "x": 2.962308673469388,
-        "y": 1.4693558673469371
+        "x": 1.6793823711609124,
+        "y": 0.9248912572527694
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,14 +47,14 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1.2360742705570285,
-      "rotationDegrees": -134.03732054823718
+      "rotationDegrees": -125.00000000000001
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -63,10 +63,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -125.33133133891633
+    "rotation": -126.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Right Source Pickup",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

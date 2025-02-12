@@ -235,9 +235,9 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
 
-        pivot = new Pivot(null);
-        intake = new Intake(null);
-        vision = null;
+        pivot = new Pivot(new PivotIO() {});
+        intake = new Intake(new IntakeIO() {});
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {});
         // algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOSim());
         break;
 
