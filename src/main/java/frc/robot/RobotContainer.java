@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -90,9 +91,18 @@ public class RobotContainer {
         Units.inchesToMeters(193.118), Units.inchesToMeters(130.145), Rotation2d.fromDegrees(-60)),
     new Pose2d(
         Units.inchesToMeters(160.375), Units.inchesToMeters(130.144), Rotation2d.fromDegrees(-120)),
-    new Pose2d(1.552, 0.760, Rotation2d.fromDegrees(120)), // this is Right source, angle could be inaccurate
-    new Pose2d(1.657, 7.312, Rotation2d.fromDegrees(-120)), // this is left source, angle could be inaccurate
-    new Pose2d(5.980, 0.622, Rotation2d.fromDegrees(90)) // this is processer, angle could be inaccurate
+    new Pose2d(
+        1.552,
+        0.760,
+        Rotation2d.fromDegrees(120)), // this is Right source, angle could be inaccurate
+    new Pose2d(
+        1.657,
+        7.312,
+        Rotation2d.fromDegrees(-120)), // this is left source, angle could be inaccurate
+    new Pose2d(
+        5.980,
+        Units.inchesToMeters(5),
+        Rotation2d.fromDegrees(-90)) // this is processer, angle could be inaccurate
   };
 
   public enum ReefScorePositions {
@@ -351,13 +361,16 @@ public class RobotContainer {
         .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT)));
     operatorController
         .a()
-        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.PROCESSER)));
-    operatorController
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.PROCESSER)));
+    /* operatorController
         .x()
-        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.LEFTSOURCE)));
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.LEFTSOURCE)));
     operatorController
         .y()
-        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.RIGHTSOURCE)));
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.RIGHTSOURCE))); */
 
     operatorController
         .b()
@@ -368,6 +381,28 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    operatorController
+        .leftBumper()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  drive.setAutoAlignOffsetX(Units.inchesToMeters(-7.5));
+                }));
+    operatorController
+        .rightBumper()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  drive.setAutoAlignOffsetX(Units.inchesToMeters(7.5));
+                }));
+    operatorController
+        .y()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  drive.setAutoAlignOffsetX(0);
+                }));
   }
 
   /**

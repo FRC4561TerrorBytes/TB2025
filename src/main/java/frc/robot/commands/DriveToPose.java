@@ -40,7 +40,7 @@ public class DriveToPose extends Command {
 
     if (AllianceFlipUtil.shouldFlip()) {
       if (drive.getSelectedScorePosition().equals(ReefScorePositions.FRONT)
-          || drive.getSelectedScorePosition().equals(ReefScorePositions.BACK) 
+          || drive.getSelectedScorePosition().equals(ReefScorePositions.BACK)
           || drive.getSelectedScorePosition().equals(ReefScorePositions.LEFTSOURCE)
           || drive.getSelectedScorePosition().equals(ReefScorePositions.RIGHTSOURCE)) {
         endTagId -= 11;
@@ -48,7 +48,7 @@ public class DriveToPose extends Command {
           || drive.getSelectedScorePosition().equals(ReefScorePositions.FRONTRIGHT)) {
         endTagId -= 9;
       } else if (drive.getSelectedScorePosition().equals(ReefScorePositions.BACKRIGHT)
-          || drive.getSelectedScorePosition().equals(ReefScorePositions.FRONTLEFT) 
+          || drive.getSelectedScorePosition().equals(ReefScorePositions.FRONTLEFT)
           || drive.getSelectedScorePosition().equals(ReefScorePositions.PROCESSER)) {
         endTagId -= 13;
       }
@@ -57,7 +57,7 @@ public class DriveToPose extends Command {
     pathCommand =
         AutoBuilder.pathfindToPose(
             AllianceFlipUtil.apply(drive.getSelectedScorePosition().scorePosition),
-            new PathConstraints(1, 1, 360, 360));
+            new PathConstraints(2, 2, 360, 360));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
