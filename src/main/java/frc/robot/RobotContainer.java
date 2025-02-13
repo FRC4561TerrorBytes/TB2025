@@ -34,6 +34,9 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPose;
 import frc.robot.commands.SingleTagAlign;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.algaeManipulator.AlgaeManipulator;
+import frc.robot.subsystems.algaeManipulator.AlgaeManipulatorIOReal;
+import frc.robot.subsystems.algaeManipulator.AlgaeManipulatorIOSim;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -194,7 +197,7 @@ public class RobotContainer {
   private final Pivot pivot;
   private final Intake intake;
   private final Vision vision;
-  //   private final AlgaeManipulator algaeManipulator;
+  private final AlgaeManipulator algaeManipulator;
 
   // Controller
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -222,7 +225,7 @@ public class RobotContainer {
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(camera0Name, drive::getRotation));
-        // algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOReal());
+        algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOReal());
         break;
 
       case SIM:
@@ -238,7 +241,7 @@ public class RobotContainer {
         pivot = new Pivot(new PivotIO() {});
         intake = new Intake(new IntakeIO() {});
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {});
-        // algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOSim());
+        algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOSim());
         break;
 
       default:
@@ -255,7 +258,7 @@ public class RobotContainer {
         intake = new Intake(new IntakeIO() {});
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
-        // algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIO() {});
+        algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIO() {});
         break;
     }
 
@@ -331,6 +334,9 @@ public class RobotContainer {
         .b()
         .whileTrue(new SingleTagAlign(drive, vision))
         .onFalse(Commands.runOnce(() -> drive.stop(), drive));
+
+    driverController
+        .x().whileTrue(new RunCommand(() -> algaeManipulator.setOutput(767), algaeManipulator));
 
     // driverController.y().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(57), pivot));
     // driverController.b().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(25), pivot));
