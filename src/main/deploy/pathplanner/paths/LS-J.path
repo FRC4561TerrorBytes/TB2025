@@ -3,37 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.998872950819672,
-        "y": 5.223770491803278
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 4.051844262295081,
-        "y": 6.242725409836066
-      },
-      "isLocked": false,
-      "linkedName": "J"
-    },
-    {
-      "anchor": {
         "x": 1.5584016393442621,
         "y": 7.321618852459016
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.706614441519571,
+        "y": 6.6065499361489275
+      },
+      "isLocked": false,
+      "linkedName": "LS"
+    },
+    {
+      "anchor": {
+        "x": 4.998872950819672,
+        "y": 5.223770491803278
+      },
       "prevControl": {
-        "x": 1.707148848086115,
-        "y": 7.120685361244864
+        "x": 4.68719262295082,
+        "y": 5.907069672131148
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LS"
+      "linkedName": "J"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.4498933901919,
-      "rotationDegrees": 126.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -47,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 126.0
+    "rotation": 59.99999999999999
   },
   "reversed": false,
-  "folder": "Left Source Pickup",
+  "folder": "Left Source Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": 126.0
   },
   "useDefaultConstraints": true
 }
