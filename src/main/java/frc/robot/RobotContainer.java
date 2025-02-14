@@ -35,6 +35,7 @@ import frc.robot.commands.DriveToPose;
 import frc.robot.commands.SingleTagAlign;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.algaeManipulator.AlgaeManipulator;
+import frc.robot.subsystems.algaeManipulator.AlgaeManipulatorIO;
 import frc.robot.subsystems.algaeManipulator.AlgaeManipulatorIOReal;
 import frc.robot.subsystems.algaeManipulator.AlgaeManipulatorIOSim;
 import frc.robot.subsystems.drive.Drive;
@@ -95,16 +96,16 @@ public class RobotContainer {
     new Pose2d(
         Units.inchesToMeters(160.375), Units.inchesToMeters(130.144), Rotation2d.fromDegrees(-120)),
     new Pose2d(
-        1.552,
-        0.760,
-        Rotation2d.fromDegrees(120)), // this is Right source, angle could be inaccurate
+        Units.inchesToMeters(68) + 0.5,
+        Units.inchesToMeters(71) + 0.5,
+        Rotation2d.fromDegrees(-126)), // this is Right source, angle could be inaccurate
     new Pose2d(
-        1.657,
-        7.312,
-        Rotation2d.fromDegrees(-120)), // this is left source, angle could be inaccurate
+        Units.inchesToMeters(67.5) + 0.5,
+        Units.inchesToMeters(244.5) - 0.5,
+        Rotation2d.fromDegrees(126)), // this is left source, angle could be inaccurate
     new Pose2d(
         5.980,
-        Units.inchesToMeters(5),
+        Units.inchesToMeters(55) + 0.75,
         Rotation2d.fromDegrees(-90)) // this is processer, angle could be inaccurate
   };
 
@@ -336,7 +337,8 @@ public class RobotContainer {
         .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
     driverController
-        .x().whileTrue(new RunCommand(() -> algaeManipulator.setOutput(767), algaeManipulator));
+        .x()
+        .whileTrue(new RunCommand(() -> algaeManipulator.setOutput(767), algaeManipulator));
 
     // driverController.y().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(57), pivot));
     // driverController.b().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(25), pivot));
@@ -369,14 +371,14 @@ public class RobotContainer {
         .a()
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.PROCESSER)));
-    /* operatorController
+    operatorController
         .x()
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.LEFTSOURCE)));
     operatorController
         .y()
         .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.RIGHTSOURCE))); */
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.RIGHTSOURCE)));
 
     operatorController
         .b()
@@ -402,13 +404,13 @@ public class RobotContainer {
                 () -> {
                   drive.setAutoAlignOffsetX(Units.inchesToMeters(7.5));
                 }));
-    operatorController
-        .y()
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  drive.setAutoAlignOffsetX(0);
-                }));
+    /*operatorController
+    .y()
+    .onTrue(
+        new InstantCommand(
+            () -> {
+              drive.setAutoAlignOffsetX(0);
+            })); */
   }
 
   /**
