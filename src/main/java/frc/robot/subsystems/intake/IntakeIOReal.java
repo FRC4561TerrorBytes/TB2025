@@ -20,7 +20,7 @@ public class IntakeIOReal implements IntakeIO {
   public IntakeIOReal() {
     var intakeConfig = new SparkMaxConfig();
     var limitSwitchConfig = new LimitSwitchConfig();
-    limitSwitchConfig.forwardLimitSwitchEnabled(false);
+    limitSwitchConfig.forwardLimitSwitchEnabled(true);
     limitSwitchConfig.forwardLimitSwitchType(Type.kNormallyOpen);
 
     intakeConfig.idleMode(IdleMode.kBrake);

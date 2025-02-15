@@ -31,8 +31,7 @@ public class Intake extends SubsystemBase {
   }
 
   public Command intakeCoral() {
-    return new RunCommand(
-        () -> this.setOutput(0.75), this).until(() -> inputs.intakeLimitSwitch);
+    return new RunCommand(() -> this.setOutput(0.75), this).until(() -> inputs.intakeLimitSwitch);
   }
 
   public Command outtakeCoral() {
