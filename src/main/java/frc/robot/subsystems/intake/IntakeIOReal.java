@@ -14,12 +14,13 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.Constants;
 
 public class IntakeIOReal implements IntakeIO {
-  private final SparkBase intakeMotor = new SparkMax(Constants.intakeMotorID, MotorType.kBrushless);
+  private final SparkBase intakeMotor =
+      new SparkMax(Constants.INTAKE_MOTOR_ID, MotorType.kBrushless);
 
   public IntakeIOReal() {
     var intakeConfig = new SparkMaxConfig();
     var limitSwitchConfig = new LimitSwitchConfig();
-    limitSwitchConfig.forwardLimitSwitchEnabled(true);
+    limitSwitchConfig.forwardLimitSwitchEnabled(false);
     limitSwitchConfig.forwardLimitSwitchType(Type.kNormallyOpen);
 
     intakeConfig.idleMode(IdleMode.kBrake);

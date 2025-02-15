@@ -36,10 +36,10 @@ public final class Constants {
     REPLAY
   }
 
-  public static final int pivotMotorID = 13;
+  public static final int PIVOT_MOTOR_ID = 13;
   public static final double PIVOT_GEAR_RATIO = 256;
 
-  public static final int intakeMotorID = 33;
-  public static final int algaeManipulatorMotorID = 61;
+  public static final int INTAKE_MOTOR_ID = 41;
+  public static final int ALGAE_MANIPULATOR_ID = 42;
   public static final int INTAKE_CURRENT_LIMIT = 20;
 }
