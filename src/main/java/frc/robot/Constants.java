@@ -36,6 +36,12 @@ public final class Constants {
     REPLAY
   }
 
-  public static final int pivotMotorID = 13;
+  public static final int LEFT_PIVOT_ID_1 = 31;
+  public static final int LEFT_PIVOT_ID_2 = 32;
+  public static final int RIGHT_PIVOT_ID_1 = 33;
+  public static final int RIGHT_PIVOT_ID_2 = 34;
   public static final double PIVOT_GEAR_RATIO = 256;
+
+  public static final int EXTENSION_ID = 40;
+  public static final double EXTENSION_GEAR_RATIO = 256;
 }
