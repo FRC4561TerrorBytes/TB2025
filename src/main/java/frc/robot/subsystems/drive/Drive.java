@@ -98,6 +98,7 @@ public class Drive extends SubsystemBase {
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
 
   private ReefScorePositions selectedPosition = ReefScorePositions.FRONT;
+  private double autoAlignOffsetX = 0;
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private Rotation2d rawGyroRotation = new Rotation2d();
@@ -345,6 +346,14 @@ public class Drive extends SubsystemBase {
 
   public void setSelectedScorePosition(ReefScorePositions position) {
     selectedPosition = position;
+  }
+
+  public void setAutoAlignOffsetX(double offset) {
+    autoAlignOffsetX = offset;
+  }
+
+  public double getAutoAlignOffsetX() {
+    return autoAlignOffsetX;
   }
 
   /** Returns the current odometry rotation. */

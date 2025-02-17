@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -93,7 +94,19 @@ public class RobotContainer {
     new Pose2d(
         Units.inchesToMeters(193.118), Units.inchesToMeters(130.145), Rotation2d.fromDegrees(-60)),
     new Pose2d(
-        Units.inchesToMeters(160.375), Units.inchesToMeters(130.144), Rotation2d.fromDegrees(-120))
+        Units.inchesToMeters(160.375), Units.inchesToMeters(130.144), Rotation2d.fromDegrees(-120)),
+    new Pose2d(
+        Units.inchesToMeters(68) + 0.5,
+        Units.inchesToMeters(71) + 0.5,
+        Rotation2d.fromDegrees(-126)), // this is Right source, angle could be inaccurate
+    new Pose2d(
+        Units.inchesToMeters(67.5) + 0.5,
+        Units.inchesToMeters(244.5) - 0.5,
+        Rotation2d.fromDegrees(126)), // this is left source, angle could be inaccurate
+    new Pose2d(
+        5.980,
+        Units.inchesToMeters(55) + 0.75,
+        Rotation2d.fromDegrees(-90)) // this is processer, angle could be inaccurate
   };
 
   public enum ReefScorePositions {
@@ -145,7 +158,32 @@ public class RobotContainer {
             Math.sin(reefFaces[5].getRotation().getRadians()) * distanceAway
                 + reefFaces[5].getTranslation().getY(),
             reefFaces[5].getRotation()),
-        17);
+        17),
+    RIGHTSOURCE(
+        new Pose2d(
+            Math.cos(reefFaces[6].getRotation().getRadians()) * distanceAway
+                + reefFaces[6].getTranslation().getX(),
+            Math.sin(reefFaces[6].getRotation().getRadians()) * distanceAway
+                + reefFaces[6].getTranslation().getY(),
+            reefFaces[6].getRotation()),
+        12),
+    LEFTSOURCE(
+        new Pose2d(
+            Math.cos(reefFaces[7].getRotation().getRadians()) * distanceAway
+                + reefFaces[7].getTranslation().getX(),
+            Math.sin(reefFaces[7].getRotation().getRadians()) * distanceAway
+                + reefFaces[7].getTranslation().getY(),
+            reefFaces[7].getRotation()),
+        13),
+    PROCESSER(
+        new Pose2d(
+            Math.cos(reefFaces[8].getRotation().getRadians()) * distanceAway
+                + reefFaces[8].getTranslation().getX(),
+            Math.sin(reefFaces[8].getRotation().getRadians()) * distanceAway
+                + reefFaces[8].getTranslation().getY(),
+            reefFaces[8].getRotation()),
+        16);
+
     public Pose2d scorePosition;
     public int aprilTagID;
 
@@ -201,9 +239,9 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
 
-        pivot = new Pivot(null);
-        intake = new Intake(null);
-        vision = null;
+        pivot = new Pivot(new PivotIO() {});
+        intake = new Intake(new IntakeIO() {});
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {});
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOSim());
         break;
 
@@ -298,6 +336,10 @@ public class RobotContainer {
         .whileTrue(new SingleTagAlign(drive, vision))
         .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
+    driverController
+        .x()
+        .whileTrue(new RunCommand(() -> algaeManipulator.setOutput(767), algaeManipulator));
+
     // driverController.y().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(57), pivot));
     // driverController.b().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(25), pivot));
     driverController.x().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(5), pivot));
@@ -325,6 +367,18 @@ public class RobotContainer {
     operatorController
         .povDown()
         .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT)));
+    operatorController
+        .a()
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.PROCESSER)));
+    operatorController
+        .x()
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.LEFTSOURCE)));
+    operatorController
+        .y()
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.RIGHTSOURCE)));
 
     operatorController.leftTrigger().whileTrue(intake.intakeCoral());
     operatorController.rightTrigger().whileTrue(intake.outtakeCoral());
@@ -341,6 +395,28 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    operatorController
+        .leftBumper()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  drive.setAutoAlignOffsetX(Units.inchesToMeters(-7.5));
+                }));
+    operatorController
+        .rightBumper()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  drive.setAutoAlignOffsetX(Units.inchesToMeters(7.5));
+                }));
+    /*operatorController
+    .y()
+    .onTrue(
+        new InstantCommand(
+            () -> {
+              drive.setAutoAlignOffsetX(0);
+            })); */
   }
 
   /**

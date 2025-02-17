@@ -41,12 +41,17 @@ public class SingleTagAlign extends Command {
     targetPose =
         new Pose2d(
             Math.cos(selectedPosition.getRotation().getRadians()) * distanceAway
+                - Math.sin(selectedPosition.getRotation().getRadians())
+                    * drive.getAutoAlignOffsetX()
                 + selectedPosition.getTranslation().getX(),
             Math.sin(selectedPosition.getRotation().getRadians()) * distanceAway
+                + Math.cos(selectedPosition.getRotation().getRadians())
+                    * drive.getAutoAlignOffsetX()
                 + selectedPosition.getTranslation().getY(),
             selectedPosition.getRotation());
 
     Logger.recordOutput("AutoLineup/Target Pose", targetPose);
+    Logger.recordOutput("AutoLineup/ReefOffsetX", drive.getAutoAlignOffsetX());
 
     pathCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(1, 1, 180, 180));
   }

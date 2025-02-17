@@ -15,6 +15,13 @@
 | FRONT_RIGHT_CANCoder     | CANCoder vers. H   | 22  | TBD      |
 | BACK_LEFT_CANCoder       | CANCoder vers. H   | 23  | TBD      |
 | FRONT_LEFT_CANCoder      | CANCoder vers. H   | 24  | TBD      |
+| LEFT_PIVOT_1             | Falcon 500         | 31  | TBD      |
+| LEFT_PIVOT_2             | Falcon 500         | 32  | TBD      |
+| RIGHT_PIVOT_1            | Falcon 500         | 33  | TBD      |
+| RIGHT_PIVOT_2            | Falcon 500         | 34  | TBD      |
+| ELEVATOR                 | Kraken X60         | 40  | TBD      |
+| END_EFFECTOR             | NEO 550            | 41  | TBD      |
+| ALGAE_MANIPULATOR        | NEO 550            | 42  | TBD      |
 
 ## [Kraken Status Lights](https://docs.wcproducts.com/kraken-x60/kraken-x60-+-talonfx/status-lights)
 | LED State               | Description                                                                                     |
