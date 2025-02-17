@@ -328,6 +328,7 @@ public class RobotContainer {
 
     operatorController.leftTrigger().whileTrue(intake.intakeCoral());
     operatorController.rightTrigger().whileTrue(intake.outtakeCoral());
+    operatorController.leftStick().whileTrue(Commands.run(() -> intake.setOutput(-1), intake));
     operatorController
         .rightStick()
         .whileTrue(Commands.run(() -> algaeManipulator.setOutput(1), algaeManipulator));
