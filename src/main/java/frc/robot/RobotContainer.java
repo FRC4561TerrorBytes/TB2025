@@ -148,6 +148,7 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     controller.a().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(15), pivot));
+    controller.y().onTrue(Commands.runOnce(() -> pivot.setExtensionPosition(10), pivot));
   }
 
   /**

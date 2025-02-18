@@ -36,6 +36,14 @@ public class Pivot extends SubsystemBase {
     io.setPivotVoltage(voltage);
   }
 
+  public void setExtensionPosition(double angle) {
+    io.setExtensionPosition(angle);
+  }
+
+  public void setExtensionVoltage(double voltage) {
+    io.setExtensionVoltage(voltage);
+  }
+
   public double getCurrentSetpoint() {
     return inputs.pivotAngle;
   }
