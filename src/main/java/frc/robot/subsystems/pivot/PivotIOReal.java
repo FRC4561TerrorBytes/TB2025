@@ -74,8 +74,11 @@ public class PivotIOReal implements PivotIO {
     pivotConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * Constants.PIVOT_GEAR_RATIO;
     pivotConfig.MotionMagic.MotionMagicExpo_kA = 0.1;
     pivotConfig.ClosedLoopGeneral.ContinuousWrap = false;
-    pivotConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    pivotConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.4;
+    pivotConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    pivotConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.28;
+    pivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.4;
+    pivotConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    pivotConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     tryUntilOk(5, () -> pivotMotorL1.getConfigurator().apply(pivotConfig, 0.25));
 
     pivotMotorL1.setPosition(-0.01025390625 + 0.003173828125 + 0.000244140625);
@@ -107,11 +110,14 @@ public class PivotIOReal implements PivotIO {
     extensionConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * Constants.PIVOT_GEAR_RATIO;
     extensionConfig.MotionMagic.MotionMagicExpo_kA = 0.1;
     extensionConfig.ClosedLoopGeneral.ContinuousWrap = false;
-    extensionConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    extensionConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.4;
+    extensionConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    extensionConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.004;
+    extensionConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.08;
+    extensionConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    extensionConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     tryUntilOk(5, () -> extensionMotor.getConfigurator().apply(extensionConfig, 0.25));
 
-    extensionMotor.setPosition(-0.01025390625 + 0.003173828125 + 0.000244140625);
+    extensionMotor.setPosition(0);
 
     extensionHeight = extensionMotor.getPosition();
     extensionStatorCurrent = extensionMotor.getStatorCurrent();
