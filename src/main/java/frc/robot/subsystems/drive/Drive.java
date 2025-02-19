@@ -48,7 +48,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.RobotContainer.ElevatorPosition;
+import frc.robot.RobotContainer.ReefScorePositions;
 import frc.robot.generated.TunerConstants;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -93,6 +96,9 @@ public class Drive extends SubsystemBase {
   private final SysIdRoutine sysId;
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
+
+  private ReefScorePositions selectedPosition = ReefScorePositions.FRONT;
+  private double autoAlignOffsetX = 0;
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private Rotation2d rawGyroRotation = new Rotation2d();
@@ -174,6 +180,8 @@ public class Drive extends SubsystemBase {
         module.stop();
       }
     }
+
+    Logger.recordOutput("testing", ElevatorPosition.L1.toString());
 
     // Log empty setpoint states when disabled
     if (DriverStation.isDisabled()) {
@@ -325,6 +333,27 @@ public class Drive extends SubsystemBase {
   @AutoLogOutput(key = "Odometry/Robot")
   public Pose2d getPose() {
     return poseEstimator.getEstimatedPosition();
+  }
+
+  public ReefScorePositions getSelectedScorePosition() {
+    return selectedPosition;
+  }
+
+  @AutoLogOutput(key = "AutoLineup/Selected Pose")
+  public Pose2d getSelectedPose() {
+    return AllianceFlipUtil.apply(getSelectedScorePosition().scorePosition);
+  }
+
+  public void setSelectedScorePosition(ReefScorePositions position) {
+    selectedPosition = position;
+  }
+
+  public void setAutoAlignOffsetX(double offset) {
+    autoAlignOffsetX = offset;
+  }
+
+  public double getAutoAlignOffsetX() {
+    return autoAlignOffsetX;
   }
 
   /** Returns the current odometry rotation. */
