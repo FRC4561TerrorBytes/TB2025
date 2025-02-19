@@ -14,7 +14,7 @@ import frc.robot.Constants;
 public class AlgaeManipulatorIOReal implements AlgaeManipulatorIO {
 
   private final SparkBase algaeManipulatorMotor =
-      new SparkMax(Constants.algaeManipulatorMotorID, MotorType.kBrushless);
+      new SparkMax(Constants.ALGAE_MANIPULATOR_ID, MotorType.kBrushless);
 
   public AlgaeManipulatorIOReal() {
     var algaeManipulatorConfig = new SparkMaxConfig();
@@ -22,7 +22,7 @@ public class AlgaeManipulatorIOReal implements AlgaeManipulatorIO {
     algaeManipulatorConfig.idleMode(IdleMode.kBrake);
     algaeManipulatorConfig.smartCurrentLimit(20);
     algaeManipulatorConfig.voltageCompensation(12.0);
-    algaeManipulatorConfig.inverted(false);
+    algaeManipulatorConfig.inverted(true);
 
     tryUntilOk(
         algaeManipulatorMotor,

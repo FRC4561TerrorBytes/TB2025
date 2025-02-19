@@ -296,7 +296,7 @@ public class RobotContainer {
     // Default Commands
 
     intake.setDefaultCommand(new RunCommand(() -> intake.setOutput(0.0), intake));
-    // algaeManipulator.setDefaultCommand(algaeManipulator.stopAlgaeManipulator());
+    algaeManipulator.setDefaultCommand(algaeManipulator.stopAlgaeManipulator());
 
     // Switch to X pattern when X button is pressed
     // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
@@ -365,6 +365,12 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.RIGHTSOURCE)));
 
+    operatorController.leftTrigger().whileTrue(intake.intakeCoral());
+    operatorController.rightTrigger().whileTrue(intake.outtakeCoral());
+    operatorController.leftStick().whileTrue(Commands.run(() -> intake.setOutput(-1), intake));
+    operatorController
+        .rightStick()
+        .whileTrue(Commands.run(() -> algaeManipulator.setOutput(1), algaeManipulator));
     operatorController
         .b()
         .onTrue(
