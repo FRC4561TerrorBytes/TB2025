@@ -16,6 +16,7 @@ package frc.robot;
 import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -252,6 +253,10 @@ public class RobotContainer {
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIO() {});
         break;
     }
+
+    // Register NamedCommands for use in PathPlanner
+    NamedCommands.registerCommand("Intake", intake.intakeCoral());
+    NamedCommands.registerCommand("Outtake", intake.outtakeCoral());
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
