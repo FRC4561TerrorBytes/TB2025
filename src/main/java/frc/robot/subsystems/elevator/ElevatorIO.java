@@ -2,14 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.pivot;
+package frc.robot.subsystems.elevator;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface PivotIO {
+public interface ElevatorIO {
 
   @AutoLog
-  public static class PivotIOInputs {
+  public static class ElevatorIOInputs {
     public double pivotAngle = 0.0;
     public double extensionHeight = 0.0;
     // pivot components
@@ -37,7 +37,7 @@ public interface PivotIO {
   }
 
   /** Updates the set of loggable inputs. */
-  public default void updateInputs(PivotIOInputs inputs) {}
+  public default void updateInputs(ElevatorIOInputs inputs) {}
 
   public default void setExtensionPosition(double position) {}
 

@@ -45,6 +45,9 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOReal;
@@ -195,6 +198,7 @@ public class RobotContainer {
   private final Drive drive;
   private final Intake intake;
   private final Vision vision;
+  private final Elevator elevator;
   private final AlgaeManipulator algaeManipulator;
 
   // Controller
@@ -217,6 +221,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
         intake = new Intake(new IntakeIOReal());
+        elevator = new Elevator(new ElevatorIOReal());
         vision =
             new Vision(
                 drive::addVisionMeasurement,
@@ -234,6 +239,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
         intake = new Intake(new IntakeIO() {});
+        elevator = new Elevator(new ElevatorIO() {});
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {});
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOSim());
         break;
@@ -248,6 +254,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
         intake = new Intake(new IntakeIO() {});
+        elevator = new Elevator(new ElevatorIO() {});
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIO() {});

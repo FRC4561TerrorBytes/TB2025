@@ -1,14 +1,14 @@
-package frc.robot.subsystems.pivot;
+package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import org.littletonrobotics.junction.Logger;
 
-public class Pivot extends SubsystemBase {
-  private PivotIO io;
-  private PivotIOInputsAutoLogged inputs = new PivotIOInputsAutoLogged();
+public class Elevator extends SubsystemBase {
+  private ElevatorIO io;
+  private ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
 
-  public Pivot(PivotIO io) {
+  public Elevator(ElevatorIO io) {
     this.io = io;
 
     switch (Constants.currentMode) {

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.pivot;
+package frc.robot.subsystems.elevator;
 
 import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
@@ -21,7 +21,7 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants;
 
-public class PivotIOReal implements PivotIO {
+public class ElevatorIOReal implements ElevatorIO {
 
   private TalonFX pivotMotorL1 = new TalonFX(Constants.LEFT_PIVOT_ID_1);
   private TalonFX pivotMotorL2 = new TalonFX(Constants.LEFT_PIVOT_ID_2);
@@ -54,7 +54,7 @@ public class PivotIOReal implements PivotIO {
   private final MotionMagicVoltage m_request_pivot = new MotionMagicVoltage(0);
   private final MotionMagicVoltage m_request_extension = new MotionMagicVoltage(0);
 
-  public PivotIOReal() {
+  public ElevatorIOReal() {
     var pivotPIDConfig = new Slot0Configs();
     pivotPIDConfig.GravityType = GravityTypeValue.Arm_Cosine;
     // pivotPIDConfig.kS = 0.28;
@@ -144,7 +144,7 @@ public class PivotIOReal implements PivotIO {
     ParentDevice.optimizeBusUtilizationForAll(pivotMotorL1);
   }
 
-  public void updateInputs(PivotIOInputs inputs) {
+  public void updateInputs(ElevatorIOInputs inputs) {
     var pivotOneStatus =
         BaseStatusSignal.refreshAll(
             pivotAngle,
