@@ -47,9 +47,6 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOReal;
-import frc.robot.subsystems.pivot.Pivot;
-import frc.robot.subsystems.pivot.PivotIO;
-import frc.robot.subsystems.pivot.PivotIOReal;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -195,7 +192,6 @@ public class RobotContainer {
 
   // Subsystems
   private final Drive drive;
-  private final Pivot pivot;
   private final Intake intake;
   private final Vision vision;
   private final AlgaeManipulator algaeManipulator;
@@ -219,8 +215,6 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
-
-        pivot = new Pivot(new PivotIOReal());
         intake = new Intake(new IntakeIOReal());
         vision =
             new Vision(
@@ -238,8 +232,6 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-
-        pivot = new Pivot(new PivotIO() {});
         intake = new Intake(new IntakeIO() {});
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {});
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOSim());
@@ -254,8 +246,6 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-
-        pivot = new Pivot(new PivotIO() {});
         intake = new Intake(new IntakeIO() {});
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
@@ -339,11 +329,6 @@ public class RobotContainer {
     driverController
         .x()
         .whileTrue(new RunCommand(() -> algaeManipulator.setOutput(767), algaeManipulator));
-
-    // driverController.y().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(57), pivot));
-    // driverController.b().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(25), pivot));
-    driverController.x().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(5), pivot));
-    driverController.y().onTrue(Commands.runOnce(() -> pivot.setPivotPosition(90), pivot));
 
     operatorController
         .povUpLeft()
