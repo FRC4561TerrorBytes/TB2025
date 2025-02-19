@@ -23,7 +23,6 @@ import frc.robot.Constants;
 
 public class PivotIOReal implements PivotIO {
 
-
   private TalonFX pivotMotorL1 = new TalonFX(Constants.LEFT_PIVOT_ID_1);
   private TalonFX pivotMotorL2 = new TalonFX(Constants.LEFT_PIVOT_ID_2);
   private TalonFX pivotMotorR1 = new TalonFX(Constants.RIGHT_PIVOT_ID_1);
