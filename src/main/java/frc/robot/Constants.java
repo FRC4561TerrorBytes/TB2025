@@ -39,6 +39,10 @@ public final class Constants {
   public static final int PIVOT_MOTOR_ID = 13;
   public static final int PIVOT_CANCODER_ID = 30;
   public static final double PIVOT_GEAR_RATIO = 190;
+  // MOI = 11.2kg * (0.37m^2)
+  public static final double PIVOT_MOI = 11.2 * Math.pow(0.37, 2);
+
+  public static final double MOTOR_MOI = 0.5 * 0.27 * Math.pow(0.05, 2);
 
   public static final int INTAKE_MOTOR_ID = 41;
   public static final int ALGAE_MANIPULATOR_ID = 42;

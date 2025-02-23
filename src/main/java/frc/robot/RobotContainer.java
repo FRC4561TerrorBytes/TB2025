@@ -263,8 +263,15 @@ public class RobotContainer {
     }
 
     // Register NamedCommands for use in PathPlanner
-    NamedCommands.registerCommand("Intake", intake.intakeCoral());
-    NamedCommands.registerCommand("Outtake", intake.outtakeCoral());
+    NamedCommands.registerCommand("Intake", intake.intakeCoral().withTimeout(1.0));
+    NamedCommands.registerCommand("Outtake", intake.outtakeCoral().withTimeout(1.0));
+    NamedCommands.registerCommand(
+        "L1", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L1), elevator));
+    NamedCommands.registerCommand(
+        "L2", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator));
+    NamedCommands.registerCommand(
+        "L3", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3), elevator));
+    NamedCommands.registerCommand("Source", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.SOURCE), elevator));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());

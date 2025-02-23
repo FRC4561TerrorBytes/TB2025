@@ -17,11 +17,11 @@ public class ElevatorIOSim implements ElevatorIO {
   /** Creates a new ElevatorIOSim. */
   private static final double LOOP_PERIOD_SECS = 0.02;
 
-  private static final double PIVOT_KP = 12;
-  private static final double PIVOT_KD = 14;
+  private static final double PIVOT_KP = 0.0009;
+  private static final double PIVOT_KD = 0.0011;
 
-  private static final double EXTENSION_KP = 24;
-  private static final double EXTENSION_KD = 3;
+  private static final double EXTENSION_KP = 29.5;
+  private static final double EXTENSION_KD = 0;
 
   private static final DCMotor PIVOT_MOTOR = DCMotor.getFalcon500(4);
   private static final DCMotor EXTENSION_MOTOR = DCMotor.getKrakenX60(1);
@@ -48,31 +48,31 @@ public class ElevatorIOSim implements ElevatorIO {
     pivotMotorOneSim =
         new DCMotorSim(
             LinearSystemId.createDCMotorSystem(
-                PIVOT_MOTOR, 0.001, 1.0 / Constants.PIVOT_GEAR_RATIO),
+                PIVOT_MOTOR, 0.000001, 1.0 / Constants.PIVOT_GEAR_RATIO),
             PIVOT_MOTOR);
 
     pivotMotorTwoSim =
         new DCMotorSim(
             LinearSystemId.createDCMotorSystem(
-                PIVOT_MOTOR, 0.001, 1.0 / Constants.PIVOT_GEAR_RATIO),
+                PIVOT_MOTOR, 0.000001, 1.0 / Constants.PIVOT_GEAR_RATIO),
             PIVOT_MOTOR);
 
     pivotMotorThreeSim =
         new DCMotorSim(
             LinearSystemId.createDCMotorSystem(
-                PIVOT_MOTOR, 0.001, 1.0 / Constants.PIVOT_GEAR_RATIO),
+                PIVOT_MOTOR, 0.000001, 1.0 / Constants.PIVOT_GEAR_RATIO),
             PIVOT_MOTOR);
 
     pivotMotorFourSim =
         new DCMotorSim(
             LinearSystemId.createDCMotorSystem(
-                PIVOT_MOTOR, 0.001, 1.0 / Constants.PIVOT_GEAR_RATIO),
+                PIVOT_MOTOR, 0.000001, 1.0 / Constants.PIVOT_GEAR_RATIO),
             PIVOT_MOTOR);
 
     extensionMotorSim =
         new DCMotorSim(
             LinearSystemId.createDCMotorSystem(
-                EXTENSION_MOTOR, 0.001, Constants.EXTENSION_GEAR_RATIO),
+                EXTENSION_MOTOR, 0.000001, Constants.EXTENSION_GEAR_RATIO),
             EXTENSION_MOTOR);
     setTargetPosition(ElevatorPosition.STOW);
   }

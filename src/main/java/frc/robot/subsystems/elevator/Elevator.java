@@ -31,7 +31,7 @@ public class Elevator extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Pivot/IO", inputs);
 
-        Logger.recordOutput(
+    Logger.recordOutput(
         "FinalComponentPoses",
         new Pose3d[] {
           new Pose3d(
