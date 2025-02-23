@@ -6,6 +6,8 @@ package frc.robot.subsystems.elevator;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import frc.robot.RobotContainer.ElevatorPosition;
+
 public interface ElevatorIO {
 
   @AutoLog
@@ -40,6 +42,8 @@ public interface ElevatorIO {
   public default void updateInputs(ElevatorIOInputs inputs) {}
 
   public default void setExtensionPosition(double position) {}
+
+  public default void setElevatorPosition(ElevatorPosition position) {}
 
   public default void setPivotPosition(double position) {}
 

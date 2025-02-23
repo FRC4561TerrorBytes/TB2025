@@ -2,6 +2,8 @@ package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer.ElevatorPosition;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
@@ -26,6 +28,10 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Pivot/IO", inputs);
+  }
+
+  public void setElevatorPosition(ElevatorPosition position){
+    io.setElevatorPosition(position);
   }
 
   public void setPivotPosition(double angle) {

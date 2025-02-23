@@ -23,6 +23,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants;
+import frc.robot.RobotContainer.ElevatorPosition;
 
 public class ElevatorIOReal implements ElevatorIO {
 
@@ -189,6 +190,11 @@ public class ElevatorIOReal implements ElevatorIO {
 
     m_request_pivot.FeedForward =
         Math.cos(Units.degreesToRadians(inputs.pivotAngle)) * pivotFeedForward;
+  }
+
+  public void setElevatorPosition(ElevatorPosition position){
+    setPivotPosition(position.pivotPosition);
+    setExtensionPosition(position.extensionPosition);
   }
 
   public void setPivotPosition(double angle) {

@@ -414,7 +414,10 @@ public class RobotContainer {
             () -> {
               drive.setAutoAlignOffsetX(0);
             })); */
-    operatorController.a().onTrue(new InstantCommand(() -> elevator.setPivotPosition(20)));
+    operatorController.x().onTrue(new InstantCommand(() -> elevator.setElevatorPosition(ElevatorPosition.STOW)));
+    operatorController.a().onTrue(new InstantCommand(() -> elevator.setElevatorPosition(ElevatorPosition.L1)));
+    operatorController.b().onTrue(new InstantCommand(() -> elevator.setElevatorPosition(ElevatorPosition.L2)));
+    operatorController.y().onTrue(new InstantCommand(() -> elevator.setElevatorPosition(ElevatorPosition.L3)));
   }
 
   /**
