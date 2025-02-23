@@ -192,7 +192,7 @@ public class ElevatorIOReal implements ElevatorIO {
         Math.cos(Units.degreesToRadians(inputs.pivotAngle)) * pivotFeedForward;
   }
 
-  public void setElevatorPosition(ElevatorPosition position){
+  public void setTargetPosition(ElevatorPosition position) {
     setPivotPosition(position.pivotPosition);
     setExtensionPosition(position.extensionPosition);
   }

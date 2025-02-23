@@ -48,6 +48,7 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOReal;
@@ -67,9 +68,9 @@ public class RobotContainer {
   public enum ElevatorPosition {
     STOW(0, 20.0),
     SOURCE(0.15, 47),
-    L1(0, 90.0),
-    L2(0.1, 90.0),
-    L3(0.45, 90.0),
+    L1(0, 120.0),
+    L2(0.1, 100.0),
+    L3(0.45, 92.0),
     L4(0.5, 90.0);
 
     public double extensionPosition;
@@ -239,7 +240,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
         intake = new Intake(new IntakeIO() {});
-        elevator = new Elevator(new ElevatorIO() {});
+        elevator = new Elevator(new ElevatorIOSim());
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {});
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOSim());
         break;
@@ -414,10 +415,18 @@ public class RobotContainer {
             () -> {
               drive.setAutoAlignOffsetX(0);
             })); */
-    operatorController.x().onTrue(new InstantCommand(() -> elevator.setElevatorPosition(ElevatorPosition.STOW)));
-    operatorController.a().onTrue(new InstantCommand(() -> elevator.setElevatorPosition(ElevatorPosition.L1)));
-    operatorController.b().onTrue(new InstantCommand(() -> elevator.setElevatorPosition(ElevatorPosition.L2)));
-    operatorController.y().onTrue(new InstantCommand(() -> elevator.setElevatorPosition(ElevatorPosition.L3)));
+    operatorController
+        .x()
+        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.STOW)));
+    operatorController
+        .a()
+        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L1)));
+    operatorController
+        .b()
+        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L2)));
+    operatorController
+        .y()
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3), elevator));
   }
 
   /**

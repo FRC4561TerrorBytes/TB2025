@@ -1,9 +1,11 @@
 package frc.robot.subsystems.elevator;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer.ElevatorPosition;
-
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
@@ -28,10 +30,29 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Pivot/IO", inputs);
+
+        Logger.recordOutput(
+        "FinalComponentPoses",
+        new Pose3d[] {
+          new Pose3d(
+              0.03 - 0.2782,
+              0,
+              0.37 - 0.095,
+              new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0)),
+          new Pose3d(
+              0.03
+                  - 0.2782
+                  + Math.cos(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
+              0,
+              0.37
+                  - 0.095
+                  - Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
+              new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0))
+        });
   }
 
-  public void setElevatorPosition(ElevatorPosition position){
-    io.setElevatorPosition(position);
+  public void setSetpoint(ElevatorPosition position) {
+    io.setTargetPosition(position);
   }
 
   public void setPivotPosition(double angle) {

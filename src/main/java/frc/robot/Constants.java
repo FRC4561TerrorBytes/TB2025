@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public final class Constants {
 
-  public static final Mode simMode = Mode.REAL;
+  public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
   public static enum Mode {
@@ -52,5 +52,5 @@ public final class Constants {
   public static final int algaeManipulatorMotorID = 61;
 
   public static final int EXTENSION_ID = 40;
-  public static final double EXTENSION_GEAR_RATIO = 256;
+  public static final double EXTENSION_GEAR_RATIO = 10;
 }
