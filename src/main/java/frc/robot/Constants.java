@@ -37,7 +37,8 @@ public final class Constants {
   }
 
   public static final int PIVOT_MOTOR_ID = 13;
-  public static final double PIVOT_GEAR_RATIO = 256;
+  public static final int PIVOT_CANCODER_ID = 30;
+  public static final double PIVOT_GEAR_RATIO = 190;
 
   public static final int INTAKE_MOTOR_ID = 41;
   public static final int ALGAE_MANIPULATOR_ID = 42;

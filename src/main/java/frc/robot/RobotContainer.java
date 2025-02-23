@@ -65,7 +65,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
 
   public enum ElevatorPosition {
-    STOW(0, 5.0),
+    STOW(0, 20.0),
     SOURCE(0.15, 47),
     L1(0, 90.0),
     L2(0.1, 90.0),
@@ -383,15 +383,15 @@ public class RobotContainer {
     operatorController
         .rightStick()
         .whileTrue(Commands.run(() -> algaeManipulator.setOutput(1), algaeManipulator));
-    operatorController
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                    drive)
-                .ignoringDisable(true));
+    // operatorController
+    //     .b()
+    //     .onTrue(
+    //         Commands.runOnce(
+    //                 () ->
+    //                     drive.setPose(
+    //                         new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+    //                 drive)
+    //             .ignoringDisable(true));
 
     operatorController
         .leftBumper()
@@ -414,6 +414,7 @@ public class RobotContainer {
             () -> {
               drive.setAutoAlignOffsetX(0);
             })); */
+    operatorController.a().onTrue(new InstantCommand(() -> elevator.setPivotPosition(20)));
   }
 
   /**

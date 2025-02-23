@@ -4,12 +4,15 @@ import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -28,7 +31,7 @@ public class ElevatorIOReal implements ElevatorIO {
   private TalonFX pivotMotorR1 = new TalonFX(Constants.RIGHT_PIVOT_ID_1);
   private TalonFX pivotMotorR2 = new TalonFX(Constants.RIGHT_PIVOT_ID_2);
 
-  private CANcoder pivotEncoder = new CANcoder(30);
+  private CANcoder pivotEncoder = new CANcoder(Constants.PIVOT_CANCODER_ID);
 
   private TalonFX extensionMotor = new TalonFX(Constants.EXTENSION_ID);
 
@@ -64,10 +67,16 @@ public class ElevatorIOReal implements ElevatorIO {
     pivotPIDConfig.kI = 0;
     pivotPIDConfig.kD = 0;
 
+    var cancoderConfig = new CANcoderConfiguration();
+    cancoderConfig.MagnetSensor.withMagnetOffset(-0.267090);
+    tryUntilOk(5, () -> pivotEncoder.getConfigurator().apply(cancoderConfig, 0.25));
+
     var pivotConfig = new TalonFXConfiguration();
     pivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     pivotConfig.Slot0 = pivotPIDConfig; //
     pivotConfig.Feedback.SensorToMechanismRatio = Constants.PIVOT_GEAR_RATIO;
+    pivotConfig.Feedback.FeedbackRemoteSensorID = pivotEncoder.getDeviceID();
+    pivotConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
     pivotConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0 / Constants.PIVOT_GEAR_RATIO;
     pivotConfig.MotionMagic.MotionMagicAcceleration =
         pivotConfig.MotionMagic.MotionMagicCruiseVelocity / 0.100;
@@ -81,10 +90,7 @@ public class ElevatorIOReal implements ElevatorIO {
     pivotConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     tryUntilOk(5, () -> pivotMotorL1.getConfigurator().apply(pivotConfig, 0.25));
 
-    pivotMotorL1.setPosition(-0.01025390625 + 0.003173828125 + 0.000244140625);
-    pivotMotorL1.setPosition(pivotEncoder.getAbsolutePosition().getValueAsDouble());
-
-    pivotAngle = pivotEncoder.getAbsolutePosition();
+    pivotAngle = pivotEncoder.getPosition();
     pivotStatorCurrent = pivotMotorL1.getStatorCurrent();
     pivotSupplyCurrent = pivotMotorL1.getSupplyCurrent();
     pivotSpeed = pivotMotorL1.getVelocity();
@@ -104,7 +110,7 @@ public class ElevatorIOReal implements ElevatorIO {
     extensionConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     extensionConfig.Slot0 = extensionPIDConfig; //
     extensionConfig.Feedback.SensorToMechanismRatio = Constants.PIVOT_GEAR_RATIO;
-    extensionConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0 / Constants.PIVOT_GEAR_RATIO;
+    extensionConfig.MotionMagic.MotionMagicCruiseVelocity = 0.1;
     extensionConfig.MotionMagic.MotionMagicAcceleration =
         extensionConfig.MotionMagic.MotionMagicCruiseVelocity / 0.100;
     extensionConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * Constants.PIVOT_GEAR_RATIO;
@@ -142,6 +148,10 @@ public class ElevatorIOReal implements ElevatorIO {
         extensionTemp);
 
     ParentDevice.optimizeBusUtilizationForAll(pivotMotorL1);
+
+    pivotMotorL2.setControl(new Follower(pivotMotorL1.getDeviceID(), false));
+    pivotMotorR1.setControl(new Follower(pivotMotorL1.getDeviceID(), true));
+    pivotMotorR2.setControl(new Follower(pivotMotorL1.getDeviceID(), true));
   }
 
   public void updateInputs(ElevatorIOInputs inputs) {
@@ -182,7 +192,7 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   public void setPivotPosition(double angle) {
-    pivotSetpoint = angle;
+    pivotSetpoint = Units.degreesToRotations(angle);
     pivotMotorL1.setControl(m_request_pivot.withPosition(pivotSetpoint));
   }
 
