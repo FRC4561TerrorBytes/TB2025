@@ -264,14 +264,17 @@ public class RobotContainer {
 
     // Register NamedCommands for use in PathPlanner
     NamedCommands.registerCommand("Intake", intake.intakeCoral().withTimeout(1.0));
-    NamedCommands.registerCommand("Outtake", intake.outtakeCoral().withTimeout(1.0));
+    NamedCommands.registerCommand("Outtake", intake.outtakeCoral().withTimeout(0.5));
     NamedCommands.registerCommand(
         "L1", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L1), elevator));
     NamedCommands.registerCommand(
         "L2", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator));
     NamedCommands.registerCommand(
         "L3", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3), elevator));
-    NamedCommands.registerCommand("Source", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.SOURCE), elevator));
+    NamedCommands.registerCommand(
+        "Source", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.SOURCE), elevator));
+    NamedCommands.registerCommand(
+        "Stow", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -376,14 +379,6 @@ public class RobotContainer {
         .a()
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.PROCESSER)));
-    operatorController
-        .x()
-        .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.LEFTSOURCE)));
-    operatorController
-        .y()
-        .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.RIGHTSOURCE)));
 
     operatorController.leftTrigger().whileTrue(intake.intakeCoral());
     operatorController.rightTrigger().whileTrue(intake.outtakeCoral());

@@ -20,7 +20,7 @@ public class ElevatorIOSim implements ElevatorIO {
   private static final double PIVOT_KP = 0.0009;
   private static final double PIVOT_KD = 0.0011;
 
-  private static final double EXTENSION_KP = 29.5;
+  private static final double EXTENSION_KP = 75;
   private static final double EXTENSION_KD = 0;
 
   private static final DCMotor PIVOT_MOTOR = DCMotor.getFalcon500(4);
