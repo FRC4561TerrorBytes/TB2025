@@ -14,18 +14,32 @@ public interface ElevatorIO {
     public double pivotAngle = 0.0;
     public double extensionHeight = 0.0;
     // pivot components
-    public double pivotStatorCurrent = 0.0;
-    public double pivotSupplyCurrent = 0.0;
-    public double pivotVoltage = 0.0;
+    public double pivotOneStatorCurrent = 0.0;
+    public double pivotOneSupplyCurrent = 0.0;
+    public double pivotOneVoltage = 0.0;
     public double pivotSetpoint = 0.0;
+    public double pivotOneSpeed = 0.0;
     public double pivotMotorOneTemp = 0.0;
     public boolean pivotMotorOneConnected = false;
     public double pivotMotorTwoTemp = 0.0;
     public boolean pivotMotorTwoConnected = false;
+    public double pivotTwoStatorCurrent = 0.0;
+    public double pivotTwoSupplyCurrent = 0.0;
+    public double pivotTwoVoltage = 0.0;
+    public double pivotTwoSpeed = 0.0;
     public double pivotMotorThreeTemp = 0.0;
     public boolean pivotMotorThreeConnected = false;
+    public double pivotThreeStatorCurrent = 0.0;
+    public double pivotThreeSupplyCurrent = 0.0;
+    public double pivotThreeVoltage = 0.0;
+    public double pivotThreeSpeed = 0.0;
     public double pivotMotorFourTemp = 0.0;
     public boolean pivotMotorFourConnected = false;
+    public double pivotFourStatorCurrent = 0.0;
+    public double pivotFourSupplyCurrent = 0.0;
+    public double pivotFourVoltage = 0.0;
+    public double pivotFourSpeed = 0.0;
+
     public double pivotSpeed = 0.0;
     // carriage components
     public double extensionStatorCurrent = 0.0;

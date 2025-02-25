@@ -117,7 +117,7 @@ public class ElevatorIOSim implements ElevatorIO {
     inputs.extensionMotorConnected = true;
     inputs.pivotSetpoint = this.pivotSetpoint;
     inputs.extensionSetpoint = this.extensionSetpoint;
-    inputs.pivotVoltage = pivotAppliedVolts;
+    inputs.pivotOneVoltage = pivotAppliedVolts;
     inputs.extensionVoltage = extensionAppliedVolts;
   }
 

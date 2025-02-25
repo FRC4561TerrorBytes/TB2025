@@ -68,7 +68,7 @@ public class RobotContainer {
   public enum ElevatorPosition {
     STOW(0, 20.0),
     SOURCE(0.15, 47),
-    L1(0, 120.0),
+    L1(0, 60.0),
     L2(0.1, 100.0),
     L3(0.45, 92.0),
     L4(0.5, 90.0);
@@ -106,7 +106,7 @@ public class RobotContainer {
         Units.inchesToMeters(244.5) - 0.5,
         Rotation2d.fromDegrees(126)), // this is left source, angle could be inaccurate
     new Pose2d(
-        5.980,
+        Units.inchesToMeters(240),
         Units.inchesToMeters(55) + 0.75,
         Rotation2d.fromDegrees(-90)) // this is processer, angle could be inaccurate
   };
@@ -353,6 +353,16 @@ public class RobotContainer {
         .x()
         .whileTrue(new RunCommand(() -> algaeManipulator.setOutput(767), algaeManipulator));
 
+    driverController
+        .povUp()
+        .whileTrue(Commands.run(() -> elevator.setPivotVoltage(12), elevator))
+        .onFalse(Commands.runOnce(() -> elevator.setPivotVoltage(0), elevator));
+
+    driverController
+        .povDown()
+        .whileTrue(Commands.run(() -> elevator.setPivotVoltage(-12), elevator))
+        .onFalse(Commands.runOnce(() -> elevator.setPivotVoltage(0), elevator));
+
     operatorController
         .povUpLeft()
         .onTrue(
@@ -375,10 +385,11 @@ public class RobotContainer {
     operatorController
         .povDown()
         .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT)));
-    operatorController
-        .a()
-        .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.PROCESSER)));
+    // operatorController
+    //     .a()
+    //     .onTrue(
+    //         Commands.runOnce(() ->
+    // drive.setSelectedScorePosition(ReefScorePositions.PROCESSER)));
 
     operatorController.leftTrigger().whileTrue(intake.intakeCoral());
     operatorController.rightTrigger().whileTrue(intake.outtakeCoral());

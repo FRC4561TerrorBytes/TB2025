@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public final class Constants {
 
-  public static final Mode simMode = Mode.SIM;
+  public static final Mode simMode = Mode.REAL;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
   public static enum Mode {
@@ -38,7 +38,7 @@ public final class Constants {
 
   public static final int PIVOT_MOTOR_ID = 13;
   public static final int PIVOT_CANCODER_ID = 30;
-  public static final double PIVOT_GEAR_RATIO = 190;
+  public static final double PIVOT_GEAR_RATIO = 216;
   // MOI = 11.2kg * (0.37m^2)
   public static final double PIVOT_MOI = 11.2 * Math.pow(0.37, 2);
 
@@ -51,10 +51,17 @@ public final class Constants {
   public static final int LEFT_PIVOT_ID_2 = 32;
   public static final int RIGHT_PIVOT_ID_1 = 33;
   public static final int RIGHT_PIVOT_ID_2 = 34;
+  public static final int PIVOT_STATOR_CURRENT_LIMIT = 60;
+  public static final int PIVOT_SUPPLY_CURRENT_LIMIT = 40;
 
-  public static final int intakeMotorID = 33;
-  public static final int algaeManipulatorMotorID = 61;
+  public static final int ALGAE_MANIPULATOR_MOTOR_ID = 61;
 
   public static final int EXTENSION_ID = 40;
-  public static final double EXTENSION_GEAR_RATIO = 10;
+  // Gears are 12:44:60 tooth gears in a line
+  // Determine Gear Ratio 12/44 * 44/60
+  // Sprockets are 1:1 22 teeth
+  // 22 teeth = 140mm
+  // 140 * 0.2 = linear movement per rotation
+  // 1000(aka 1 meter)/linear movement
+  public static final double EXTENSION_GEAR_RATIO = 35.7909806729;
 }
