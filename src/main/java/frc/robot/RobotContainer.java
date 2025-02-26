@@ -375,8 +375,9 @@ public class RobotContainer {
                         elevator)),
                 intake.outtakeCoral().withTimeout(0.5),
                 Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)))
-        .onFalse(Commands.runOnce(() -> drive.stop(), drive)
-        .alongWith(Commands.runOnce(() -> leds.autoScoring = false)));
+        .onFalse(
+            Commands.runOnce(() -> drive.stop(), drive)
+                .alongWith(Commands.runOnce(() -> leds.autoScoring = false)));
 
     // Run algae bar when Y is held
     driverController

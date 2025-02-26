@@ -3,6 +3,7 @@ package frc.robot.subsystems.elevator;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer.ElevatorPosition;
@@ -52,6 +53,8 @@ public class Elevator extends SubsystemBase {
                   - Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
               new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0))
         });
+
+    SmartDashboard.putString("Auto Lineup/Score Level", selectedElevatorPosition.toString());
   }
 
   public void setSetpoint(ElevatorPosition position) {

@@ -43,6 +43,8 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -99,6 +101,8 @@ public class Drive extends SubsystemBase {
 
   private ReefScorePositions selectedPosition = ReefScorePositions.FRONT;
   private double autoAlignOffsetX = 0;
+
+  private Field2d field = new Field2d();
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private Rotation2d rawGyroRotation = new Rotation2d();
@@ -223,6 +227,53 @@ public class Drive extends SubsystemBase {
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
+
+    field.setRobotPose(getPose());
+    SmartDashboard.putData("Field", field);
+
+    if (autoAlignOffsetX != 0) {
+      switch (selectedPosition) {
+        case FRONT:
+          if (autoAlignOffsetX == Constants.SCORING_POSITION_OFFSET)
+            SmartDashboard.putString("Auto Lineup/Reef Position", "B");
+          else SmartDashboard.putString("Auto Lineup/Reef Position", "A");
+          break;
+
+        case FRONTRIGHT:
+          if (autoAlignOffsetX == Constants.SCORING_POSITION_OFFSET)
+            SmartDashboard.putString("Auto Lineup/Reef Position", "D");
+          else SmartDashboard.putString("Auto Lineup/Reef Position", "C");
+          break;
+
+        case BACKRIGHT:
+          if (autoAlignOffsetX == Constants.SCORING_POSITION_OFFSET)
+            SmartDashboard.putString("Auto Lineup/Reef Position", "F");
+          else SmartDashboard.putString("Auto Lineup/Reef Position", "E");
+          break;
+
+        case BACK:
+          if (autoAlignOffsetX == Constants.SCORING_POSITION_OFFSET)
+            SmartDashboard.putString("Auto Lineup/Reef Position", "H");
+          else SmartDashboard.putString("Auto Lineup/Reef Position", "G");
+          break;
+
+        case BACKLEFT:
+          if (autoAlignOffsetX == Constants.SCORING_POSITION_OFFSET)
+            SmartDashboard.putString("Auto Lineup/Reef Position", "J");
+          else SmartDashboard.putString("Auto Lineup/Reef Position", "I");
+          break;
+
+        case FRONTLEFT:
+          if (autoAlignOffsetX == Constants.SCORING_POSITION_OFFSET)
+            SmartDashboard.putString("Auto Lineup/Reef Position", "L");
+          else SmartDashboard.putString("Auto Lineup/Reef Position", "K");
+          break;
+
+        default:
+          SmartDashboard.putString("Auto Lineup/Reef Position", " ");
+          break;
+      }
+    }
   }
 
   /**
