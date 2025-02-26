@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPose;
@@ -208,6 +209,9 @@ public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
+  // Manual elevator toggle (incase things go wrong)
+  boolean manualElevatorToggle = false;
+
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -323,128 +327,165 @@ public class RobotContainer {
     intake.setDefaultCommand(new RunCommand(() -> intake.setOutput(0.0), intake));
     algaeManipulator.setDefaultCommand(algaeManipulator.stopAlgaeManipulator());
 
-    // Switch to X pattern when X button is pressed
-    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    // Triggers
+    Trigger coralIntakeTrigger = new Trigger(() -> intake.coralPresent());
+    coralIntakeTrigger.onTrue(driverRumbleCommand().withTimeout(1.0));
+
+    // Driver Controls
 
     // Reset gyro to 0° when B button is pressed
-    // driverController
-    //     .b()
-    //     .onTrue(
-    //         Commands.runOnce(
-    //                 () ->
-    //                     drive.setPose(
-    //                         new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-    //                 drive)
-    //             .ignoringDisable(true));
+    driverController
+        .rightStick().and(driverController.leftStick())
+        .onTrue(
+            Commands.runOnce(
+                    () ->
+                        drive.setPose(
+                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                    drive)
+                .ignoringDisable(true));
 
-    driverController.leftBumper().whileTrue(intake.intakeCoral());
+    // Toggle coral intake when left bumper is pressed
+    driverController.leftBumper().toggleOnTrue(intake.intakeCoral());
+
+    // Outtake coral while right bumper is held
     driverController.rightBumper().whileTrue(intake.outtakeCoral());
 
+    // Run lineup sequence when B is held
     driverController
-        .a()
+        .b()
         .whileTrue(
             Commands.sequence(new DriveToPose(drive, vision), new SingleTagAlign(drive, vision)))
         .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
+    // Run automated scoring when A is held
     driverController
-        .b()
-        .whileTrue(new SingleTagAlign(drive, vision))
+        .a()
+        .whileTrue(
+            Commands.sequence(
+                new DriveToPose(drive, vision),
+                Commands.parallel(
+                    new SingleTagAlign(drive, vision),
+                    Commands.runOnce(
+                        () -> elevator.setSetpoint(elevator.getRequestedElevatorPosition()),
+                        elevator)),
+                intake.outtakeCoral().withTimeout(0.5),
+                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)))
         .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
+    // Run algae bar when Y is held
     driverController
-        .x()
+        .y()
         .whileTrue(new RunCommand(() -> algaeManipulator.setOutput(1), algaeManipulator));
 
+    // Set elevator position to SOURCE when Y is pressed
     driverController
-        .povUp()
+        .x()
         .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.SOURCE), elevator));
 
-    driverController
-        .povDown()
-        .whileTrue(Commands.run(() -> elevator.setPivotVoltage(-12), elevator))
-        .onFalse(Commands.runOnce(() -> elevator.setPivotVoltage(0), elevator));
 
+    // Operator Controls
+
+    // Set lineup position to I/J 
     operatorController
         .povUpLeft()
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKLEFT)));
+
+    // Set lineup position to E/F
     operatorController
         .povUpRight()
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKRIGHT)));
+
+    // Set lineup position to K/L
     operatorController
         .povDownLeft()
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTLEFT)));
+    
+    // Set lineup position to C/D
     operatorController
         .povDownRight()
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTRIGHT)));
+
+    // Set lineup position to G/H
     operatorController
         .povUp()
         .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACK)));
+
+    // Set lineup position to A/B
     operatorController
         .povDown()
         .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT)));
-    // operatorController
-    //     .a()
-    //     .onTrue(
-    //         Commands.runOnce(() ->
-    // drive.setSelectedScorePosition(ReefScorePositions.PROCESSER)));
 
-    operatorController.leftTrigger().whileTrue(intake.intakeCoral());
-    operatorController.rightTrigger().whileTrue(intake.outtakeCoral());
-    operatorController.leftStick().whileTrue(Commands.run(() -> intake.setOutput(-1), intake));
-    operatorController
-        .rightStick()
-        .whileTrue(Commands.run(() -> algaeManipulator.setOutput(1), algaeManipulator));
-    // operatorController
-    //     .b()
-    //     .onTrue(
-    //         Commands.runOnce(
-    //                 () ->
-    //                     drive.setPose(
-    //                         new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-    //                 drive)
-    //             .ignoringDisable(true));
-
+    // Adjust scoring position to left side
     operatorController
         .leftBumper()
         .onTrue(
             new InstantCommand(
                 () -> {
-                  drive.setAutoAlignOffsetX(Units.inchesToMeters(-7.5));
+                  drive.setAutoAlignOffsetX(Units.inchesToMeters(-Constants.SCORING_POSITION_OFFSET));
                 }));
+
+    // Adjust scoring position to right side
     operatorController
         .rightBumper()
         .onTrue(
             new InstantCommand(
                 () -> {
-                  drive.setAutoAlignOffsetX(Units.inchesToMeters(7.5));
+                  drive.setAutoAlignOffsetX(Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET));
                 }));
-    /*operatorController
-    .y()
-    .onTrue(
-        new InstantCommand(
-            () -> {
-              drive.setAutoAlignOffsetX(0);
-            })); */
+
+    // Toggle manual elevator control when BACK is pressed
+    operatorController
+        .back()
+        .toggleOnTrue(Commands.runOnce(() -> manualElevatorToggle = !manualElevatorToggle));
+    
+    // Move elevator to stow when X is pressed
     operatorController
         .x()
         .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.STOW)));
-    operatorController
-        .a()
-        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L1)));
-    operatorController
-        .b()
-        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L2)));
-    operatorController
-        .y()
-        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3), elevator));
+
+    // Move elevator to L3 Algae removal when RT is pressed
     operatorController
         .rightTrigger()
         .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3ALGAE), elevator));
-    operatorController.leftTrigger().onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2ALGAE), elevator));
+
+    // Move elevator to L2 Algae removal when LT is pressed
+    operatorController
+        .leftTrigger()
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2ALGAE), elevator));
+
+    // Move elevator to L1 position when A is pressed and Manual mode is TRUE
+    operatorController
+        .a().and(() -> manualElevatorToggle)
+        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L1)));
+    
+    // Move elevator to L2 position when B is pressed and Manual mode is TRUE
+    operatorController
+        .b().and(() -> manualElevatorToggle)
+        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L2)));
+
+    // Move elevator to L3 position when Y is pressed and Manual mode is TRUE
+    operatorController
+        .y().and(() -> manualElevatorToggle)
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3), elevator));
+
+    // Request L1 automated score position when A is pressed and Manual mode is FALSE
+    operatorController
+        .a().and(() -> !manualElevatorToggle)
+        .onTrue(Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L1), elevator));
+
+    // Request L2 automated score position when B is pressed and Manual mode is FALSE
+    operatorController
+        .b().and(() -> !manualElevatorToggle)
+        .onTrue(Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L2), elevator));
+
+    // Request L3 automated score position when Y is pressed and Manual mode is FALSE
+    operatorController
+        .y().and(() -> !manualElevatorToggle)
+        .onTrue(Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L3), elevator));
   }
 
   /**

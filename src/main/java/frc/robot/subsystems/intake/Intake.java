@@ -30,6 +30,10 @@ public class Intake extends SubsystemBase {
     io.setOutput(speed);
   }
 
+  public boolean coralPresent() {
+    return inputs.intakeLimitSwitch;
+  }
+
   public Command intakeCoral() {
     return new RunCommand(() -> this.setOutput(0.75), this).until(() -> inputs.intakeLimitSwitch);
   }

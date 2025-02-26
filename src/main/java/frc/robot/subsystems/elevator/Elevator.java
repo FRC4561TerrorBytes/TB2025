@@ -6,11 +6,14 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer.ElevatorPosition;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
   private ElevatorIO io;
   private ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
+
+  private ElevatorPosition selectedElevatorPosition = ElevatorPosition.STOW;
 
   public Elevator(ElevatorIO io) {
     this.io = io;
@@ -73,5 +76,26 @@ public class Elevator extends SubsystemBase {
 
   public double getCurrentSetpoint() {
     return inputs.pivotAngle;
+  }
+
+  public void requestElevatorPosition(ElevatorPosition position) {
+    selectedElevatorPosition = position;
+  }
+
+  @AutoLogOutput(key = "Elevator/Selected Position")
+  public ElevatorPosition getRequestedElevatorPosition() {
+    return selectedElevatorPosition;
+  }
+
+  @AutoLogOutput(key = "Elevator/Elevator At Setpoint")
+  public boolean elevatorAtSetpoint() {
+    if (inputs.extensionHeight == inputs.extensionSetpoint) return true;
+    else return false;
+  }
+
+  @AutoLogOutput(key = "Elevator/Pivot At Setpoint")
+  public boolean pivotAtSetpoint() {
+    if (inputs.pivotAngle == inputs.pivotSetpoint) return true;
+    else return false;
   }
 }
