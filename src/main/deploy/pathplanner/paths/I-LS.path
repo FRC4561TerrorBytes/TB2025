@@ -20,8 +20,8 @@
         "y": 7.321618852459016
       },
       "prevControl": {
-        "x": 1.5776463044046978,
-        "y": 7.072360667304122
+        "x": 1.7908163265306123,
+        "y": 6.968654336734694
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,13 +38,24 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Intake",
-      "waypointRelativePos": 0.8129642133693448,
+      "name": "Stow",
+      "waypointRelativePos": 0.1442953020134227,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "Intake"
+          "name": "Stow"
+        }
+      }
+    },
+    {
+      "name": "Source",
+      "waypointRelativePos": 0.39597315436241526,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Source"
         }
       }
     }
