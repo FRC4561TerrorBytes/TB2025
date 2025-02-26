@@ -53,9 +53,11 @@ import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOReal;
+import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.util.FieldConstants.ReefLevel;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -204,6 +206,7 @@ public class RobotContainer {
   private final Vision vision;
   private final Elevator elevator;
   private final AlgaeManipulator algaeManipulator;
+  private final Leds leds = Leds.getInstance();
 
   // Controller
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -335,7 +338,8 @@ public class RobotContainer {
 
     // Reset gyro to 0° when B button is pressed
     driverController
-        .rightStick().and(driverController.leftStick())
+        .rightStick()
+        .and(driverController.leftStick())
         .onTrue(
             Commands.runOnce(
                     () ->
@@ -362,6 +366,7 @@ public class RobotContainer {
         .a()
         .whileTrue(
             Commands.sequence(
+                Commands.runOnce(() -> leds.autoScoring = true),
                 new DriveToPose(drive, vision),
                 Commands.parallel(
                     new SingleTagAlign(drive, vision),
@@ -370,7 +375,8 @@ public class RobotContainer {
                         elevator)),
                 intake.outtakeCoral().withTimeout(0.5),
                 Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)))
-        .onFalse(Commands.runOnce(() -> drive.stop(), drive));
+        .onFalse(Commands.runOnce(() -> drive.stop(), drive)
+        .alongWith(Commands.runOnce(() -> leds.autoScoring = false)));
 
     // Run algae bar when Y is held
     driverController
@@ -382,10 +388,9 @@ public class RobotContainer {
         .x()
         .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.SOURCE), elevator));
 
-
     // Operator Controls
 
-    // Set lineup position to I/J 
+    // Set lineup position to I/J
     operatorController
         .povUpLeft()
         .onTrue(
@@ -402,7 +407,7 @@ public class RobotContainer {
         .povDownLeft()
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTLEFT)));
-    
+
     // Set lineup position to C/D
     operatorController
         .povDownRight()
@@ -425,7 +430,8 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () -> {
-                  drive.setAutoAlignOffsetX(Units.inchesToMeters(-Constants.SCORING_POSITION_OFFSET));
+                  drive.setAutoAlignOffsetX(
+                      Units.inchesToMeters(-Constants.SCORING_POSITION_OFFSET));
                 }));
 
     // Adjust scoring position to right side
@@ -434,17 +440,20 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () -> {
-                  drive.setAutoAlignOffsetX(Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET));
+                  drive.setAutoAlignOffsetX(
+                      Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET));
                 }));
 
     // Toggle manual elevator control when BACK is pressed
     operatorController
-        .back()
-        .toggleOnTrue(Commands.runOnce(() -> manualElevatorToggle = !manualElevatorToggle));
-    
+        .x()
+        .toggleOnTrue(
+            Commands.runOnce(() -> manualElevatorToggle = !manualElevatorToggle)
+                .alongWith(Commands.runOnce(() -> leds.manualElevator = !leds.manualElevator)));
+
     // Move elevator to stow when X is pressed
     operatorController
-        .x()
+        .back()
         .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.STOW)));
 
     // Move elevator to L3 Algae removal when RT is pressed
@@ -459,33 +468,45 @@ public class RobotContainer {
 
     // Move elevator to L1 position when A is pressed and Manual mode is TRUE
     operatorController
-        .a().and(() -> manualElevatorToggle)
+        .a()
+        .and(() -> manualElevatorToggle)
         .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L1)));
-    
+
     // Move elevator to L2 position when B is pressed and Manual mode is TRUE
     operatorController
-        .b().and(() -> manualElevatorToggle)
+        .b()
+        .and(() -> manualElevatorToggle)
         .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L2)));
 
     // Move elevator to L3 position when Y is pressed and Manual mode is TRUE
     operatorController
-        .y().and(() -> manualElevatorToggle)
+        .y()
+        .and(() -> manualElevatorToggle)
         .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3), elevator));
 
     // Request L1 automated score position when A is pressed and Manual mode is FALSE
     operatorController
-        .a().and(() -> !manualElevatorToggle)
-        .onTrue(Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L1), elevator));
+        .a()
+        .and(() -> !manualElevatorToggle)
+        .onTrue(
+            Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L1), elevator)
+                .alongWith(Commands.runOnce(() -> leds.autoScoringLevel = ReefLevel.L1)));
 
     // Request L2 automated score position when B is pressed and Manual mode is FALSE
     operatorController
-        .b().and(() -> !manualElevatorToggle)
-        .onTrue(Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L2), elevator));
+        .b()
+        .and(() -> !manualElevatorToggle)
+        .onTrue(
+            Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L2), elevator)
+                .alongWith(Commands.runOnce(() -> leds.autoScoringLevel = ReefLevel.L2)));
 
     // Request L3 automated score position when Y is pressed and Manual mode is FALSE
     operatorController
-        .y().and(() -> !manualElevatorToggle)
-        .onTrue(Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L3), elevator));
+        .y()
+        .and(() -> !manualElevatorToggle)
+        .onTrue(
+            Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L3), elevator)
+                .alongWith(Commands.runOnce(() -> leds.autoScoringLevel = ReefLevel.L3)));
   }
 
   /**
