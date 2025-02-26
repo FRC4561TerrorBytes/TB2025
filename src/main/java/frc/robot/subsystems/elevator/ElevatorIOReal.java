@@ -71,7 +71,7 @@ public class ElevatorIOReal implements ElevatorIO {
   private double pivotSetpoint = 0.0;
   private double pivotFeedForward = 0.0;
   private double extensionSetpoint = 0.0;
-  private double extensionFeedForward = 0.0;
+  private double extensionFeedForward = 0.5;
 
   private final MotionMagicVoltage m_request_pivot = new MotionMagicVoltage(0);
   private final MotionMagicVoltage m_request_extension = new MotionMagicVoltage(0);
@@ -96,7 +96,7 @@ public class ElevatorIOReal implements ElevatorIO {
     pivotConfig.Feedback.RotorToSensorRatio = Constants.PIVOT_GEAR_RATIO;
     pivotConfig.Feedback.FeedbackRemoteSensorID = pivotEncoder.getDeviceID();
     pivotConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-    pivotConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0 / Constants.PIVOT_GEAR_RATIO;
+    pivotConfig.MotionMagic.MotionMagicCruiseVelocity = 125.0 / Constants.PIVOT_GEAR_RATIO;
     pivotConfig.MotionMagic.MotionMagicAcceleration =
         pivotConfig.MotionMagic.MotionMagicCruiseVelocity / 0.100;
     pivotConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * Constants.PIVOT_GEAR_RATIO;
@@ -146,15 +146,15 @@ public class ElevatorIOReal implements ElevatorIO {
     // pivotPIDConfig.kS = 0.28;
     extensionPIDConfig.kV = 0;
     extensionPIDConfig.kA = 0;
-    extensionPIDConfig.kP = 0.5;
+    extensionPIDConfig.kP = 25;
     extensionPIDConfig.kI = 0;
     extensionPIDConfig.kD = 0;
 
     var extensionConfig = new TalonFXConfiguration();
     extensionConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    extensionConfig.Slot0 = extensionPIDConfig; //
+    extensionConfig.Slot0 = extensionPIDConfig;
     extensionConfig.Feedback.SensorToMechanismRatio = Constants.EXTENSION_GEAR_RATIO;
-    extensionConfig.MotionMagic.MotionMagicCruiseVelocity = 0.1;
+    extensionConfig.MotionMagic.MotionMagicCruiseVelocity = 0.5;
     extensionConfig.MotionMagic.MotionMagicAcceleration =
         extensionConfig.MotionMagic.MotionMagicCruiseVelocity / 0.100;
     extensionConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * Constants.EXTENSION_GEAR_RATIO;
@@ -163,8 +163,12 @@ public class ElevatorIOReal implements ElevatorIO {
     extensionConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     extensionConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.004;
     extensionConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.08;
-    extensionConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    extensionConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    extensionConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+    extensionConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
+    extensionConfig.CurrentLimits.StatorCurrentLimit = Constants.EXTENSION_STATOR_CURRENT_LIMIT;
+    extensionConfig.CurrentLimits.SupplyCurrentLimit = Constants.EXTENSION_SUPPLY_CURRENT_LIMIT;
+    extensionConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+    extensionConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     tryUntilOk(5, () -> extensionMotor.getConfigurator().apply(extensionConfig, 0.25));
 
     extensionMotor.setPosition(0);
@@ -270,14 +274,17 @@ public class ElevatorIOReal implements ElevatorIO {
     inputs.extensionSupplyCurrent = extensionSupplyCurrent.getValueAsDouble();
     inputs.extensionSpeed = extensionMotor.getVelocity().getValueAsDouble();
     inputs.extensionVoltage = extensionMotor.getMotorVoltage().getValueAsDouble();
-    inputs.extensionSetpoint = this.extensionSetpoint;
+    inputs.extensionSetpoint = extensionSetpoint;
+
+    m_request_extension.FeedForward =
+        Math.sin(Units.rotationsToRadians(inputs.pivotAngle)) * extensionFeedForward;
 
     inputs.pivotMotorOneConnected = pivotOneStatus.isOK();
     inputs.pivotOneStatorCurrent = pivotOneStatorCurrent.getValueAsDouble();
     inputs.pivotOneSupplyCurrent = pivotOneSupplyCurrent.getValueAsDouble();
     inputs.pivotOneSpeed = pivotMotorL1.getVelocity().getValueAsDouble();
     inputs.pivotOneVoltage = pivotMotorL1.getMotorVoltage().getValueAsDouble();
-    inputs.pivotSetpoint = this.pivotSetpoint;
+    inputs.pivotSetpoint = pivotSetpoint;
 
     inputs.pivotMotorTwoConnected = pivotTwoStatus.isOK();
     inputs.pivotTwoStatorCurrent = pivotTwoStatorCurrent.getValueAsDouble();
@@ -296,9 +303,6 @@ public class ElevatorIOReal implements ElevatorIO {
     inputs.pivotFourSupplyCurrent = pivotFourSupplyCurrent.getValueAsDouble();
     inputs.pivotFourSpeed = pivotMotorR2.getVelocity().getValueAsDouble();
     inputs.pivotFourVoltage = pivotMotorR2.getMotorVoltage().getValueAsDouble();
-
-    m_request_pivot.FeedForward =
-        Math.cos(Units.degreesToRadians(inputs.pivotAngle)) * pivotFeedForward;
   }
 
   public void setTargetPosition(ElevatorPosition position) {
@@ -315,8 +319,8 @@ public class ElevatorIOReal implements ElevatorIO {
     pivotMotorL1.setVoltage(voltage);
   }
 
-  public void setExtensionPosition(double angle) {
-    extensionSetpoint = angle;
+  public void setExtensionPosition(double position) {
+    extensionSetpoint = position;
     extensionMotor.setControl(m_request_extension.withPosition(extensionSetpoint));
   }
 

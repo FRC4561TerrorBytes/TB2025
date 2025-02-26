@@ -67,10 +67,12 @@ public class RobotContainer {
 
   public enum ElevatorPosition {
     STOW(0, 20.0),
-    SOURCE(0.15, 47),
-    L1(0, 60.0),
-    L2(0.1, 100.0),
-    L3(0.45, 92.0),
+    SOURCE(0.05, 50),
+    L1(0, 110.0),
+    L2(0.1, 90.0),
+    L2ALGAE(0, 90),
+    L3(0.55, 90.0),
+    L3ALGAE(0.4, 90),
     L4(0.5, 90.0);
 
     public double extensionPosition;
@@ -335,8 +337,8 @@ public class RobotContainer {
     //                 drive)
     //             .ignoringDisable(true));
 
-    driverController.leftBumper().whileTrue(new RunCommand(() -> intake.setOutput(0.3), intake));
-    driverController.rightBumper().whileTrue(new RunCommand(() -> intake.setOutput(-0.3), intake));
+    driverController.leftBumper().whileTrue(intake.intakeCoral());
+    driverController.rightBumper().whileTrue(intake.outtakeCoral());
 
     driverController
         .a()
@@ -351,12 +353,11 @@ public class RobotContainer {
 
     driverController
         .x()
-        .whileTrue(new RunCommand(() -> algaeManipulator.setOutput(767), algaeManipulator));
+        .whileTrue(new RunCommand(() -> algaeManipulator.setOutput(1), algaeManipulator));
 
     driverController
         .povUp()
-        .whileTrue(Commands.run(() -> elevator.setPivotVoltage(12), elevator))
-        .onFalse(Commands.runOnce(() -> elevator.setPivotVoltage(0), elevator));
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.SOURCE), elevator));
 
     driverController
         .povDown()
@@ -440,6 +441,10 @@ public class RobotContainer {
     operatorController
         .y()
         .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3), elevator));
+    operatorController
+        .rightTrigger()
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3ALGAE), elevator));
+    operatorController.leftTrigger().onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2ALGAE), elevator));
   }
 
   /**
