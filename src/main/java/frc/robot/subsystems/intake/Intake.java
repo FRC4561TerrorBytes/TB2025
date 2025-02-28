@@ -51,4 +51,18 @@ public class Intake extends SubsystemBase {
               }
             });
   }
+
+  public Command outtakeL1Coral() {
+    if (Constants.currentMode == Mode.REAL) {
+      io.disableLimitSwitch();
+    }
+    return new RunCommand(() -> this.setOutput(-0.75), this)
+        // .withTimeout(2.0)
+        .andThen(
+            () -> {
+              if (Constants.currentMode == Mode.REAL) {
+                io.enableLimitSwitch();
+              }
+            });
+  }
 }

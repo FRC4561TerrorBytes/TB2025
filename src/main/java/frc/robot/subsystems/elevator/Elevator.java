@@ -15,6 +15,7 @@ public class Elevator extends SubsystemBase {
   private ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
 
   private ElevatorPosition selectedElevatorPosition = ElevatorPosition.STOW;
+  private ElevatorPosition lastElevatorPosition = ElevatorPosition.STOW;
 
   public Elevator(ElevatorIO io) {
     this.io = io;
@@ -58,7 +59,12 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setSetpoint(ElevatorPosition position) {
+    lastElevatorPosition = position;
     io.setTargetPosition(position);
+  }
+
+  public ElevatorPosition getElevatorPosition() {
+    return lastElevatorPosition;
   }
 
   public void setPivotPosition(double angle) {
@@ -88,6 +94,14 @@ public class Elevator extends SubsystemBase {
   @AutoLogOutput(key = "Elevator/Selected Position")
   public ElevatorPosition getRequestedElevatorPosition() {
     return selectedElevatorPosition;
+  }
+
+  @AutoLogOutput(key = "Elevator/At setpoint")
+  public boolean mechanismAtSetpoint() {
+    if (Math.abs(inputs.extensionHeight - inputs.extensionSetpoint) <= 0.075
+        && Math.abs(inputs.pivotAngle - inputs.pivotSetpoint) <= Units.degreesToRotations(6.0))
+      return true;
+    else return false;
   }
 
   @AutoLogOutput(key = "Elevator/Elevator At Setpoint")

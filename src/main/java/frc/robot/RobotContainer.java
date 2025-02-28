@@ -17,6 +17,7 @@ import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -57,6 +58,7 @@ import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.FieldConstants.ReefLevel;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -71,7 +73,10 @@ public class RobotContainer {
   public enum ElevatorPosition {
     STOW(0, 20.0),
     SOURCE(0.05, 50),
-    L1(0, 110.0),
+    CLIMBPREP(0.55, 45.0),
+    CLIMBFULL(0.55, 5),
+    ALGAEINTAKE(0.1, 15),
+    L1(0, 20.0),
     L2(0.1, 90.0),
     L2ALGAE(0, 90),
     L3(0.55, 90.0),
@@ -334,6 +339,12 @@ public class RobotContainer {
     Trigger coralIntakeTrigger = new Trigger(() -> intake.coralPresent());
     coralIntakeTrigger.onTrue(driverRumbleCommand().withTimeout(1.0));
 
+    Trigger algaePositionTrigger =
+        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.ALGAEINTAKE));
+
+    Trigger L1PositionTrigger =
+        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L1));
+
     // Driver Controls
 
     // Reset gyro to 0° when B button is pressed
@@ -349,10 +360,42 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // Toggle coral intake when left bumper is pressed
-    driverController.leftBumper().toggleOnTrue(intake.intakeCoral());
+    driverController
+        .leftTrigger()
+        .and(algaePositionTrigger.negate())
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.SOURCE), elevator))
+        .toggleOnTrue(intake.intakeCoral());
+
+    driverController
+        .leftTrigger()
+        .and(algaePositionTrigger)
+        .toggleOnTrue(Commands.run(() -> intake.setOutput(-0.75), intake));
 
     // Outtake coral while right bumper is held
-    driverController.rightBumper().whileTrue(intake.outtakeCoral());
+    driverController
+        .rightTrigger()
+        .and(L1PositionTrigger.negate())
+        .whileTrue(intake.outtakeCoral());
+
+    driverController.rightTrigger().and(L1PositionTrigger).whileTrue(intake.outtakeL1Coral());
+
+    driverController
+        .leftBumper()
+        .whileTrue(
+            AutoBuilder.pathfindToPose(
+                AllianceFlipUtil.apply(ReefScorePositions.LEFTSOURCE.scorePosition),
+                new PathConstraints(
+                    1, 1, Units.degreesToRadians(360), Units.degreesToRadians(360))))
+        .onFalse(Commands.runOnce(() -> drive.stop(), drive));
+
+    driverController
+        .rightBumper()
+        .whileTrue(
+            AutoBuilder.pathfindToPose(
+                AllianceFlipUtil.apply(ReefScorePositions.RIGHTSOURCE.scorePosition),
+                new PathConstraints(
+                    1, 1, Units.degreesToRadians(360), Units.degreesToRadians(360))))
+        .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
     // Run lineup sequence when B is held
     driverController
@@ -373,6 +416,7 @@ public class RobotContainer {
                     Commands.runOnce(
                         () -> elevator.setSetpoint(elevator.getRequestedElevatorPosition()),
                         elevator)),
+                Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
                 intake.outtakeCoral().withTimeout(0.5),
                 Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)))
         .onFalse(
@@ -384,10 +428,18 @@ public class RobotContainer {
         .y()
         .whileTrue(new RunCommand(() -> algaeManipulator.setOutput(1), algaeManipulator));
 
-    // Set elevator position to SOURCE when Y is pressed
     driverController
-        .x()
-        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.SOURCE), elevator));
+        .povRight()
+        .onTrue(
+            Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.ALGAEINTAKE), elevator));
+
+    driverController
+        .povUp()
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBPREP), elevator));
+
+    driverController
+        .povDown()
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBFULL), elevator));
 
     // Operator Controls
 
@@ -447,14 +499,14 @@ public class RobotContainer {
 
     // Toggle manual elevator control when BACK is pressed
     operatorController
-        .x()
+        .back()
         .toggleOnTrue(
             Commands.runOnce(() -> manualElevatorToggle = !manualElevatorToggle)
                 .alongWith(Commands.runOnce(() -> leds.manualElevator = !leds.manualElevator)));
 
     // Move elevator to stow when X is pressed
     operatorController
-        .back()
+        .x()
         .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.STOW)));
 
     // Move elevator to L3 Algae removal when RT is pressed

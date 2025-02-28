@@ -11,6 +11,7 @@ import frc.robot.util.FieldConstants.ReefLevel;
 import frc.robot.util.VirtualSubsystem;
 import java.util.List;
 import java.util.Optional;
+import org.littletonrobotics.junction.Logger;
 
 public class Leds extends VirtualSubsystem {
   private static Leds instance;
@@ -206,6 +207,8 @@ public class Leds extends VirtualSubsystem {
 
     // Update LEDs
     leds.setData(buffer);
+
+    Logger.recordOutput("AutoLineup/Manual Mode", manualElevator);
   }
 
   private Color solid(Section section, Color color) {
