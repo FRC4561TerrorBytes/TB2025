@@ -345,6 +345,9 @@ public class RobotContainer {
     Trigger L1PositionTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L1));
 
+    Trigger L3PositionTrigger =
+        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3));
+
     // Driver Controls
 
     // Reset gyro to 0° when B button is pressed
@@ -507,7 +510,17 @@ public class RobotContainer {
     // Move elevator to stow when X is pressed
     operatorController
         .x()
-        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.STOW)));
+        .and(L3PositionTrigger)
+        .onTrue(
+            Commands.sequence(
+                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator),
+                Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
+
+    operatorController
+        .x()
+        .and(L3PositionTrigger.negate())
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator));
 
     // Move elevator to L3 Algae removal when RT is pressed
     operatorController
