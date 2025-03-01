@@ -517,7 +517,7 @@ public class RobotContainer {
                     Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator),
                     Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
                     Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator))
-                .onlyIf(L3PositionTrigger.and(L3AlgaeTrigger))
+                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger))
                 .finallyDo(() -> elevator.setSetpoint(ElevatorPosition.STOW)));
 
     // operatorController
