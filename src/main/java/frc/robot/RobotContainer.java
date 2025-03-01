@@ -41,6 +41,10 @@ import frc.robot.subsystems.algaeManipulator.AlgaeManipulator;
 import frc.robot.subsystems.algaeManipulator.AlgaeManipulatorIO;
 import frc.robot.subsystems.algaeManipulator.AlgaeManipulatorIOReal;
 import frc.robot.subsystems.algaeManipulator.AlgaeManipulatorIOSim;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIO;
+import frc.robot.subsystems.climber.ClimberIOReal;
+import frc.robot.subsystems.climber.ClimberIOSim;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -210,6 +214,7 @@ public class RobotContainer {
   private final Intake intake;
   private final Vision vision;
   private final Elevator elevator;
+  private final Climber climber;
   private final AlgaeManipulator algaeManipulator;
   private final Leds leds = Leds.getInstance();
 
@@ -242,6 +247,7 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(camera0Name, drive::getRotation));
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOReal());
+        climber = new Climber(new ClimberIOReal());
         break;
 
       case SIM:
@@ -257,6 +263,7 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOSim());
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {});
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOSim());
+        climber = new Climber(new ClimberIOSim());
         break;
 
       default:
@@ -273,6 +280,7 @@ public class RobotContainer {
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIO() {});
+        climber = new Climber(new ClimberIO() {});
         break;
     }
 
@@ -435,11 +443,13 @@ public class RobotContainer {
 
     driverController
         .povUp()
-        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBPREP), elevator));
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBPREP), elevator)
+        .andThen(Commands.runOnce(() -> climber.setClimberSetPoint(0), climber))); //Need to determine set point (0)
 
     driverController
         .povDown()
-        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBFULL), elevator));
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBFULL), elevator)
+        .andThen(Commands.runOnce(() -> climber.setClimberSetPoint(0), climber))); //Need to determine set point (0)
 
     // Operator Controls
 
