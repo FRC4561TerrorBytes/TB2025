@@ -3,37 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.348,
-        "y": 4.013012295081967
+        "x": 1.4984631147540983,
+        "y": 0.7523565573770474
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.901514848903371,
-        "y": 4.059410243818222
+        "x": 6.014158163265307,
+        "y": 2.5139987244897952
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "RS"
     },
     {
       "anchor": {
-        "x": 5.78,
-        "y": 4.19
+        "x": 5.812691326530613,
+        "y": 3.8720344387755095
       },
       "prevControl": {
-        "x": 6.460708901157409,
-        "y": 4.133823583685828
+        "x": 6.9170280612244905,
+        "y": 3.3571747448979585
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "H"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.8020134228187944,
-      "maxWaypointRelativePos": 0.9916107382550368,
+      "minWaypointRelativePos": 0.7348993288590624,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.5,
         "maxAcceleration": 0.5,
@@ -47,31 +47,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "L2",
-      "waypointRelativePos": 0.14854827819041522,
+      "name": "L3",
+      "waypointRelativePos": 0.6946308724832231,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "L2"
-        }
-      }
-    },
-    {
-      "name": "SpinAlgae",
-      "waypointRelativePos": 0.889261744966444,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "SpinAlgae"
+          "name": "L3"
         }
       }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -82,10 +71,10 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Starting Line Paths",
+  "folder": "Right Source Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -126.8228567865343
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
