@@ -96,9 +96,9 @@ public class ElevatorIOReal implements ElevatorIO {
     pivotConfig.Feedback.RotorToSensorRatio = Constants.PIVOT_GEAR_RATIO;
     pivotConfig.Feedback.FeedbackRemoteSensorID = pivotEncoder.getDeviceID();
     pivotConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-    pivotConfig.MotionMagic.MotionMagicCruiseVelocity = 150.0 / Constants.PIVOT_GEAR_RATIO;
+    pivotConfig.MotionMagic.MotionMagicCruiseVelocity = 400.0 / Constants.PIVOT_GEAR_RATIO;
     pivotConfig.MotionMagic.MotionMagicAcceleration =
-        pivotConfig.MotionMagic.MotionMagicCruiseVelocity / 0.200;
+        pivotConfig.MotionMagic.MotionMagicCruiseVelocity / 0.7;
     pivotConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * Constants.PIVOT_GEAR_RATIO;
     pivotConfig.MotionMagic.MotionMagicExpo_kA = 0.1;
     pivotConfig.ClosedLoopGeneral.ContinuousWrap = false;
@@ -154,7 +154,7 @@ public class ElevatorIOReal implements ElevatorIO {
     extensionConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     extensionConfig.Slot0 = extensionPIDConfig;
     extensionConfig.Feedback.SensorToMechanismRatio = Constants.EXTENSION_GEAR_RATIO;
-    extensionConfig.MotionMagic.MotionMagicCruiseVelocity = 0.5;
+    extensionConfig.MotionMagic.MotionMagicCruiseVelocity = 1.5;
     extensionConfig.MotionMagic.MotionMagicAcceleration =
         extensionConfig.MotionMagic.MotionMagicCruiseVelocity / 0.050;
     extensionConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * Constants.EXTENSION_GEAR_RATIO;

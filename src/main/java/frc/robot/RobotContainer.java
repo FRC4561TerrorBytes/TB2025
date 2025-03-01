@@ -347,6 +347,8 @@ public class RobotContainer {
 
     Trigger L3PositionTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3));
+    Trigger L3AlgaeTrigger =
+        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3ALGAE));
 
     // Driver Controls
 
@@ -510,17 +512,18 @@ public class RobotContainer {
     // Move elevator to stow when X is pressed
     operatorController
         .x()
-        .and(L3PositionTrigger)
         .onTrue(
             Commands.sequence(
-                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator),
-                Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
-                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
+                    Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator),
+                    Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+                    Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator))
+                .onlyIf(L3PositionTrigger.and(L3AlgaeTrigger))
+                .finallyDo(() -> elevator.setSetpoint(ElevatorPosition.STOW)));
 
-    operatorController
-        .x()
-        .and(L3PositionTrigger.negate())
-        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator));
+    // operatorController
+    //     .x()
+    //     .and(L3PositionTrigger.negate())
+    //     .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator));
 
     // Move elevator to L3 Algae removal when RT is pressed
     operatorController
