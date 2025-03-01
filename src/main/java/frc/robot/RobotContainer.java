@@ -81,6 +81,7 @@ public class RobotContainer {
     L2ALGAE(0, 90),
     L3(0.55, 90.0),
     L3ALGAE(0.4, 90),
+    L3RETURN(0.1, 80),
     L4(0.5, 90.0);
 
     public double extensionPosition;
@@ -452,35 +453,35 @@ public class RobotContainer {
     operatorController
         .povUpLeft()
         .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKLEFT)));
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKLEFT))).debounce(0.5);
 
     // Set lineup position to E/F
     operatorController
         .povUpRight()
         .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKRIGHT)));
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKRIGHT))).debounce(0.5);
 
     // Set lineup position to K/L
     operatorController
         .povDownLeft()
         .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTLEFT)));
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTLEFT))).debounce(0.5);
 
     // Set lineup position to C/D
     operatorController
         .povDownRight()
         .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTRIGHT)));
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTRIGHT))).debounce(0.5);
 
     // Set lineup position to G/H
     operatorController
         .povUp()
-        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACK)));
+        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACK))).debounce(0.5);
 
     // Set lineup position to A/B
     operatorController
         .povDown()
-        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT)));
+        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT))).debounce(0.5);
 
     // Adjust scoring position to left side
     operatorController
@@ -514,9 +515,8 @@ public class RobotContainer {
         .x()
         .onTrue(
             Commands.sequence(
-                    Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator),
-                    Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
-                    Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator))
+                    Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3RETURN), elevator),
+                    Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
                 .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger))
                 .finallyDo(() -> elevator.setSetpoint(ElevatorPosition.STOW)));
 
