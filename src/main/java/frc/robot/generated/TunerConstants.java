@@ -198,7 +198,7 @@ public class TunerConstants {
               kFrontLeftEncoderOffset,
               kFrontLeftXPos,
               kFrontLeftYPos,
-              kInvertLeftSide,
+              false,
               kFrontLeftSteerMotorInverted,
               kFrontLeftEncoderInverted);
   public static final SwerveModuleConstants<
@@ -211,7 +211,7 @@ public class TunerConstants {
               kFrontRightEncoderOffset,
               kFrontRightXPos,
               kFrontRightYPos,
-              kInvertRightSide,
+              true,
               kFrontRightSteerMotorInverted,
               kFrontRightEncoderInverted);
   public static final SwerveModuleConstants<
@@ -224,7 +224,7 @@ public class TunerConstants {
               kBackLeftEncoderOffset,
               kBackLeftXPos,
               kBackLeftYPos,
-              kInvertLeftSide,
+              false,
               kBackLeftSteerMotorInverted,
               kBackLeftEncoderInverted);
   public static final SwerveModuleConstants<
@@ -237,7 +237,7 @@ public class TunerConstants {
               kBackRightEncoderOffset,
               kBackRightXPos,
               kBackRightYPos,
-              kInvertRightSide,
+              true,
               kBackRightSteerMotorInverted,
               kBackRightEncoderInverted);
 
