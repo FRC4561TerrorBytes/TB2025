@@ -3,47 +3,51 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4998086734693878,
-        "y": 7.423820153061224
+        "x": 3.447321428571429,
+        "y": 5.095758928571428
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.648021475644697,
-        "y": 6.7087512367511355
+        "x": 3.14139030612041,
+        "y": 5.58823341836472
       },
       "isLocked": false,
-      "linkedName": "LS"
+      "linkedName": "KAlgae"
     },
     {
       "anchor": {
-        "x": 5.01,
-        "y": 5.31
+        "x": 3.1218464411392377,
+        "y": 6.315219239907126
       },
       "prevControl": {
-        "x": 4.698319672131148,
-        "y": 5.9932991803278695
+        "x": 2.720780110791907,
+        "y": 6.197833972488394
+      },
+      "nextControl": {
+        "x": 3.620839778535025,
+        "y": 6.461266070364431
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.679378813371208,
+        "y": 5.095758928571428
+      },
+      "prevControl": {
+        "x": 3.641326530610206,
+        "y": 5.916549744895333
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "J"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "L3",
-      "waypointRelativePos": 0.34899328859060386,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "L3"
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 2.0,
     "maxAcceleration": 1.5,
@@ -54,13 +58,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": 119.72481344198889
   },
   "reversed": false,
   "folder": "Left Source Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 126.0
+    "rotation": 123.00665127641302
   },
   "useDefaultConstraints": true
 }

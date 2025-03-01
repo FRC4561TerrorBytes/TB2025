@@ -280,7 +280,7 @@ public class RobotContainer {
     }
 
     // Register NamedCommands for use in PathPlanner
-    NamedCommands.registerCommand("Intake", intake.intakeCoral().withTimeout(1.0));
+    NamedCommands.registerCommand("Intake", intake.intakeCoral());
     NamedCommands.registerCommand("Outtake", intake.outtakeCoral().withTimeout(0.5));
     NamedCommands.registerCommand(
         "L1", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L1), elevator));
@@ -292,7 +292,26 @@ public class RobotContainer {
         "Source", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.SOURCE), elevator));
     NamedCommands.registerCommand(
         "Stow", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator));
-
+    NamedCommands.registerCommand(
+        "L3Algae",
+        Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3ALGAE), elevator));
+    NamedCommands.registerCommand(
+        "L2Algae",
+        Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2ALGAE), elevator));
+    NamedCommands.registerCommand(
+        "L3Stow",
+        Commands.runOnce(
+            () ->
+                Commands.sequence(
+                    Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator),
+                    Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+                    Commands.runOnce(
+                        () -> elevator.setSetpoint(ElevatorPosition.STOW), elevator))));
+    NamedCommands.registerCommand(
+        "SpinAlgae",
+        Commands.run(() -> algaeManipulator.setOutput(0.75), algaeManipulator)
+            .withTimeout(2.5)
+            .andThen(Commands.runOnce(() -> algaeManipulator.setOutput(0), algaeManipulator)));
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -444,6 +463,15 @@ public class RobotContainer {
     driverController
         .y()
         .whileTrue(new RunCommand(() -> algaeManipulator.setOutput(1), algaeManipulator));
+
+    driverController
+        .x()
+        .whileTrue(
+            AutoBuilder.pathfindToPose(
+                AllianceFlipUtil.apply(ReefScorePositions.PROCESSER.scorePosition),
+                new PathConstraints(
+                    1, 1, Units.degreesToRadians(360), Units.degreesToRadians(360))))
+        .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
     driverController
         .povRight()

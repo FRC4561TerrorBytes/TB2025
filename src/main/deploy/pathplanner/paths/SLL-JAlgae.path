@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4984631147540983,
-        "y": 0.7523565573770474
+        "x": 7.324487704918032,
+        "y": 6.158811475409837
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.681814938098883,
-        "y": 0.922303928277991
+        "x": 6.217646499854867,
+        "y": 5.843849309697954
       },
       "isLocked": false,
-      "linkedName": "RS"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.9799180327868857,
-        "y": 2.8142418032786884
+        "x": 4.872512755102041,
+        "y": 5.461383928571429
       },
       "prevControl": {
-        "x": 3.665310733898399,
-        "y": 2.4151415112823558
+        "x": 5.802123035768448,
+        "y": 6.067642763987123
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "D"
+      "linkedName": "JAlgae"
     }
   ],
   "rotationTargets": [],
@@ -33,13 +33,13 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "L3",
-      "waypointRelativePos": 0.511744966442952,
+      "name": "L3Algae",
+      "waypointRelativePos": 0.13422818791946303,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "L3"
+          "name": "L3Algae"
         }
       }
     }
@@ -54,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": 59.99999999999999
   },
   "reversed": false,
-  "folder": "Right Source Score",
+  "folder": "Starting Line Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -126.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

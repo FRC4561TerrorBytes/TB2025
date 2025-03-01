@@ -7,31 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SLL-JAlgae"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "SpinAlgae"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "I-LS"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "LS-J"
+            "pathName": "SLL-J"
           }
         },
         {
@@ -55,13 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LS-K"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Outtake"
+            "pathName": "LS-I"
           }
         }
       ]
