@@ -3,54 +3,68 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.022848360655738,
-        "y": 2.8382172131147545
+        "x": 7.324487704918032,
+        "y": 6.158811475409837
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.3875,
-        "y": 2.34672131147541
+        "x": 6.118622448979592,
+        "y": 6.140401785714285
       },
       "isLocked": false,
-      "linkedName": "E"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.4984631147540983,
-        "y": 0.7523565573770474
+        "x": 5.01,
+        "y": 5.31
       },
       "prevControl": {
-        "x": 3.3617986389434242,
-        "y": 1.9506541973521234
+        "x": 5.525348987955838,
+        "y": 6.36840425309468
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "RS"
+      "linkedName": "J"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.7499999999999993,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.4,
+        "maxAcceleration": 0.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Stow",
-      "waypointRelativePos": 0.2,
+      "name": "L3",
+      "waypointRelativePos": 0.7734899328859094,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "Stow"
+          "name": "L3"
         }
       }
     },
     {
-      "name": "Source",
-      "waypointRelativePos": 0.75,
+      "name": "SpinAlgae",
+      "waypointRelativePos": 0.8959731543624163,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "Source"
+          "name": "SpinAlgae"
         }
       }
     }
@@ -65,13 +79,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -126.0
+    "rotation": 59.99999999999999
   },
   "reversed": false,
-  "folder": "Right Source Pickup",
+  "folder": "Starting Line Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

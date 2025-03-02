@@ -32,10 +32,10 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.8523489932885915,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0.823825503355705,
+      "maxWaypointRelativePos": 0.9446308724832241,
       "constraints": {
-        "maxVelocity": 1.0,
+        "maxVelocity": 0.8,
         "maxAcceleration": 1.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -48,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "L3",
-      "waypointRelativePos": 0.8355704697986596,
+      "waypointRelativePos": 0.7466442953020151,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -56,6 +56,12 @@
           "name": "L3"
         }
       }
+    },
+    {
+      "name": "SpinAlgae",
+      "waypointRelativePos": 0.8590604026845662,
+      "endWaypointRelativePos": null,
+      "command": null
     }
   ],
   "globalConstraints": {

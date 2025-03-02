@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SLL-J-L3"
+            "pathName": "SLL-J-L2"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "J-L3-LS"
+            "pathName": "J-L2-LS"
           }
         },
         {
@@ -32,6 +32,36 @@
           "type": "path",
           "data": {
             "pathName": "LS-I"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "I-L3-LS"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LS-J"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
           }
         }
       ]

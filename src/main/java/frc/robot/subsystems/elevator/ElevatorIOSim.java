@@ -17,10 +17,10 @@ public class ElevatorIOSim implements ElevatorIO {
   /** Creates a new ElevatorIOSim. */
   private static final double LOOP_PERIOD_SECS = 0.02;
 
-  private static final double PIVOT_KP = 0.0009;
-  private static final double PIVOT_KD = 0.0011;
+  private static final double PIVOT_KP = 0.2;
+  private static final double PIVOT_KD = 0.7;
 
-  private static final double EXTENSION_KP = 75;
+  private static final double EXTENSION_KP = 0.25;
   private static final double EXTENSION_KD = 0;
 
   private static final DCMotor PIVOT_MOTOR = DCMotor.getFalcon500(4);
@@ -72,7 +72,7 @@ public class ElevatorIOSim implements ElevatorIO {
     extensionMotorSim =
         new DCMotorSim(
             LinearSystemId.createDCMotorSystem(
-                EXTENSION_MOTOR, 0.000001, Constants.EXTENSION_GEAR_RATIO),
+                EXTENSION_MOTOR, 0.000001, 1.0 / Constants.EXTENSION_GEAR_RATIO),
             EXTENSION_MOTOR);
     setTargetPosition(ElevatorPosition.STOW);
   }
@@ -104,8 +104,7 @@ public class ElevatorIOSim implements ElevatorIO {
     pivotMotorFourSim.update(LOOP_PERIOD_SECS);
     extensionMotorSim.update(LOOP_PERIOD_SECS);
 
-    inputs.pivotAngle =
-            pivotMotorOneSim.getAngularPositionRotations() / Constants.PIVOT_GEAR_RATIO;
+    inputs.pivotAngle = pivotMotorOneSim.getAngularPositionRotations() / Constants.PIVOT_GEAR_RATIO;
     inputs.extensionHeight =
         extensionMotorSim.getAngularPositionRotations() / Constants.EXTENSION_GEAR_RATIO;
 
@@ -125,7 +124,7 @@ public class ElevatorIOSim implements ElevatorIO {
     extensionClosedLoop = true;
     extensionSetpoint = position.extensionPosition;
     pivotClosedLoop = true;
-    pivotSetpoint = position.pivotPosition * -1;
+    pivotSetpoint = Units.degreesToRotations(position.pivotPosition * -1);
 
     lastPosition = position;
   }

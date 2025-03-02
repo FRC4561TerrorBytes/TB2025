@@ -74,7 +74,7 @@ public class RobotContainer {
   public enum ElevatorPosition {
     STOW(0, 20.0),
     SOURCE(0.1, 46),
-    CLIMBPREP(0.55, 50.0), //ask nicholas about this later
+    CLIMBPREP(0.55, 50.0), // ask nicholas about this later
     CLIMBFULL(0.55, 5),
     ALGAEINTAKE(0.1, 15),
     L1(0.1, 20.0),
@@ -280,7 +280,11 @@ public class RobotContainer {
     }
 
     // Register NamedCommands for use in PathPlanner
-    NamedCommands.registerCommand("Intake", intake.intakeCoral());
+    NamedCommands.registerCommand(
+        "Intake",
+        intake
+            .intakeCoral()
+            .withTimeout(0.5)); // REMOVE WITH TIMEOUT ADDED FOR SIM TESTING PURPOSES
     NamedCommands.registerCommand("Outtake", intake.outtakeCoral().withTimeout(0.5));
     NamedCommands.registerCommand(
         "L1", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L1), elevator));

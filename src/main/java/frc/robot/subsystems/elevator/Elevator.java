@@ -47,12 +47,14 @@ public class Elevator extends SubsystemBase {
           new Pose3d(
               0.03
                   - 0.2782
-                  + Math.cos(Units.rotationsToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
+                  + Math.cos(Units.rotationsToRadians(inputs.pivotAngle))
+                      * (inputs.extensionHeight),
               0,
               0.37
                   - 0.095
-                  - Math.sin(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
-              new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0))
+                  - Math.sin(Units.rotationsToRadians(inputs.pivotAngle))
+                      * (inputs.extensionHeight),
+              new Rotation3d(0, Units.rotationsToRadians(inputs.pivotAngle), 0))
         });
 
     SmartDashboard.putString("Auto Lineup/Score Level", selectedElevatorPosition.toString());
