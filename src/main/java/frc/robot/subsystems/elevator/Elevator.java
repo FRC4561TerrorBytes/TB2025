@@ -43,11 +43,11 @@ public class Elevator extends SubsystemBase {
               0.03 - 0.2782,
               0,
               0.37 - 0.095,
-              new Rotation3d(0, Units.degreesToRadians(inputs.pivotAngle), 0)),
+              new Rotation3d(0, Units.rotationsToRadians(inputs.pivotAngle), 0)),
           new Pose3d(
               0.03
                   - 0.2782
-                  + Math.cos(Units.degreesToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
+                  + Math.cos(Units.rotationsToRadians(inputs.pivotAngle)) * (inputs.extensionHeight),
               0,
               0.37
                   - 0.095

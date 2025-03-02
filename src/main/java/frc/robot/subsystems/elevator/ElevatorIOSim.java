@@ -105,8 +105,7 @@ public class ElevatorIOSim implements ElevatorIO {
     extensionMotorSim.update(LOOP_PERIOD_SECS);
 
     inputs.pivotAngle =
-        Units.rotationsToDegrees(
-            pivotMotorOneSim.getAngularPositionRotations() / Constants.PIVOT_GEAR_RATIO);
+            pivotMotorOneSim.getAngularPositionRotations() / Constants.PIVOT_GEAR_RATIO;
     inputs.extensionHeight =
         extensionMotorSim.getAngularPositionRotations() / Constants.EXTENSION_GEAR_RATIO;
 
