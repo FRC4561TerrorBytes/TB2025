@@ -31,19 +31,38 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LS-I"
+            "pathName": "LS-J(removes algae)"
           }
         },
         {
-          "type": "named",
+          "type": "sequential",
           "data": {
-            "name": "Outtake"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "L3"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Outtake"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "I-LS"
+            "pathName": "J-LS"
           }
         },
         {
@@ -55,7 +74,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LS-J"
+            "pathName": "LS-I"
           }
         },
         {

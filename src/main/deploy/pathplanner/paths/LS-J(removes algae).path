@@ -47,20 +47,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "L3",
-      "waypointRelativePos": 0.7466442953020151,
+      "name": "L3Algae",
+      "waypointRelativePos": 0.2869127516778508,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "L3"
+          "name": "L3Algae"
         }
       }
     },
     {
       "name": "SpinAlgae",
-      "waypointRelativePos": 0.8590604026845662,
-      "endWaypointRelativePos": null,
+      "waypointRelativePos": 0.8020134228187913,
+      "endWaypointRelativePos": 1.0,
       "command": null
     }
   ],

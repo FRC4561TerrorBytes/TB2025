@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 4.958476027397261,
-        "y": 1.3278895547945209
+        "y": 1.327889554794521
       },
       "isLocked": false,
       "linkedName": "F"
@@ -70,7 +70,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -126.0
+    "rotation": -126.8228567865343
   },
   "reversed": false,
   "folder": "Right Source Pickup",

@@ -84,13 +84,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 62.21200363001322
+    "rotation": 59.99999999999999
   },
   "reversed": false,
   "folder": "Algae to Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 56.30993247402028
+    "rotation": 59.99999999999999
   },
   "useDefaultConstraints": true
 }
