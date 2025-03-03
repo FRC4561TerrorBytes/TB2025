@@ -295,22 +295,19 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Source", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.SOURCE), elevator));
     NamedCommands.registerCommand(
-        "Stow", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator));
+        "Stow",
+        Commands.sequence(
+                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator),
+                Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
+            .onlyIf(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3))
+            .andThen(
+                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
     NamedCommands.registerCommand(
         "L3Algae",
         Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3ALGAE), elevator));
     NamedCommands.registerCommand(
         "L2Algae",
         Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2ALGAE), elevator));
-    NamedCommands.registerCommand(
-        "L3Stow",
-        Commands.runOnce(
-            () ->
-                Commands.sequence(
-                    Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator),
-                    Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
-                    Commands.runOnce(
-                        () -> elevator.setSetpoint(ElevatorPosition.STOW), elevator))));
     NamedCommands.registerCommand(
         "SpinAlgae",
         Commands.run(() -> algaeManipulator.setOutput(0.75), algaeManipulator)

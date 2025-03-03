@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "J-L2-LS"
+            "pathName": "J-LS"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "I-L3-LS"
+            "pathName": "I-LS"
           }
         },
         {
@@ -68,6 +68,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Comp 1",
   "choreoAuto": false
 }
