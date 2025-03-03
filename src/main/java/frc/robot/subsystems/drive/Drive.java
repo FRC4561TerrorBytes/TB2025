@@ -39,6 +39,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -233,37 +234,37 @@ public class Drive extends SubsystemBase {
 
     switch (selectedPosition) {
       case FRONT:
-        if (autoAlignOffsetX == Constants.SCORING_POSITION_OFFSET)
+        if (autoAlignOffsetX == Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET))
           SmartDashboard.putString("Auto Lineup/Reef Position", "B");
         else SmartDashboard.putString("Auto Lineup/Reef Position", "A");
         break;
 
       case FRONTRIGHT:
-        if (autoAlignOffsetX == Constants.SCORING_POSITION_OFFSET)
+        if (autoAlignOffsetX == Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET))
           SmartDashboard.putString("Auto Lineup/Reef Position", "D");
         else SmartDashboard.putString("Auto Lineup/Reef Position", "C");
         break;
 
       case BACKRIGHT:
-        if (autoAlignOffsetX == Constants.SCORING_POSITION_OFFSET)
+        if (autoAlignOffsetX == Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET))
           SmartDashboard.putString("Auto Lineup/Reef Position", "F");
         else SmartDashboard.putString("Auto Lineup/Reef Position", "E");
         break;
 
       case BACK:
-        if (autoAlignOffsetX == Constants.SCORING_POSITION_OFFSET)
+        if (autoAlignOffsetX == Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET))
           SmartDashboard.putString("Auto Lineup/Reef Position", "H");
         else SmartDashboard.putString("Auto Lineup/Reef Position", "G");
         break;
 
       case BACKLEFT:
-        if (autoAlignOffsetX == Constants.SCORING_POSITION_OFFSET)
+        if (autoAlignOffsetX == Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET))
           SmartDashboard.putString("Auto Lineup/Reef Position", "J");
         else SmartDashboard.putString("Auto Lineup/Reef Position", "I");
         break;
 
       case FRONTLEFT:
-        if (autoAlignOffsetX == Constants.SCORING_POSITION_OFFSET)
+        if (autoAlignOffsetX == Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET))
           SmartDashboard.putString("Auto Lineup/Reef Position", "L");
         else SmartDashboard.putString("Auto Lineup/Reef Position", "K");
         break;
