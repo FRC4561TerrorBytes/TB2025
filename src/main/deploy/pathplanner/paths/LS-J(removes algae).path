@@ -61,7 +61,12 @@
       "name": "SpinAlgae",
       "waypointRelativePos": 0.8590604026845662,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SpinAlgae"
+        }
+      }
     }
   ],
   "globalConstraints": {

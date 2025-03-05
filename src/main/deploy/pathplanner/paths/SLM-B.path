@@ -8,35 +8,51 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.901514848903371,
-        "y": 4.059410243818222
+        "x": 5.969877049180327,
+        "y": 2.86219262295082
       },
       "isLocked": false,
       "linkedName": "SLM"
     },
     {
       "anchor": {
-        "x": 5.78,
-        "y": 4.19
+        "x": 4.495389344262295,
+        "y": 2.3347336065573767
       },
       "prevControl": {
-        "x": 6.460708901157409,
-        "y": 4.133823583685828
+        "x": 5.394467213114754,
+        "y": 2.1908811475409844
+      },
+      "nextControl": {
+        "x": 3.6543082490529564,
+        "y": 2.46930658179087
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.14,
+        "y": 3.869
+      },
+      "prevControl": {
+        "x": 2.241700819672131,
+        "y": 3.245799180327869
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "H"
+      "linkedName": "B"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.8020134228187944,
-      "maxWaypointRelativePos": 0.9916107382550368,
+      "minWaypointRelativePos": 1.7,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 0.5,
-        "maxAcceleration": 0.5,
+        "maxAcceleration": 1.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -45,33 +61,10 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "L2",
-      "waypointRelativePos": 0.14854827819041522,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "L2"
-        }
-      }
-    },
-    {
-      "name": "SpinAlgae",
-      "waypointRelativePos": 0.889261744966444,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "SpinAlgae"
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.2,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -79,7 +72,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Starting Line Paths",
@@ -87,5 +80,5 @@
     "velocity": 0,
     "rotation": 0.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
