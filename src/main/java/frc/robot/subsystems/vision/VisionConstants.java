@@ -26,7 +26,7 @@ public class VisionConstants {
 
   // Camera names, must match names configured on coprocessor
   public static String camera0Name = "limelight-vanap";
-  public static String camera1Name = "limelight-2";
+  public static String camera1Name = "limelight-table";
 
   public static Pose3d[] cameraOffsets = {
     new Pose3d(

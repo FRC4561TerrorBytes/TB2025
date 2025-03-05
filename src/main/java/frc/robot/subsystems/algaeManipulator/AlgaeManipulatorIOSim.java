@@ -3,6 +3,7 @@ package frc.robot.subsystems.algaeManipulator;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class AlgaeManipulatorIOSim implements AlgaeManipulatorIO {
@@ -17,10 +18,12 @@ public class AlgaeManipulatorIOSim implements AlgaeManipulatorIO {
           DCMotor.getNeo550(1));
 
   @Override
-  public void updateInputs(AlgaeManipulatorIOInputs Inputs) {
+  public void updateInputs(AlgaeManipulatorIOInputs inputs) {
     algaeManipulatorMotorSim.update(LOOP_PERIOD_SECS);
-    Inputs.algaeManipulatorVoltage = algaeManipulatorAppliedVolts;
-    Inputs.algaeManipulatorCurrentAmps = Math.abs(algaeManipulatorMotorSim.getCurrentDrawAmps());
+    inputs.algaeManipulatorVelocity =
+        Units.radiansToDegrees(algaeManipulatorMotorSim.getAngularVelocityRadPerSec());
+    inputs.algaeManipulatorVoltage = algaeManipulatorAppliedVolts;
+    inputs.algaeManipulatorCurrentAmps = Math.abs(algaeManipulatorMotorSim.getCurrentDrawAmps());
   }
 
   public void setOutput(double volts) {

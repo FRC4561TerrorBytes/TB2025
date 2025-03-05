@@ -64,7 +64,7 @@
   "folder": "Left Source Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 123.00665127641302
+    "rotation": -60.068488159492304
   },
   "useDefaultConstraints": true
 }

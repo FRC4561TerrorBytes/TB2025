@@ -14,6 +14,7 @@
 package frc.robot;
 
 import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
+import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -55,6 +56,7 @@ import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOReal;
+import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -74,8 +76,8 @@ public class RobotContainer {
   public enum ElevatorPosition {
     STOW(0, 20.0),
     SOURCE(0.1, 46),
-    CLIMBPREP(0.55, 50.0), // ask nicholas about this later
-    CLIMBFULL(0.55, 5),
+    CLIMBPREP(0.45, 50.0),
+    CLIMBFULL(0.2, 10),
     ALGAEINTAKE(0.1, 15),
     L1(0.1, 20.0),
     L2(0.0, 85.0),
@@ -243,7 +245,8 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive::addVisionMeasurement,
-                new VisionIOLimelight(camera0Name, drive::getRotation));
+                new VisionIOLimelight(camera0Name, drive::getRotation),
+                new VisionIOLimelight(camera1Name, drive::getRotation));
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOReal());
         break;
 
@@ -256,9 +259,9 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        intake = new Intake(new IntakeIO() {});
+        intake = new Intake(new IntakeIOSim());
         elevator = new Elevator(new ElevatorIOSim());
-        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {});
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOSim());
         break;
 
@@ -306,12 +309,14 @@ public class RobotContainer {
         "L3Algae",
         Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3ALGAE), elevator));
     NamedCommands.registerCommand(
+        "WaitForArm", Commands.waitUntil(() -> elevator.mechanismAtSetpoint()));
+    NamedCommands.registerCommand(
         "L2Algae",
         Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2ALGAE), elevator));
     NamedCommands.registerCommand(
         "SpinAlgae",
-        Commands.run(() -> algaeManipulator.setOutput(0.75), algaeManipulator)
-            .withTimeout(2.5)
+        Commands.run(() -> algaeManipulator.setOutput(1.0), algaeManipulator)
+            // .withTimeout(2.5)
             .andThen(Commands.runOnce(() -> algaeManipulator.setOutput(0), algaeManipulator)));
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());

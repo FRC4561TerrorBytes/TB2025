@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 4.567808219178082,
-        "y": 1.6284032534246582
+        "y": 1.6284032534246584
       },
       "nextControl": null,
       "isLocked": false,
@@ -60,7 +60,7 @@
   "folder": "Right Source Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -126.0
+    "rotation": -126.8228567865343
   },
   "useDefaultConstraints": true
 }
