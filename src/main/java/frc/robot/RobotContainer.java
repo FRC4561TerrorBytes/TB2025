@@ -76,8 +76,8 @@ public class RobotContainer {
   public enum ElevatorPosition {
     STOW(0, 20.0),
     SOURCE(0.1, 46),
-    CLIMBPREP(0.55, 50.0), // ask nicholas about this later
-    CLIMBFULL(0.55, 5),
+    CLIMBPREP(0.45, 50.0),
+    CLIMBFULL(0.2, 10),
     ALGAEINTAKE(0.1, 15),
     L1(0.1, 20.0),
     L2(0.0, 85.0),
