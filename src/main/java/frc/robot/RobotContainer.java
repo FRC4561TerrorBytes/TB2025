@@ -19,7 +19,6 @@ import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -221,6 +220,7 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
+  private final CommandXboxController reefSelector = new CommandXboxController(2);
 
   // Manual elevator toggle (incase things go wrong)
   boolean manualElevatorToggle = false;
@@ -388,26 +388,29 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    // Toggle coral intake when left bumper is pressed
+    // Toggle coral intake when LEFT BUMPER is pressed
     driverController
         .leftTrigger()
         .and(algaePositionTrigger.negate())
         .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.SOURCE), elevator))
         .toggleOnTrue(intake.intakeCoral());
 
+    // Toggle algae intake when LEFT BUMPER is pressed and arm is at algae intake position
     driverController
         .leftTrigger()
         .and(algaePositionTrigger)
         .toggleOnTrue(Commands.run(() -> intake.setOutput(-0.75), intake));
 
-    // Outtake coral while right bumper is held
+    // Outtake coral while RIGHT TRIGGER is held
     driverController
         .rightTrigger()
         .and(L1PositionTrigger.negate())
         .whileTrue(intake.outtakeCoral());
 
+    // Outtake coral other way at L1 when RIGHT TRIGGER is held
     driverController.rightTrigger().and(L1PositionTrigger).whileTrue(intake.outtakeL1Coral());
 
+    // Pathfind to left source when LEFT BUMPER is held
     driverController
         .leftBumper()
         .whileTrue(
@@ -417,6 +420,7 @@ public class RobotContainer {
                     1, 1, Units.degreesToRadians(360), Units.degreesToRadians(360))))
         .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
+    // Pathfind to right source when RIGHT BUMPER is held
     driverController
         .rightBumper()
         .whileTrue(
@@ -466,6 +470,7 @@ public class RobotContainer {
         .y()
         .whileTrue(new RunCommand(() -> algaeManipulator.setOutput(1), algaeManipulator));
 
+    // Pathfind to processor when X is held
     driverController
         .x()
         .whileTrue(
@@ -475,63 +480,28 @@ public class RobotContainer {
                     1, 1, Units.degreesToRadians(360), Units.degreesToRadians(360))))
         .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
+    // Set elevator to ALGAEINTAKE when DPAD RIGHT is pressed
     driverController
         .povRight()
         .onTrue(
             Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.ALGAEINTAKE), elevator));
 
+    // set elevator to CLIMBPREP when DPAD UP is pressed
     driverController
         .povUp()
         .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBPREP), elevator));
 
+    // set elevator to CLIMBFULL when DPAD DOWN is pressed
     driverController
         .povDown()
         .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBFULL), elevator));
 
+        
     // Operator Controls
 
-    // Set lineup position to I/J
+    // Adjust scoring position to left side when DPAD LEFT is pressed
     operatorController
-        .povUpLeft()
-        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKLEFT)))
-        .debounce(0.5, DebounceType.kFalling);
-
-    // Set lineup position to E/F
-    operatorController
-        .povUpRight()
-        .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKRIGHT)))
-        .debounce(0.5, DebounceType.kFalling);
-
-    // Set lineup position to K/L
-    operatorController
-        .povDownLeft()
-        .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTLEFT)))
-        .debounce(0.5, DebounceType.kFalling);
-
-    // Set lineup position to C/D
-    operatorController
-        .povDownRight()
-        .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTRIGHT)))
-        .debounce(0.5, DebounceType.kFalling);
-
-    // Set lineup position to G/H
-    operatorController
-        .povUp()
-        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACK)))
-        .debounce(0.5, DebounceType.kFalling);
-
-    // Set lineup position to A/B
-    operatorController
-        .povDown()
-        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT)))
-        .debounce(0.5, DebounceType.kFalling);
-
-    // Adjust scoring position to left side
-    operatorController
-        .leftBumper()
+        .povLeft()
         .onTrue(
             new InstantCommand(
                 () -> {
@@ -539,9 +509,9 @@ public class RobotContainer {
                       Units.inchesToMeters(-Constants.SCORING_POSITION_OFFSET));
                 }));
 
-    // Adjust scoring position to right side
+    // Adjust scoring position to right side when DPAD RIGHT is pressed
     operatorController
-        .rightBumper()
+        .povRight()
         .onTrue(
             new InstantCommand(
                 () -> {
@@ -550,6 +520,7 @@ public class RobotContainer {
                 }));
 
     // Toggle manual elevator control when BACK is pressed
+    // OUTDATED (MAYBE SHOULDNT USE SOON)
     operatorController
         .back()
         .toggleOnTrue(
@@ -566,11 +537,6 @@ public class RobotContainer {
                 .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger))
                 .finallyDo(() -> elevator.setSetpoint(ElevatorPosition.STOW)));
 
-    // operatorController
-    //     .x()
-    //     .and(L3PositionTrigger.negate())
-    //     .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator));
-
     // Move elevator to L3 Algae removal when RT is pressed
     operatorController
         .rightTrigger()
@@ -581,47 +547,71 @@ public class RobotContainer {
         .leftTrigger()
         .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2ALGAE), elevator));
 
-    // Move elevator to L1 position when A is pressed and Manual mode is TRUE
+    // Move elevator to L1 position when A is pressed
     operatorController
         .a()
-        .and(() -> manualElevatorToggle)
         .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L1)));
 
-    // Move elevator to L2 position when B is pressed and Manual mode is TRUE
+    // Move elevator to L2 position when B is pressed
     operatorController
         .b()
-        .and(() -> manualElevatorToggle)
         .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L2)));
 
-    // Move elevator to L3 position when Y is pressed and Manual mode is TRUE
+    // Move elevator to L3 position when Y is pressed
     operatorController
         .y()
-        .and(() -> manualElevatorToggle)
         .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3), elevator));
 
-    // Request L1 automated score position when A is pressed and Manual mode is FALSE
+    // Set requested auto score level to L2 when DPAD DOWN is pressed
     operatorController
-        .a()
-        .and(() -> !manualElevatorToggle)
-        .onTrue(
-            Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L1), elevator)
-                .alongWith(Commands.runOnce(() -> leds.autoScoringLevel = ReefLevel.L1)));
-
-    // Request L2 automated score position when B is pressed and Manual mode is FALSE
-    operatorController
-        .b()
-        .and(() -> !manualElevatorToggle)
+        .povDown()
         .onTrue(
             Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L2), elevator)
                 .alongWith(Commands.runOnce(() -> leds.autoScoringLevel = ReefLevel.L2)));
 
-    // Request L3 automated score position when Y is pressed and Manual mode is FALSE
+    // Set requested auto score level to L3 when DPAD UP is pressed
     operatorController
-        .y()
-        .and(() -> !manualElevatorToggle)
+        .povUp()
         .onTrue(
             Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L3), elevator)
                 .alongWith(Commands.runOnce(() -> leds.autoScoringLevel = ReefLevel.L3)));
+
+
+    // REEF SELECTION USING KEYBOARD
+
+    // Set lineup position to I/J
+    reefSelector
+        .a()
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKLEFT)));
+
+    // Set lineup position to E/F
+    reefSelector
+        .b()
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKRIGHT)));
+
+    // Set lineup position to K/L
+    reefSelector
+        .x()
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTLEFT)));
+
+    // Set lineup position to C/D
+    reefSelector
+        .y()
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTRIGHT)));
+
+    // Set lineup position to G/H
+    reefSelector
+        .povUp()
+        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACK)));
+
+    // Set lineup position to A/B
+    reefSelector
+        .povDown()
+        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT)));
   }
 
   /**
