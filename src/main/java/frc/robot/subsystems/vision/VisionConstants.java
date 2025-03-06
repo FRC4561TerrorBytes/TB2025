@@ -25,8 +25,8 @@ public class VisionConstants {
       AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
   // Camera names, must match names configured on coprocessor
-  public static String camera0Name = "limelight-vanap";
-  public static String camera1Name = "limelight-table";
+  public static String camera0Name = "limelight-table";
+  public static String camera1Name = "limelight-vanap";
 
   public static Pose3d[] cameraOffsets = {
     new Pose3d(

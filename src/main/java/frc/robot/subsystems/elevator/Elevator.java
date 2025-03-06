@@ -101,7 +101,7 @@ public class Elevator extends SubsystemBase {
   @AutoLogOutput(key = "Elevator/At setpoint")
   public boolean mechanismAtSetpoint() {
     if (Math.abs(inputs.extensionHeight - inputs.extensionSetpoint) <= 0.075
-        && Math.abs(inputs.pivotAngle - inputs.pivotSetpoint) <= Units.degreesToRotations(6.0))
+        && Math.abs(inputs.pivotAngle - inputs.pivotSetpoint) <= Units.degreesToRotations(4.0))
       return true;
     else return false;
   }

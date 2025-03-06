@@ -77,7 +77,7 @@ public class RobotContainer {
     STOW(0, 20.0),
     SOURCE(0.1, 46),
     CLIMBPREP(0.45, 50.0),
-    CLIMBFULL(0.2, 10),
+    CLIMBFULL(0.2, 5),
     ALGAEINTAKE(0.1, 15),
     L1(0.1, 20.0),
     L2(0.0, 85.0),
@@ -283,11 +283,7 @@ public class RobotContainer {
     }
 
     // Register NamedCommands for use in PathPlanner
-    NamedCommands.registerCommand(
-        "Intake",
-        intake
-            .intakeCoral()
-            .withTimeout(0.5)); // REMOVE WITH TIMEOUT ADDED FOR SIM TESTING PURPOSES
+    NamedCommands.registerCommand("Intake", intake.intakeCoral());
     NamedCommands.registerCommand("Outtake", intake.outtakeCoral().withTimeout(0.5));
     NamedCommands.registerCommand(
         "L1", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L1), elevator));
