@@ -52,7 +52,7 @@ public final class Constants {
   public static final int RIGHT_PIVOT_ID_1 = 33;
   public static final int RIGHT_PIVOT_ID_2 = 34;
   public static final int PIVOT_STATOR_CURRENT_LIMIT = 60;
-  public static final int PIVOT_SUPPLY_CURRENT_LIMIT = 40;
+  public static final int PIVOT_SUPPLY_CURRENT_LIMIT = 50;
   public static final int EXTENSION_STATOR_CURRENT_LIMIT = 30;
   public static final int EXTENSION_SUPPLY_CURRENT_LIMIT = 20;
 

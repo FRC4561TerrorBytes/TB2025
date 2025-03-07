@@ -468,7 +468,7 @@ public class RobotContainer {
     // Run algae bar when Y is held
     driverController
         .y()
-        .whileTrue(new RunCommand(() -> algaeManipulator.setOutput(1), algaeManipulator));
+        .toggleOnTrue(new RunCommand(() -> algaeManipulator.setOutput(1), algaeManipulator));
 
     // Pathfind to processor when X is held
     driverController
@@ -496,7 +496,6 @@ public class RobotContainer {
         .povDown()
         .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBFULL), elevator));
 
-        
     // Operator Controls
 
     // Adjust scoring position to left side when DPAD LEFT is pressed
@@ -575,7 +574,6 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L3), elevator)
                 .alongWith(Commands.runOnce(() -> leds.autoScoringLevel = ReefLevel.L3)));
-
 
     // REEF SELECTION USING KEYBOARD
 
