@@ -47,13 +47,13 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "L3",
+      "name": "L3Algae",
       "waypointRelativePos": 0.7734899328859094,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "L3"
+          "name": "L3Algae"
         }
       }
     },
