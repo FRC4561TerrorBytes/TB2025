@@ -468,7 +468,9 @@ public class RobotContainer {
     // Run algae bar when Y is held
     driverController
         .y()
-        .toggleOnTrue(new RunCommand(() -> algaeManipulator.setOutput(1), algaeManipulator));
+        .toggleOnTrue(
+            new RunCommand(() -> algaeManipulator.setOutput(1), algaeManipulator)
+                .andThen(() -> algaeManipulator.setIfSpinning(false), algaeManipulator));
 
     // Pathfind to processor when X is held
     driverController

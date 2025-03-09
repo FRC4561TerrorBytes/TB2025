@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.5520408163265307,
-        "y": 7.296970663265306
+        "x": 1.1467329545454548,
+        "y": 7.026448863636364
       },
       "prevControl": {
-        "x": 1.7844555035128808,
-        "y": 6.944006147540984
+        "x": 1.3791476417318052,
+        "y": 6.673484347912044
       },
       "nextControl": null,
       "isLocked": false,
@@ -73,7 +73,7 @@
     "rotation": 126.0
   },
   "reversed": false,
-  "folder": "Left Source Pickup",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 59.99999999999999

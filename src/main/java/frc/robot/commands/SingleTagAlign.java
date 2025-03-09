@@ -76,7 +76,6 @@ public class SingleTagAlign extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return pathCommand.isFinished()
-        || !vision.seenTagId(drive.getSelectedScorePosition().aprilTagID, 0);
+    return pathCommand.isFinished();
   }
 }

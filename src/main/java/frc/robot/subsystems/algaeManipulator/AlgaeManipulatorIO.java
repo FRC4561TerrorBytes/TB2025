@@ -15,4 +15,6 @@ public interface AlgaeManipulatorIO {
   public default void updateInputs(AlgaeManipulatorIOInputs inputs) {}
 
   public default void setOutput(double speed) {}
+
+  public default void setIfSpinning(boolean spin) {}
 }
