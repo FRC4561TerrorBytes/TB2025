@@ -410,25 +410,35 @@ public class RobotContainer {
     // Outtake coral other way at L1 when RIGHT TRIGGER is held
     driverController.rightTrigger().and(L1PositionTrigger).whileTrue(intake.outtakeL1Coral());
 
-    // Pathfind to left source when LEFT BUMPER is held
-    driverController
-        .leftBumper()
-        .whileTrue(
-            AutoBuilder.pathfindToPose(
-                AllianceFlipUtil.apply(ReefScorePositions.LEFTSOURCE.scorePosition),
-                new PathConstraints(
-                    1, 1, Units.degreesToRadians(360), Units.degreesToRadians(360))))
-        .onFalse(Commands.runOnce(() -> drive.stop(), drive));
-
-    // Pathfind to right source when RIGHT BUMPER is held
+    // Automatically de-algaefy reef at selected position when RB is held
     driverController
         .rightBumper()
         .whileTrue(
-            AutoBuilder.pathfindToPose(
-                AllianceFlipUtil.apply(ReefScorePositions.RIGHTSOURCE.scorePosition),
-                new PathConstraints(
-                    1, 1, Units.degreesToRadians(360), Units.degreesToRadians(360))))
-        .onFalse(Commands.runOnce(() -> drive.stop(), drive));
+            Commands.sequence(
+                Commands.runOnce(() -> leds.autoScoring = true),
+                new DriveToPose(drive, vision),
+                Commands.parallel(
+                    new SingleTagAlign(drive, vision),
+                    Commands.runOnce(
+                        () -> elevator.setSetpoint(drive.getAlgaePosition()), elevator),
+                    Commands.run(() -> algaeManipulator.setOutput(1), algaeManipulator)),
+                Commands.waitSeconds(5.0),
+                Commands.runOnce(
+                    () -> elevator.setSetpoint(elevator.getRequestedElevatorPosition()), elevator),
+                Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+                intake.outtakeCoral().withTimeout(0.5)))
+        .onFalse(
+            Commands.sequence(
+                    Commands.runOnce(
+                        () -> elevator.setSetpoint(ElevatorPosition.L3RETURN), elevator),
+                    Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+                    Commands.runOnce(
+                        () -> elevator.setSetpoint(ElevatorPosition.L3RETURN2), elevator),
+                    Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
+                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger))
+                .alongWith(Commands.runOnce(() -> drive.stop(), drive))
+                .andThen(
+                    Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
 
     // Run lineup sequence when B is held
     driverController
@@ -437,9 +447,9 @@ public class RobotContainer {
             Commands.sequence(new DriveToPose(drive, vision), new SingleTagAlign(drive, vision)))
         .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
-    // Run automated scoring when A is held
+    // Run automated scoring when LB is held
     driverController
-        .a()
+        .leftBumper()
         .whileTrue(
             Commands.sequence(
                 Commands.runOnce(() -> leds.autoScoring = true),

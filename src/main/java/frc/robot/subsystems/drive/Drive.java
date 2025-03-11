@@ -398,6 +398,16 @@ public class Drive extends SubsystemBase {
     selectedPosition = position;
   }
 
+  public ElevatorPosition getAlgaePosition() {
+    if (selectedPosition.scorePosition.equals(ReefScorePositions.FRONT.scorePosition)
+        || selectedPosition.scorePosition.equals(ReefScorePositions.BACKRIGHT.scorePosition)
+        || selectedPosition.scorePosition.equals(ReefScorePositions.BACKLEFT.scorePosition)) {
+      return ElevatorPosition.L3ALGAE;
+    } else {
+      return ElevatorPosition.L2ALGAE;
+    }
+  }
+
   public void setAutoAlignOffsetX(double offset) {
     autoAlignOffsetX = offset;
   }
