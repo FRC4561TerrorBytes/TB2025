@@ -69,7 +69,7 @@ public class TunerConstants {
                   // stator current limit to help avoid brownouts without impacting performance.
                   .withStatorCurrentLimit(Amps.of(80))
                   .withStatorCurrentLimitEnable(true)
-                  .withSupplyCurrentLimit(Amps.of(20))
+                  .withSupplyCurrentLimit(Amps.of(40))
                   .withSupplyCurrentLimitEnable(true));
   private static final TalonFXConfiguration steerInitialConfigs =
       new TalonFXConfiguration()

@@ -17,7 +17,6 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import com.pathplanner.lib.commands.FollowPathCommand;
-
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -110,7 +109,7 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void robotInit(){
+  public void robotInit() {
     FollowPathCommand.warmupCommand().schedule();
   }
 
