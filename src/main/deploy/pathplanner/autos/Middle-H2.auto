@@ -9,6 +9,18 @@
           "data": {
             "pathName": "SLM-H"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "H-H"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
         }
       ]
     }

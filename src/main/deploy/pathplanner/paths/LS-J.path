@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5584016393442621,
-        "y": 7.321618852459016
+        "x": 1.1467329545454548,
+        "y": 7.026448863636364
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.706614441519571,
-        "y": 6.6065499361489275
+        "x": 2.2949457567207645,
+        "y": 6.311379947326277
       },
       "isLocked": false,
       "linkedName": "LS"
     },
     {
       "anchor": {
-        "x": 4.998872950819672,
-        "y": 5.223770491803278
+        "x": 4.98,
+        "y": 5.22
       },
       "prevControl": {
-        "x": 4.68719262295082,
-        "y": 5.907069672131148
+        "x": 4.668319672131148,
+        "y": 5.90329918032787
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,12 +29,38 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.8523489932885915,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 1.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "L3",
+      "waypointRelativePos": 0.8355704697986596,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "L3"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.2,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -45,7 +71,7 @@
     "rotation": 59.99999999999999
   },
   "reversed": false,
-  "folder": "Left Source Score",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 126.0

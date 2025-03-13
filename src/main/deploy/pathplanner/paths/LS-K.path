@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5584016393442621,
-        "y": 7.321618852459016
+        "x": 1.1467329545454548,
+        "y": 7.026448863636364
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.247457575203148,
-        "y": 6.625712181117919
+        "x": 1.835788890404341,
+        "y": 6.330542192295269
       },
       "isLocked": false,
       "linkedName": "LS"
     },
     {
       "anchor": {
-        "x": 3.9799180327868857,
-        "y": 5.223770491803278
+        "x": 3.9248724489795923,
+        "y": 5.36438137755102
       },
       "prevControl": {
-        "x": 3.7088717451360917,
-        "y": 5.627492536833562
+        "x": 3.6538261613287983,
+        "y": 5.768103422581303
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,12 +29,49 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.7382550335570481,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.4,
+        "maxAcceleration": 0.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "L2",
+      "waypointRelativePos": 0.5436241610738263,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "L3"
+        }
+      }
+    },
+    {
+      "name": "SpinAlgae",
+      "waypointRelativePos": 0.8540268456375852,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SpinAlgae"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.2,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -45,7 +82,7 @@
     "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": "Left Source Score",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 126.0

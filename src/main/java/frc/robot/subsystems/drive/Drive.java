@@ -39,10 +39,13 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -99,6 +102,8 @@ public class Drive extends SubsystemBase {
 
   private ReefScorePositions selectedPosition = ReefScorePositions.FRONT;
   private double autoAlignOffsetX = 0;
+
+  private Field2d field = new Field2d();
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private Rotation2d rawGyroRotation = new Rotation2d();
@@ -223,6 +228,51 @@ public class Drive extends SubsystemBase {
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
+
+    field.setRobotPose(getPose());
+    SmartDashboard.putData("Field", field);
+
+    switch (selectedPosition) {
+      case FRONT:
+        if (autoAlignOffsetX == Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET))
+          SmartDashboard.putString("Auto Lineup/Reef Position", "B");
+        else SmartDashboard.putString("Auto Lineup/Reef Position", "A");
+        break;
+
+      case FRONTRIGHT:
+        if (autoAlignOffsetX == Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET))
+          SmartDashboard.putString("Auto Lineup/Reef Position", "D");
+        else SmartDashboard.putString("Auto Lineup/Reef Position", "C");
+        break;
+
+      case BACKRIGHT:
+        if (autoAlignOffsetX == Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET))
+          SmartDashboard.putString("Auto Lineup/Reef Position", "F");
+        else SmartDashboard.putString("Auto Lineup/Reef Position", "E");
+        break;
+
+      case BACK:
+        if (autoAlignOffsetX == Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET))
+          SmartDashboard.putString("Auto Lineup/Reef Position", "H");
+        else SmartDashboard.putString("Auto Lineup/Reef Position", "G");
+        break;
+
+      case BACKLEFT:
+        if (autoAlignOffsetX == Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET))
+          SmartDashboard.putString("Auto Lineup/Reef Position", "J");
+        else SmartDashboard.putString("Auto Lineup/Reef Position", "I");
+        break;
+
+      case FRONTLEFT:
+        if (autoAlignOffsetX == Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET))
+          SmartDashboard.putString("Auto Lineup/Reef Position", "L");
+        else SmartDashboard.putString("Auto Lineup/Reef Position", "K");
+        break;
+
+      default:
+        SmartDashboard.putString("Auto Lineup/Reef Position", "URMOM");
+        break;
+    }
   }
 
   /**
@@ -346,6 +396,16 @@ public class Drive extends SubsystemBase {
 
   public void setSelectedScorePosition(ReefScorePositions position) {
     selectedPosition = position;
+  }
+
+  public ElevatorPosition getAlgaePosition() {
+    if (selectedPosition.scorePosition.equals(ReefScorePositions.FRONT.scorePosition)
+        || selectedPosition.scorePosition.equals(ReefScorePositions.BACKRIGHT.scorePosition)
+        || selectedPosition.scorePosition.equals(ReefScorePositions.BACKLEFT.scorePosition)) {
+      return ElevatorPosition.L3ALGAE;
+    } else {
+      return ElevatorPosition.L2ALGAE;
+    }
   }
 
   public void setAutoAlignOffsetX(double offset) {

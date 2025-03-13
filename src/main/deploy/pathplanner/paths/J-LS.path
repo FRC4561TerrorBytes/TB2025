@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.998872950819672,
-        "y": 5.223770491803278
+        "x": 4.98,
+        "y": 5.22
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.051844262295081,
-        "y": 6.242725409836066
+        "x": 4.60373724489796,
+        "y": 6.707034438775509
       },
       "isLocked": false,
       "linkedName": "J"
     },
     {
       "anchor": {
-        "x": 1.5584016393442621,
-        "y": 7.321618852459016
+        "x": 1.1467329545454548,
+        "y": 7.026448863636364
       },
       "prevControl": {
-        "x": 1.707148848086115,
-        "y": 7.120685361244864
+        "x": 1.2954801632873076,
+        "y": 6.825515372422213
       },
       "nextControl": null,
       "isLocked": false,
@@ -36,10 +36,33 @@
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Stow",
+      "waypointRelativePos": 0.13926174496644284,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Stow"
+        }
+      }
+    },
+    {
+      "name": "Source",
+      "waypointRelativePos": 0.6208053691275192,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Source"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.2,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -50,7 +73,7 @@
     "rotation": 126.0
   },
   "reversed": false,
-  "folder": "Left Source Pickup",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 59.99999999999999

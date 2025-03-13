@@ -3,6 +3,7 @@ package frc.robot.util;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,7 @@ public final class FieldConstants {
 
     public static final Pose2d[] centerFaces =
         new Pose2d[6]; // Starting facing the driver station in clockwise order
-    public static final List<Map<ReefHeight, Pose3d>> branchPositions =
+    public static final List<Map<ReefLevel, Pose3d>> branchPositions =
         new ArrayList<>(); // Starting at the right branch facing the driver station in clockwise
 
     static {
@@ -94,9 +95,9 @@ public final class FieldConstants {
 
       // Initialize branch positions
       for (int face = 0; face < 6; face++) {
-        Map<ReefHeight, Pose3d> fillRight = new HashMap<>();
-        Map<ReefHeight, Pose3d> fillLeft = new HashMap<>();
-        for (var level : ReefHeight.values()) {
+        Map<ReefLevel, Pose3d> fillRight = new HashMap<>();
+        Map<ReefLevel, Pose3d> fillLeft = new HashMap<>();
+        for (var level : ReefLevel.values()) {
           Pose2d poseDirection = new Pose2d(center, Rotation2d.fromDegrees(180 - (60 * face)));
           double adjustX = Units.inchesToMeters(30.738);
           double adjustY = Units.inchesToMeters(6.469);
@@ -148,15 +149,22 @@ public final class FieldConstants {
         new Pose2d(Units.inchesToMeters(48), Units.inchesToMeters(86.5), new Rotation2d());
   }
 
-  public enum ReefHeight {
-    L4(Units.inchesToMeters(72), -90),
-    L3(Units.inchesToMeters(47.625), -35),
-    L2(Units.inchesToMeters(31.875), -35),
-    L1(Units.inchesToMeters(18), 0);
+  public enum ReefLevel {
+    L1(Units.inchesToMeters(25.0), 0),
+    L2(Units.inchesToMeters(31.875 - Math.cos(Math.toRadians(35.0)) * 0.625), -35),
+    L3(Units.inchesToMeters(47.625 - Math.cos(Math.toRadians(35.0)) * 0.625), -35),
+    L4(Units.inchesToMeters(72), -90);
 
-    ReefHeight(double height, double pitch) {
+    ReefLevel(double height, double pitch) {
       this.height = height;
-      this.pitch = pitch; // in degrees
+      this.pitch = pitch; // Degrees
+    }
+
+    public static ReefLevel fromLevel(int level) {
+      return Arrays.stream(values())
+          .filter(height -> height.ordinal() == level)
+          .findFirst()
+          .orElse(L4);
     }
 
     public final double height;
