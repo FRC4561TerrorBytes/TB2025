@@ -26,9 +26,14 @@ public class AlgaeManipulator extends SubsystemBase {
 
   public void setOutput(double speed) {
     io.setOutput(speed);
+    setIfSpinning(true);
   }
 
   public Command stopAlgaeManipulator() {
     return new RunCommand(() -> this.setOutput(0), this);
+  }
+
+  public void setIfSpinning(boolean spin) {
+    io.setIfSpinning(spin);
   }
 }

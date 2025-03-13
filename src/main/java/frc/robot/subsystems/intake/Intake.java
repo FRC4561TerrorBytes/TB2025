@@ -30,6 +30,10 @@ public class Intake extends SubsystemBase {
     io.setOutput(speed);
   }
 
+  public void setIfSpinning(boolean spin) {
+    io.setIfSpinning(spin);
+  }
+
   public boolean coralPresent() {
     return inputs.intakeLimitSwitch;
   }
@@ -37,10 +41,12 @@ public class Intake extends SubsystemBase {
   public Command intakeCoral() {
     return new RunCommand(() -> this.setOutput(0.75), this)
         .until(() -> inputs.intakeLimitSwitch)
-        .andThen(() -> this.setOutput(0));
+        .andThen(() -> this.setOutput(0))
+        .andThen(() -> this.setIfSpinning(false));
   }
 
   public Command outtakeCoral() {
+    this.setIfSpinning(true);
     if (Constants.currentMode == Mode.REAL) {
       io.disableLimitSwitch();
     }
@@ -51,7 +57,8 @@ public class Intake extends SubsystemBase {
               if (Constants.currentMode == Mode.REAL) {
                 io.enableLimitSwitch();
               }
-            });
+            })
+        .andThen(() -> this.setIfSpinning(false));
   }
 
   public Command outtakeL1Coral() {

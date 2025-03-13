@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 5.01,
-        "y": 5.25
+        "x": 4.98,
+        "y": 5.22
       },
       "prevControl": {
-        "x": 5.255688435864229,
-        "y": 5.4341360768418285
+        "x": 5.22568843586423,
+        "y": 5.404136076841828
       },
       "nextControl": null,
       "isLocked": false,
@@ -87,7 +87,7 @@
     "rotation": 59.99999999999999
   },
   "reversed": false,
-  "folder": "Algae to Score",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 59.99999999999999

@@ -9,12 +9,14 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class AlgaeManipulatorIOReal implements AlgaeManipulatorIO {
 
   private final SparkBase algaeManipulatorMotor =
       new SparkMax(Constants.ALGAE_MANIPULATOR_ID, MotorType.kBrushless);
+  private boolean spinning;
 
   public AlgaeManipulatorIOReal() {
     var algaeManipulatorConfig = new SparkMaxConfig();
@@ -39,9 +41,16 @@ public class AlgaeManipulatorIOReal implements AlgaeManipulatorIO {
     inputs.algaeManipulatorCurrentAmps = algaeManipulatorMotor.getOutputCurrent();
     inputs.algaeManipulatorVoltage = algaeManipulatorMotor.getBusVoltage();
     inputs.algaeManipulatorConnected = !algaeManipulatorMotor.hasActiveFault();
+
+    SmartDashboard.putBoolean("Algae Manipulator Spinning", spinning);
   }
 
   public void setOutput(double speed) {
     algaeManipulatorMotor.set(speed);
+  }
+
+  @Override
+  public void setIfSpinning(boolean spin) {
+    spinning = spin;
   }
 }
