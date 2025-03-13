@@ -8,6 +8,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.Constants.Mode;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.Vision;
 import org.littletonrobotics.junction.Logger;
@@ -59,10 +61,12 @@ public class SingleTagAlign extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    robotPose = vision.getFieldPoseUsingTag2(0, drive.getPose().getRotation());
-    Logger.recordOutput("AutoLineup/robotPose", robotPose);
+    if (!Constants.currentMode.equals(Mode.SIM)) {
+      robotPose = vision.getFieldPoseUsingTag2(0, drive.getPose().getRotation());
+      Logger.recordOutput("AutoLineup/robotPose", robotPose);
 
-    if (!robotPose.equals(new Pose2d())) drive.setPose(robotPose);
+      if (!robotPose.equals(new Pose2d())) drive.setPose(robotPose);
+    }
 
     pathCommand.schedule();
   }

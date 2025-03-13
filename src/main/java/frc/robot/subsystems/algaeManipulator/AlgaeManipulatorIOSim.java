@@ -26,8 +26,8 @@ public class AlgaeManipulatorIOSim implements AlgaeManipulatorIO {
     inputs.algaeManipulatorCurrentAmps = Math.abs(algaeManipulatorMotorSim.getCurrentDrawAmps());
   }
 
-  public void setOutput(double volts) {
-    algaeManipulatorAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+  public void setOutput(double output) {
+    algaeManipulatorAppliedVolts = MathUtil.clamp(output * 12, -12.0, 12.0);
     algaeManipulatorMotorSim.setInputVoltage(algaeManipulatorAppliedVolts);
   }
 }
