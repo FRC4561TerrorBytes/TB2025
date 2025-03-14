@@ -356,12 +356,17 @@ public class RobotContainer {
 
     // Default Commands
 
-    intake.setDefaultCommand(new RunCommand(() -> intake.setOutput(0.0), intake));
+    intake.setDefaultCommand(intake.stopIntake());
     algaeManipulator.setDefaultCommand(algaeManipulator.stopAlgaeManipulator());
 
     // Triggers
     Trigger coralIntakeTrigger = new Trigger(() -> intake.coralPresent());
-    coralIntakeTrigger.onTrue(driverRumbleCommand().withTimeout(1.0));
+    coralIntakeTrigger
+        .onTrue(
+            driverRumbleCommand().withTimeout(1.0)
+            .alongWith(Commands.runOnce(() -> Leds.getInstance().coralPresent = true)));
+
+    coralIntakeTrigger.onFalse(Commands.runOnce(() -> Leds.getInstance().coralPresent = false));
 
     Trigger algaePositionTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.ALGAEINTAKE));
@@ -421,8 +426,7 @@ public class RobotContainer {
                     new SingleTagAlign(drive, vision),
                     Commands.runOnce(
                         () -> elevator.setSetpoint(drive.getAlgaePosition()), elevator),
-                    Commands.run(() -> algaeManipulator.setOutput(1), algaeManipulator)),
-                Commands.waitSeconds(5.0),
+                    algaeManipulator.runAlgaeManipulator(1).withTimeout(3.0)),
                 Commands.runOnce(
                     () -> elevator.setSetpoint(elevator.getRequestedElevatorPosition()), elevator),
                 Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
@@ -437,6 +441,7 @@ public class RobotContainer {
                     Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
                 .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger))
                 .alongWith(Commands.runOnce(() -> drive.stop(), drive))
+                .alongWith(Commands.runOnce(() -> leds.autoScoring = false))
                 .andThen(
                     Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
 
@@ -479,9 +484,7 @@ public class RobotContainer {
     // Run algae bar when Y is held
     driverController
         .y()
-        .toggleOnTrue(
-            new RunCommand(() -> algaeManipulator.setOutput(1), algaeManipulator)
-                .andThen(() -> algaeManipulator.setIfSpinning(false), algaeManipulator));
+        .toggleOnTrue(algaeManipulator.runAlgaeManipulator(1));
 
     // Pathfind to processor when X is held
     driverController

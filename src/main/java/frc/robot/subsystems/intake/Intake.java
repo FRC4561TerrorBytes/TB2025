@@ -3,10 +3,14 @@ package frc.robot.subsystems.intake;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.subsystems.leds.Leds;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -38,12 +42,17 @@ public class Intake extends SubsystemBase {
     return inputs.intakeLimitSwitch;
   }
 
-  public Command intakeCoral() {
-    return new RunCommand(() -> this.setOutput(0.75), this)
-        .until(() -> inputs.intakeLimitSwitch)
-        .andThen(() -> this.setOutput(0))
-        .andThen(() -> this.setIfSpinning(false));
+  public Command stopIntake() {
+    return new SequentialCommandGroup(Commands.runOnce(() -> Leds.getInstance().intakeRunning = false),
+      Commands.run(() -> this.setOutput(0), this));
   }
+
+  public Command intakeCoral() {
+    return new SequentialCommandGroup(Commands.runOnce(() -> Leds.getInstance().intakeRunning = true),
+      Commands.run(() -> this.setOutput(0.75), this)
+        .until(() -> inputs.intakeLimitSwitch),
+      Commands.run(() -> this.setOutput(0), this));
+    }
 
   public Command outtakeCoral() {
     this.setIfSpinning(true);

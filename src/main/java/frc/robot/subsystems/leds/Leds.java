@@ -28,11 +28,11 @@ public class Leds extends VirtualSubsystem {
   public boolean endgameAlert = false;
   public boolean autoScoring = false;
   public boolean manualElevator = false;
-  public boolean lowBatteryAlert = false;
+  public boolean intakeRunning = false;
+  public boolean coralPresent = false;
+  public boolean algaeRunning = false;
   public boolean visionDisconnected = false;
   public ReefLevel autoScoringLevel = ReefLevel.L3;
-  public boolean firstPriorityBlocked = false;
-  public boolean secondPriorityBlocked = false;
   public Color hexColor = Color.kBlack;
   public Color secondaryHexColor = Color.kBlack;
 
@@ -75,7 +75,7 @@ public class Leds extends VirtualSubsystem {
   private static final Color l4PriorityColor = Color.kBlack;
 
   private Leds() {
-    leds = new AddressableLED(9);
+    leds = new AddressableLED(0);
     buffer = new AddressableLEDBuffer(length);
     leds.setLength(length);
     leds.setData(buffer);
@@ -142,9 +142,6 @@ public class Leds extends VirtualSubsystem {
             Color.kDarkBlue,
             waveFastCycleLength,
             waveFastDuration);
-      } else if (lowBatteryAlert) {
-        // Low battery
-        solid(fullSection, Color.kOrangeRed);
       } else if (prideLeds) {
         // Pride stripes
         stripes(
@@ -181,15 +178,30 @@ public class Leds extends VirtualSubsystem {
       solid(topSection, hexColor);
       solid(bottomSection, secondaryHexColor);
 
-      // Auto scoring
-      if (autoScoring) {
-        rainbow(bottomThreeQuartSection, rainbowCycleLength, rainbowDuration);
-      }
-
       // Endgame alert
       if (endgameAlert) {
         strobe(fullSection, Color.kRed, Color.kGold, strobeDuration);
       }
+
+      // Intake running
+      if (intakeRunning) {
+        strobe(bottomThreeQuartSection, Color.kBlack, Color.kBlue, strobeDuration);
+      }
+
+      // Coral in robot
+      if (coralPresent) {
+        solid(bottomThreeQuartSection, Color.kGreen);
+      }
+
+      // Algae manipulator running
+      if (algaeRunning) {
+        strobe(bottomThreeQuartSection, Color.kBlack, Color.kSeaGreen, strobeDuration);
+      }
+
+            // Auto scoring
+            if (autoScoring) {
+              rainbow(bottomThreeQuartSection, rainbowCycleLength, rainbowDuration);
+            }
 
       if (manualElevator) {
         breath(topQuartSection, Color.kRed, Color.kBlack, breathFastDuration);
