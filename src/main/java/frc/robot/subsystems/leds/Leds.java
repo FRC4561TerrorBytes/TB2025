@@ -198,10 +198,10 @@ public class Leds extends VirtualSubsystem {
         strobe(bottomThreeQuartSection, Color.kBlack, Color.kSeaGreen, strobeDuration);
       }
 
-            // Auto scoring
-            if (autoScoring) {
-              rainbow(bottomThreeQuartSection, rainbowCycleLength, rainbowDuration);
-            }
+      // Auto scoring
+      if (autoScoring) {
+        rainbow(bottomThreeQuartSection, rainbowCycleLength, rainbowDuration);
+      }
 
       if (manualElevator) {
         breath(topQuartSection, Color.kRed, Color.kBlack, breathFastDuration);
