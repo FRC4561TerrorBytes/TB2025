@@ -30,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -361,9 +360,9 @@ public class RobotContainer {
 
     // Triggers
     Trigger coralIntakeTrigger = new Trigger(() -> intake.coralPresent());
-    coralIntakeTrigger
-        .onTrue(
-            driverRumbleCommand().withTimeout(1.0)
+    coralIntakeTrigger.onTrue(
+        driverRumbleCommand()
+            .withTimeout(1.0)
             .alongWith(Commands.runOnce(() -> Leds.getInstance().coralPresent = true)));
 
     coralIntakeTrigger.onFalse(Commands.runOnce(() -> Leds.getInstance().coralPresent = false));
@@ -482,9 +481,7 @@ public class RobotContainer {
                     Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
 
     // Run algae bar when Y is held
-    driverController
-        .y()
-        .toggleOnTrue(algaeManipulator.runAlgaeManipulator(1));
+    driverController.y().toggleOnTrue(algaeManipulator.runAlgaeManipulator(1));
 
     // Pathfind to processor when X is held
     driverController
