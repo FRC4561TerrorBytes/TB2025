@@ -364,6 +364,7 @@ public class RobotContainer {
 
     intake.setDefaultCommand(intake.stopIntake());
     algaeManipulator.setDefaultCommand(algaeManipulator.stopAlgaeManipulator());
+    climber.setDefaultCommand(Commands.run(() -> climber.setOutput(0.0), climber));
 
     // Triggers
     Trigger coralIntakeTrigger = new Trigger(() -> intake.coralPresent());
@@ -501,17 +502,24 @@ public class RobotContainer {
         .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
     // Set elevator to ALGAEINTAKE when DPAD RIGHT is pressed
-    driverController
-        .povRight()
-        .onTrue(
-            Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.ALGAEINTAKE), elevator));
+    // driverController
+    //     .povRight()
+    //     .onTrue(
+    //         Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.ALGAEINTAKE),
+    // elevator));
 
     // set elevator to CLIMBPREP when DPAD UP is pressed
-    driverController.povUp().whileTrue(Commands.run(() -> climber.setOutput(0.1), climber));
+    driverController.povUp().whileTrue(Commands.run(() -> climber.setOutput(1.0), climber));
 
     // set elevator to CLIMBFULL when DPAD DOWN is pressed
+    driverController.povDown().whileTrue(Commands.run(() -> climber.setOutput(-1.0), climber));
+
     driverController
-        .povDown()
+        .povLeft()
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBPREP), elevator));
+
+    driverController
+        .povRight()
         .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBFULL), elevator));
 
     // Operator Controls
