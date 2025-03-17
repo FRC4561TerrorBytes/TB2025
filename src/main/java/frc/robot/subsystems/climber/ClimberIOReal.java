@@ -53,17 +53,13 @@ public class ClimberIOReal implements ClimberIO {
     climberConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     climberConfig.Slot0 = climberPIDConfig;
     climberConfig.Feedback.SensorToMechanismRatio = Constants.CLIMBER_GEAR_RATIO;
-    climberConfig.MotionMagic.MotionMagicCruiseVelocity = 1.5;
+    climberConfig.MotionMagic.MotionMagicCruiseVelocity = 3;
     climberConfig.MotionMagic.MotionMagicAcceleration =
         climberConfig.MotionMagic.MotionMagicCruiseVelocity / 0.050;
     climberConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * Constants.CLIMBER_GEAR_RATIO;
     climberConfig.MotionMagic.MotionMagicExpo_kA = 0.1;
     climberConfig.ClosedLoopGeneral.ContinuousWrap = false;
     climberConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    climberConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.004;
-    climberConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.08;
-    climberConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
-    climberConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     climberConfig.CurrentLimits.StatorCurrentLimit = Constants.CLIMBER_STATOR_CURRENT_LIMIT;
     climberConfig.CurrentLimits.SupplyCurrentLimit = Constants.CLIMBER_SUPPLY_CURRENT_LIMIT;
     climberConfig.CurrentLimits.StatorCurrentLimitEnable = true;

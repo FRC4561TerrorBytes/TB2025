@@ -56,8 +56,8 @@ public final class Constants {
   public static final int EXTENSION_STATOR_CURRENT_LIMIT = 30;
   public static final int EXTENSION_SUPPLY_CURRENT_LIMIT = 20;
   public static final int CLIMBER_ID = 43;
-  public static final int CLIMBER_STATOR_CURRENT_LIMIT = 30;
-  public static final int CLIMBER_SUPPLY_CURRENT_LIMIT = 30;
+  public static final int CLIMBER_STATOR_CURRENT_LIMIT = 20;
+  public static final int CLIMBER_SUPPLY_CURRENT_LIMIT = 10;
 
   public static final int ALGAE_MANIPULATOR_MOTOR_ID = 61;
 
