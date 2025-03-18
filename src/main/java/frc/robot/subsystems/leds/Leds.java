@@ -55,8 +55,8 @@ public class Leds extends VirtualSubsystem {
   private static final Section fullSection = new Section(0, length);
   private static final Section topSection = new Section(length / 2, length);
   private static final Section bottomSection = new Section(0, length / 2);
-  private static final Section topQuartSection = new Section(0, length / 4);
-  private static final Section bottomThreeQuartSection = new Section(length / 4, length);
+  private static final Section topQuartSection = new Section(length / 4, length);
+  private static final Section bottomThreeQuartSection = new Section(0, length / 4);
   private static final double strobeDuration = 0.1;
   private static final double breathFastDuration = 0.5;
   private static final double breathSlowDuration = 1.0;
@@ -178,11 +178,6 @@ public class Leds extends VirtualSubsystem {
       solid(topSection, hexColor);
       solid(bottomSection, secondaryHexColor);
 
-      // Endgame alert
-      if (endgameAlert) {
-        strobe(fullSection, Color.kRed, Color.kGold, strobeDuration);
-      }
-
       // Intake running
       if (intakeRunning) {
         strobe(bottomThreeQuartSection, Color.kBlack, Color.kBlue, strobeDuration);
@@ -201,6 +196,11 @@ public class Leds extends VirtualSubsystem {
       // Auto scoring
       if (autoScoring) {
         rainbow(bottomThreeQuartSection, rainbowCycleLength, rainbowDuration);
+      }
+
+      // Endgame alert
+      if (endgameAlert) {
+        strobe(fullSection, Color.kRed, Color.kGold, strobeDuration);
       }
 
       if (manualElevator) {

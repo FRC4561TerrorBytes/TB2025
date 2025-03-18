@@ -22,6 +22,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
@@ -90,6 +91,11 @@ public class RobotContainer {
     L3RETURN(0.55, 65),
     L3RETURN2(0.2, 65),
     L4(0.5, 90.0);
+//Ethan is very dum - Tyler
+//THat was Sam ^^^^
+//Ethan is a Goober
+//GUH
+//SKIBIDI SIGMA
 
     public double extensionPosition;
     public double pivotPosition;
@@ -383,9 +389,24 @@ public class RobotContainer {
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L1));
 
     Trigger L3PositionTrigger =
-        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3));
+        new Trigger(
+            () ->
+                elevator.getElevatorPosition().equals(ElevatorPosition.L3)
+                    || elevator.getElevatorPosition().equals(ElevatorPosition.L3AUTOALIGN));
     Trigger L3AlgaeTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3ALGAE));
+
+    new Trigger(
+            () ->
+                DriverStation.isTeleopEnabled()
+                    && DriverStation.getMatchTime() > 0
+                    && DriverStation.getMatchTime() <= 20)
+        .onTrue(
+            driverRumbleCommand()
+                .withTimeout(0.5)
+                .beforeStarting(() -> leds.endgameAlert = true)
+                .finallyDo(() -> leds.endgameAlert = false)
+                .withName("Controller Endgame Al<3rt"));
 
     // Driver Controls
 
@@ -510,21 +531,28 @@ public class RobotContainer {
     // elevator));
 
     driverController
-        .povLeft()
-        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBPREP), elevator)
-        .alongWith(Commands.runOnce(() -> climber.setClimberSetpoint(0.18), climber)));
-
-        
-    driverController
-        .povRight()
-        .onTrue(Commands.sequence
-        (Commands.runOnce(() -> climber.setClimberSetpoint(0.425), climber),
-        Commands.waitUntil(() -> climber.climberAtSetpoint(0.03)),
-        Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBFULL), elevator)));
+        .povUp()
+        .onTrue(
+            Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBPREP), elevator)
+                .alongWith(Commands.runOnce(() -> climber.setClimberSetpoint(0.425), climber)));
 
     driverController
-        .button(7)
-        .whileTrue(Commands.run(() -> climber.setOutput(-1), climber))
+        .povDown()
+        .onTrue(
+            Commands.sequence(
+                Commands.runOnce(() -> climber.setClimberSetpoint(0.18), climber),
+                Commands.waitUntil(() -> climber.climberAtSetpoint(0.05)),
+                Commands.runOnce(
+                    () -> elevator.setSetpoint(ElevatorPosition.CLIMBFULL), elevator)));
+
+    driverController
+        .back()
+        .whileTrue(Commands.run(() -> climber.setOutput(-0.75), climber))
+        .onFalse(Commands.runOnce(() -> climber.setOutput(0), climber));
+
+    driverController
+        .start()
+        .whileTrue(Commands.run(() -> climber.setOutput(0.5), climber))
         .onFalse(Commands.runOnce(() -> climber.setOutput(0), climber));
 
     // Operator Controls
@@ -596,14 +624,16 @@ public class RobotContainer {
     operatorController
         .povDown()
         .onTrue(
-            Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L2AUTOALIGN), elevator)
+            Commands.runOnce(
+                    () -> elevator.requestElevatorPosition(ElevatorPosition.L2AUTOALIGN), elevator)
                 .alongWith(Commands.runOnce(() -> leds.autoScoringLevel = ReefLevel.L2)));
 
     // Set requested auto score level to L3 when DPAD UP is pressed
     operatorController
         .povUp()
         .onTrue(
-            Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L3AUTOALIGN), elevator)
+            Commands.runOnce(
+                    () -> elevator.requestElevatorPosition(ElevatorPosition.L3AUTOALIGN), elevator)
                 .alongWith(Commands.runOnce(() -> leds.autoScoringLevel = ReefLevel.L3)));
 
     // REEF SELECTION USING KEYBOARD

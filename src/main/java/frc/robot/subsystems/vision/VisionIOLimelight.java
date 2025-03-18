@@ -61,9 +61,9 @@ public class VisionIOLimelight implements VisionIO {
 
   @Override
   public void updateInputs(VisionIOInputs inputs) {
-    // Update connection status based on whether an update has been seen in the last 250ms
+    // Update connection status based on whether an update has been seen in the last 500ms
     inputs.connected =
-        ((RobotController.getFPGATime() - latencySubscriber.getLastChange()) / 1000) < 250;
+        ((RobotController.getFPGATime() - latencySubscriber.getLastChange()) / 1000) < 500;
 
     // Update target observation
     inputs.latestTargetObservation =
