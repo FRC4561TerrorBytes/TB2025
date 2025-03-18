@@ -7,6 +7,7 @@ package frc.robot.commands;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
@@ -24,7 +25,7 @@ public class SingleTagAlign extends Command {
 
   private Pose2d targetPose;
   private Pose2d robotPose;
-  private double distanceAway = -0.55;
+  private double distanceAway = Units.inchesToMeters(-27.654);
 
   /** Creates a new goToPose. */
   public SingleTagAlign(Drive drive, Vision vision) {

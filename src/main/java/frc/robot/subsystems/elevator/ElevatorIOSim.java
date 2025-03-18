@@ -17,7 +17,7 @@ public class ElevatorIOSim implements ElevatorIO {
   /** Creates a new ElevatorIOSim. */
   private static final double LOOP_PERIOD_SECS = 0.02;
 
-  private static final double PIVOT_KP = 0.2;
+  private static final double PIVOT_KP = 0.3;
   private static final double PIVOT_KD = 0.7;
 
   private static final double EXTENSION_KP = 0.25;

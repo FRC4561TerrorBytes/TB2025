@@ -79,8 +79,10 @@ public class RobotContainer {
     ALGAEINTAKE(0.1, 15),
     L1(0.1, 20.0),
     L2(0.0, 85.0),
+    L2AUTOALIGN(0.09, 100),
     L2ALGAE(0, 90),
     L3(0.55, 90.0),
+    L3AUTOALIGN(0.475, 97.5),
     L3ALGAE(0.4, 90),
     L3RETURN(0.55, 65),
     L3RETURN2(0.2, 65),
@@ -95,7 +97,7 @@ public class RobotContainer {
     }
   }
 
-  private static double distanceAway = 1;
+  private static double distanceAway = 1.25;
 
   public static Pose2d[] reefFaces = {
     new Pose2d(
@@ -578,14 +580,14 @@ public class RobotContainer {
     operatorController
         .povDown()
         .onTrue(
-            Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L2), elevator)
+            Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L2AUTOALIGN), elevator)
                 .alongWith(Commands.runOnce(() -> leds.autoScoringLevel = ReefLevel.L2)));
 
     // Set requested auto score level to L3 when DPAD UP is pressed
     operatorController
         .povUp()
         .onTrue(
-            Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L3), elevator)
+            Commands.runOnce(() -> elevator.requestElevatorPosition(ElevatorPosition.L3AUTOALIGN), elevator)
                 .alongWith(Commands.runOnce(() -> leds.autoScoringLevel = ReefLevel.L3)));
 
     // REEF SELECTION USING KEYBOARD
