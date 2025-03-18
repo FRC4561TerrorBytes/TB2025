@@ -29,4 +29,9 @@ public class Climber extends SubsystemBase {
   public void setClimberSetpoint(double position) {
     io.setSetpoint(position);
   }
+
+  public boolean climberAtSetpoint(double tolerance) {
+    if (Math.abs(inputs.climberAngle - inputs.climberSetpoint) > tolerance) return false;
+    else return true;
+  }
 }

@@ -507,22 +507,18 @@ public class RobotContainer {
     //         Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.ALGAEINTAKE),
     // elevator));
 
-    // set elevator to CLIMBPREP when DPAD UP is pressed
-    // driverController.povUp().whileTrue(Commands.run(() -> climber.setOutput(1), climber));
-    driverController.povUp().onTrue(Commands.run(() -> climber.setClimberSetpoint(0.425), climber));
-
-    // set elevator to CLIMBFULL when DPAD DOWN is pressed
-    // driverController.povDown().whileTrue(Commands.run(() -> climber.setOutput(-1), climber));
-
     driverController
         .povLeft()
         .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBPREP), elevator)
-        .alongWith(Commands.run(() -> climber.setClimberSetpoint(0.18), climber)));
+        .alongWith(Commands.runOnce(() -> climber.setClimberSetpoint(0.18), climber)));
 
         
     driverController
         .povRight()
-        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBFULL), elevator));
+        .onTrue(Commands.sequence
+        (Commands.runOnce(() -> climber.setClimberSetpoint(0.425), climber),
+        Commands.waitUntil(() -> climber.climberAtSetpoint(0.03)),
+        Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBFULL), elevator)));
 
     driverController
         .button(7)
