@@ -41,6 +41,9 @@ import frc.robot.subsystems.algaeManipulator.AlgaeManipulator;
 import frc.robot.subsystems.algaeManipulator.AlgaeManipulatorIO;
 import frc.robot.subsystems.algaeManipulator.AlgaeManipulatorIOReal;
 import frc.robot.subsystems.algaeManipulator.AlgaeManipulatorIOSim;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIO;
+import frc.robot.subsystems.climber.ClimberIOReal;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -217,6 +220,7 @@ public class RobotContainer {
   private final Elevator elevator;
   private final AlgaeManipulator algaeManipulator;
   private final Leds leds = Leds.getInstance();
+  private final Climber climber;
 
   // Controller
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -249,8 +253,9 @@ public class RobotContainer {
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOReal());
-        break;
+        climber = new Climber(new ClimberIOReal());
 
+        break;
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         drive =
@@ -264,6 +269,7 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOSim());
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOSim());
+        climber = new Climber(new ClimberIO() {});
         break;
 
       default:
@@ -280,11 +286,12 @@ public class RobotContainer {
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIO() {});
+        climber = new Climber(new ClimberIO() {});
         break;
     }
 
     // Register NamedCommands for use in PathPlanner // TAKE INTAKE COMMAND TIMEOUT OUT (FOR SIM)
-    NamedCommands.registerCommand("Intake", intake.intakeCoral().withTimeout(0.4));
+    NamedCommands.registerCommand("Intake", intake.intakeCoral());
     NamedCommands.registerCommand("Outtake", intake.outtakeCoral().withTimeout(0.5));
     NamedCommands.registerCommand(
         "L1", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L1), elevator));
@@ -496,20 +503,29 @@ public class RobotContainer {
         .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
     // Set elevator to ALGAEINTAKE when DPAD RIGHT is pressed
+    // driverController
+    //     .povRight()
+    //     .onTrue(
+    //         Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.ALGAEINTAKE),
+    // elevator));
+
+    driverController
+        .povLeft()
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBPREP), elevator)
+        .alongWith(Commands.runOnce(() -> climber.setClimberSetpoint(0.18), climber)));
+
+        
     driverController
         .povRight()
-        .onTrue(
-            Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.ALGAEINTAKE), elevator));
+        .onTrue(Commands.sequence
+        (Commands.runOnce(() -> climber.setClimberSetpoint(0.425), climber),
+        Commands.waitUntil(() -> climber.climberAtSetpoint(0.03)),
+        Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBFULL), elevator)));
 
-    // set elevator to CLIMBPREP when DPAD UP is pressed
     driverController
-        .povUp()
-        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBPREP), elevator));
-
-    // set elevator to CLIMBFULL when DPAD DOWN is pressed
-    driverController
-        .povDown()
-        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBFULL), elevator));
+        .button(7)
+        .whileTrue(Commands.run(() -> climber.setOutput(-1), climber))
+        .onFalse(Commands.runOnce(() -> climber.setOutput(0), climber));
 
     // Operator Controls
 

@@ -55,6 +55,9 @@ public final class Constants {
   public static final int PIVOT_SUPPLY_CURRENT_LIMIT = 50;
   public static final int EXTENSION_STATOR_CURRENT_LIMIT = 30;
   public static final int EXTENSION_SUPPLY_CURRENT_LIMIT = 20;
+  public static final int CLIMBER_ID = 43;
+  public static final int CLIMBER_STATOR_CURRENT_LIMIT = 20;
+  public static final int CLIMBER_SUPPLY_CURRENT_LIMIT = 10;
 
   public static final int ALGAE_MANIPULATOR_MOTOR_ID = 61;
 
@@ -68,4 +71,5 @@ public final class Constants {
   // 140 * 0.2 = linear movement per rotation
   // 1000(aka 1 meter)/linear movement
   public static final double EXTENSION_GEAR_RATIO = 35.7909806729;
+  public static final double CLIMBER_GEAR_RATIO = 200;
 }
