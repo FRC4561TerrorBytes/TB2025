@@ -45,7 +45,7 @@ public class ClimberIOReal implements ClimberIO {
     // pivotPIDConfig.kS = 0.28;
     climberPIDConfig.kV = 0;
     climberPIDConfig.kA = 0;
-    climberPIDConfig.kP = 25;
+    climberPIDConfig.kP = 75;
     climberPIDConfig.kI = 0;
     climberPIDConfig.kD = 0;
 
@@ -115,7 +115,7 @@ public class ClimberIOReal implements ClimberIO {
   }
 
   @Override
-  public void setclimberVoltage(double voltage) {
-    climberMotor.setVoltage(voltage);
+  public void setOutput(double speed) {
+    climberMotor.set(speed);
   }
 }

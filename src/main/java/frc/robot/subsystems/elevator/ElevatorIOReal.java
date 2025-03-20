@@ -303,6 +303,8 @@ public class ElevatorIOReal implements ElevatorIO {
     inputs.pivotFourSupplyCurrent = pivotFourSupplyCurrent.getValueAsDouble();
     inputs.pivotFourSpeed = pivotMotorR2.getVelocity().getValueAsDouble();
     inputs.pivotFourVoltage = pivotMotorR2.getMotorVoltage().getValueAsDouble();
+
+    inputs.pivotEncoderConnected = pivotEncoder.isConnected();
   }
 
   public void setTargetPosition(ElevatorPosition position) {
