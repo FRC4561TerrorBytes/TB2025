@@ -78,7 +78,7 @@ public class RobotContainer {
   public enum ElevatorPosition {
     STOW(0, 20.0),
     SOURCE(0.1, 46),
-    CLIMBPREP(0.45, 50.0),
+    CLIMBPREP(0.0, 50.0),
     CLIMBFULL(0.2, 5),
     ALGAEINTAKE(0.1, 15),
     L1(0.1, 20.0),
@@ -86,7 +86,7 @@ public class RobotContainer {
     L2AUTOALIGN(0.09, 100),
     L2ALGAE(0, 90),
     L3(0.55, 90.0),
-    L3AUTOALIGN(0.475, 97.5),
+    L3AUTOALIGN(0.53, 92),
     L3ALGAE(0.4, 90),
     L3RETURN(0.55, 65),
     L3RETURN2(0.2, 65),
@@ -391,8 +391,8 @@ public class RobotContainer {
     Trigger L3PositionTrigger =
         new Trigger(
             () ->
-                elevator.getElevatorPosition().equals(ElevatorPosition.L3)
-                    || elevator.getElevatorPosition().equals(ElevatorPosition.L3AUTOALIGN));
+                elevator.getElevatorPosition().equals(ElevatorPosition.L3));
+    Trigger L3AutoTrigger = new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3AUTOALIGN));
     Trigger L3AlgaeTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3ALGAE));
 
@@ -468,7 +468,7 @@ public class RobotContainer {
                     Commands.runOnce(
                         () -> elevator.setSetpoint(ElevatorPosition.L3RETURN2), elevator),
                     Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
-                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger))
+                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
                 .alongWith(Commands.runOnce(() -> drive.stop(), drive))
                 .alongWith(Commands.runOnce(() -> leds.autoScoring = false))
                 .andThen(
@@ -505,7 +505,7 @@ public class RobotContainer {
                         Commands.runOnce(
                             () -> elevator.setSetpoint(ElevatorPosition.L3RETURN2), elevator),
                         Commands.waitUntil(() -> elevator.mechanismAtSetpoint())))
-                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger))
+                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
                 .alongWith(Commands.runOnce(() -> leds.autoScoring = false))
                 .andThen(
                     Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
@@ -592,7 +592,7 @@ public class RobotContainer {
             Commands.sequence(
                     Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator),
                     Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
-                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger))
+                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
                 .finallyDo(() -> elevator.setSetpoint(ElevatorPosition.STOW)));
 
     // Move elevator to L3 Algae removal when RT is pressed

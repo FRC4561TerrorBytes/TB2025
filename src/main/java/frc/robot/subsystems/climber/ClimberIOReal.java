@@ -115,7 +115,7 @@ public class ClimberIOReal implements ClimberIO {
   }
 
   @Override
-  public void setClimberOutput(double speed) {
+  public void setOutput(double speed) {
     climberMotor.set(speed);
   }
 }

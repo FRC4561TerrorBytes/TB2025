@@ -66,7 +66,7 @@ public class SingleTagAlign extends Command {
       robotPose = vision.getFieldPoseUsingTag2(0, drive.getPose().getRotation());
       Logger.recordOutput("AutoLineup/robotPose", robotPose);
 
-      if (!robotPose.equals(new Pose2d())) drive.setPose(robotPose);
+      //if (!robotPose.equals(new Pose2d())) drive.setPose(robotPose);
     }
 
     pathCommand.schedule();

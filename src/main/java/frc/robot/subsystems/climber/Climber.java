@@ -23,7 +23,7 @@ public class Climber extends SubsystemBase {
   }
 
   public void setOutput(double speed) {
-    io.setClimberOutput(speed);
+    io.setOutput(speed);
   }
 
   public void setClimberSetpoint(double position) {

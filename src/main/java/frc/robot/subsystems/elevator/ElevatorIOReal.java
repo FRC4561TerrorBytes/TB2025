@@ -22,6 +22,8 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.Constants;
 import frc.robot.RobotContainer.ElevatorPosition;
 
@@ -67,6 +69,12 @@ public class ElevatorIOReal implements ElevatorIO {
   private final StatusSignal<AngularVelocity> extensionSpeed;
   private final StatusSignal<Voltage> extensionVoltage;
   private final StatusSignal<Temperature> extensionTemp;
+
+  private final Alert pivotOneAlert;
+  private final Alert pivotTwoAlert;
+  private final Alert pivotThreeAlert;
+  private final Alert pivotFourAlert;
+  private final Alert pivotEncoderAlert;
 
   private double pivotSetpoint = 0.0;
   private double pivotFeedForward = 0.0;
@@ -219,6 +227,12 @@ public class ElevatorIOReal implements ElevatorIO {
     pivotMotorL2.setControl(new Follower(pivotMotorL1.getDeviceID(), false));
     pivotMotorR1.setControl(new Follower(pivotMotorL1.getDeviceID(), true));
     pivotMotorR2.setControl(new Follower(pivotMotorL1.getDeviceID(), true));
+
+    pivotOneAlert = new Alert("Left One Pivot Motor Disconnected.", AlertType.kWarning);
+    pivotTwoAlert = new Alert("Left Two Pivot Motor Disconnected.", AlertType.kWarning);
+    pivotThreeAlert = new Alert("Right One Motor Pivot Disconnected.", AlertType.kWarning);
+    pivotFourAlert = new Alert("Right Two Motor Pivot Disconnected.", AlertType.kWarning);
+    pivotEncoderAlert = new Alert("Pivot CANCoder Disconnected.", AlertType.kWarning);
   }
 
   public void updateInputs(ElevatorIOInputs inputs) {
@@ -303,6 +317,14 @@ public class ElevatorIOReal implements ElevatorIO {
     inputs.pivotFourSupplyCurrent = pivotFourSupplyCurrent.getValueAsDouble();
     inputs.pivotFourSpeed = pivotMotorR2.getVelocity().getValueAsDouble();
     inputs.pivotFourVoltage = pivotMotorR2.getMotorVoltage().getValueAsDouble();
+
+    inputs.pivotEncoderConnected = pivotEncoder.isConnected();
+
+    pivotOneAlert.set(!inputs.pivotMotorOneConnected);
+    pivotTwoAlert.set(!inputs.pivotMotorTwoConnected);
+    pivotThreeAlert.set(!inputs.pivotMotorThreeConnected);
+    pivotFourAlert.set(!inputs.pivotMotorFourConnected);
+    pivotEncoderAlert.set(!inputs.pivotEncoderConnected);
   }
 
   public void setTargetPosition(ElevatorPosition position) {
