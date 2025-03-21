@@ -49,9 +49,9 @@ public class Intake extends SubsystemBase {
 
   public Command intakeCoral() {
     return new SequentialCommandGroup(
-        // Commands.runOnce(() -> Leds.getInstance().intakeRunning = true),
+        Commands.runOnce(() -> Leds.getInstance().intakeRunning = true),
         Commands.run(() -> this.setOutput(0.6), this).until(() -> inputs.intakeLimitSwitch),
-        Commands.run(() -> this.setOutput(0), this),
+        Commands.runOnce(() -> this.setOutput(0), this),
         Commands.runOnce(() -> this.setIfSpinning(false)));
   }
 
