@@ -83,10 +83,10 @@ public class RobotContainer {
     L1(0.1, 20.0),
     L2(0.0, 85.0),
     L2ALGAE(0, 90),
-    L2AUTOALIGN(0.09, 100),
+    L2AUTOALIGN(0.15, 100),
     L3(0.55, 90.0),
     L3ALGAE(0.4, 90),
-    L3AUTOALIGN(0.53, 92),
+    L3AUTOALIGN(0.55, 95),
     L3RETURN(0.55, 65),
     L3RETURN2(0.2, 65),
     L4(0.5, 90.0);
@@ -291,7 +291,7 @@ public class RobotContainer {
     }
 
     // Register NamedCommands for use in PathPlanner // TAKE INTAKE COMMAND TIMEOUT OUT (FOR SIM)
-    NamedCommands.registerCommand("Intake", intake.intakeCoral());
+    NamedCommands.registerCommand("Intake", intake.intakeCoral().withTimeout(1.0));
     NamedCommands.registerCommand("Outtake", intake.outtakeCoral().withTimeout(0.5));
     NamedCommands.registerCommand(
         "L1", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L1), elevator));
@@ -639,7 +639,7 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTLEFT)));
 
-    //HI MANBIR :D
+    // HI MANBIR :D
 
     // Set lineup position to C/D
     reefSelector

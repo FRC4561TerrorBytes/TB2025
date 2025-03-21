@@ -22,6 +22,8 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.Constants;
 import frc.robot.RobotContainer.ElevatorPosition;
 
@@ -75,6 +77,16 @@ public class ElevatorIOReal implements ElevatorIO {
 
   private final MotionMagicVoltage m_request_pivot = new MotionMagicVoltage(0);
   private final MotionMagicVoltage m_request_extension = new MotionMagicVoltage(0);
+
+  private final Alert pivotOneAlert = new Alert("Left Pivot One Disconnected.", AlertType.kWarning);
+  private final Alert pivotTwoAlert = new Alert("Left Pivot Two Disconnected.", AlertType.kWarning);
+  private final Alert pivotThreeAlert =
+      new Alert("Right Pivot One Disconnected.", AlertType.kWarning);
+  private final Alert pivotFourAlert =
+      new Alert("Right Pivot Two Disconnected.", AlertType.kWarning);
+  private final Alert pivotEncoderAlert =
+      new Alert("Pivot Encoder Disconnected.", AlertType.kWarning);
+  private final Alert extensionAlert = new Alert("Extension Disconnected.", AlertType.kWarning);
 
   public ElevatorIOReal() {
     var pivotPIDConfig = new Slot0Configs();
@@ -305,6 +317,13 @@ public class ElevatorIOReal implements ElevatorIO {
     inputs.pivotFourVoltage = pivotMotorR2.getMotorVoltage().getValueAsDouble();
 
     inputs.pivotEncoderConnected = pivotEncoder.isConnected();
+
+    pivotOneAlert.set(!inputs.pivotMotorOneConnected);
+    pivotTwoAlert.set(!inputs.pivotMotorTwoConnected);
+    pivotThreeAlert.set(!inputs.pivotMotorThreeConnected);
+    pivotFourAlert.set(!inputs.pivotMotorFourConnected);
+    pivotEncoderAlert.set(!inputs.pivotEncoderConnected);
+    extensionAlert.set(!inputs.extensionMotorConnected);
   }
 
   public void setTargetPosition(ElevatorPosition position) {
