@@ -51,27 +51,15 @@
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 0.75
+                  "name": "WaitForArm"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Outtake"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "StopIntake"
                 }
               }
             ]
@@ -99,18 +87,6 @@
           "type": "named",
           "data": {
             "name": "Outtake"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopIntake"
           }
         }
       ]
