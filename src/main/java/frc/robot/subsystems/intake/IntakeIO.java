@@ -19,9 +19,5 @@ public interface IntakeIO {
 
   public default void disableLimitSwitch() {}
 
-  public default void setOutput(double speed) {}
-
-  public default void setIfSpinning(boolean spin) {}
-  ;
-  ;
+  public default void setOutput(double speed) {}  
 }

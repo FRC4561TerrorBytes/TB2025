@@ -33,10 +33,6 @@ public class Intake extends SubsystemBase {
     io.setOutput(speed);
   }
 
-  public void setIfSpinning(boolean spin) {
-    io.setIfSpinning(spin);
-  }
-
   public boolean coralPresent() {
     return inputs.intakeLimitSwitch;
   }
@@ -48,28 +44,31 @@ public class Intake extends SubsystemBase {
   }
 
   public Command intakeCoral() {
-    return new SequentialCommandGroup(
-        Commands.runOnce(() -> Leds.getInstance().intakeRunning = true),
-        Commands.run(() -> this.setOutput(0.6), this).until(() -> inputs.intakeLimitSwitch),
-        Commands.runOnce(() -> this.setOutput(0), this),
-        Commands.runOnce(() -> this.setIfSpinning(false)));
+    return Commands.startEnd(
+        () -> {
+          this.setOutput(0.6);
+          Leds.getInstance().intakeRunning = true;
+        },
+        () -> {
+          this.setOutput(0);
+          Leds.getInstance().intakeRunning = false;
+        },
+        this);
   }
 
   public Command outtakeCoral() {
-    this.setIfSpinning(true);
-    if (Constants.currentMode == Mode.REAL) {
+    if (Constants.currentMode.equals(Mode.REAL)) {
       io.disableLimitSwitch();
     }
-    return new RunCommand(() -> this.setOutput(0.75), this)
-        // .withTimeout(2.0)
-        .andThen(
-            () -> {
-              if (Constants.currentMode == Mode.REAL) {
-                io.enableLimitSwitch();
-              }
-            })
-        .andThen(() -> this.setOutput(0))
-        .andThen(() -> this.setIfSpinning(false));
+    return Commands.startEnd(
+        () -> this.setOutput(0.75),
+        () -> {
+          this.setOutput(0);
+          if (Constants.currentMode.equals(Mode.REAL)) {
+            io.enableLimitSwitch();
+          }
+        },
+        this);
   }
 
   public Command outtakeL1Coral() {

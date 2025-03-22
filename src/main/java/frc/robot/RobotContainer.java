@@ -22,6 +22,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
@@ -291,8 +292,9 @@ public class RobotContainer {
     }
 
     // Register NamedCommands for use in PathPlanner // TAKE INTAKE COMMAND TIMEOUT OUT (FOR SIM)
-    NamedCommands.registerCommand("Intake", intake.intakeCoral().withTimeout(1.0));
+    NamedCommands.registerCommand("Intake", intake.intakeCoral().until(() -> intake.coralPresent()));
     NamedCommands.registerCommand("Outtake", intake.outtakeCoral().withTimeout(0.5));
+    NamedCommands.registerCommand("StopIntake", Commands.runOnce(() -> intake.setOutput(0)));
     NamedCommands.registerCommand(
         "L1", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L1), elevator));
     NamedCommands.registerCommand(
@@ -364,7 +366,6 @@ public class RobotContainer {
 
     // Default Commands
 
-    intake.setDefaultCommand(intake.stopIntake());
     algaeManipulator.setDefaultCommand(algaeManipulator.stopAlgaeManipulator());
 
     // Triggers
@@ -391,6 +392,18 @@ public class RobotContainer {
     Trigger L3AlgaeTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3ALGAE));
 
+    new Trigger(
+            () ->
+                DriverStation.isTeleopEnabled()
+                    && DriverStation.getMatchTime() > 0
+                    && DriverStation.getMatchTime() <= 20)
+        .onTrue(
+            driverRumbleCommand()
+                .withTimeout(0.5)
+                .beforeStarting(() -> leds.endgameAlert = true)
+                .finallyDo(() -> leds.endgameAlert = false)
+                .withName("Controller Endgame Al3rt"));
+
     // Driver Controls
 
     // Reset gyro to 0° when RS and LS are pressed
@@ -410,7 +423,7 @@ public class RobotContainer {
         .leftTrigger()
         .and(algaePositionTrigger.negate())
         .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.SOURCE), elevator))
-        .toggleOnTrue(intake.intakeCoral());
+        .toggleOnTrue(intake.intakeCoral().until(() -> intake.coralPresent()));
 
     // Toggle algae intake when LT is pressed and arm is at algae intake position
     driverController

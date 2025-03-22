@@ -50,7 +50,7 @@
     },
     {
       "name": "Source",
-      "waypointRelativePos": 0.39597315436241526,
+      "waypointRelativePos": 0.4,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

@@ -13,6 +13,12 @@
         {
           "type": "named",
           "data": {
+            "name": "WaitForArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Outtake"
           }
         },
@@ -55,6 +61,18 @@
                 "data": {
                   "name": "Outtake"
                 }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StopIntake"
+                }
               }
             ]
           }
@@ -81,6 +99,18 @@
           "type": "named",
           "data": {
             "name": "Outtake"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopIntake"
           }
         }
       ]
