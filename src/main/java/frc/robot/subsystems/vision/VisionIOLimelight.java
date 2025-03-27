@@ -40,6 +40,8 @@ public class VisionIOLimelight implements VisionIO {
   private final DoubleArraySubscriber megatag2Subscriber;
   private final DoubleArraySubscriber rawFiducialsSubscriber;
 
+  private final double[] tagOverrides = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
+
   /**
    * Creates a new VisionIOLimelight.
    *
@@ -57,6 +59,8 @@ public class VisionIOLimelight implements VisionIO {
     megatag2Subscriber =
         table.getDoubleArrayTopic("botpose_orb_wpiblue").subscribe(new double[] {});
     rawFiducialsSubscriber = table.getDoubleArrayTopic("rawfiducials").subscribe(new double[] {});
+
+    table.getEntry("fiducial_id_filters_set").setDoubleArray(tagOverrides);
   }
 
   @Override

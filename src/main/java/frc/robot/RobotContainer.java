@@ -77,12 +77,12 @@ public class RobotContainer {
 
   public enum ElevatorPosition {
     STOW(0, 20.0),
-    SOURCE(0.1, 46),
+    SOURCE(0.2, 46),
     CLIMBPREP(0.0, 50.0),
     CLIMBFULL(0.2, 5),
     ALGAEINTAKE(0.1, 15),
     L1(0.1, 20.0),
-    L2(0.0, 85.0),
+    L2(0.0, 90.0),
     L2ALGAE(0, 90),
     L2AUTOALIGN(0.15, 100),
     L3(0.55, 90.0),
@@ -292,7 +292,8 @@ public class RobotContainer {
     }
 
     // Register NamedCommands for use in PathPlanner // TAKE INTAKE COMMAND TIMEOUT OUT (FOR SIM)
-    NamedCommands.registerCommand("Intake", intake.intakeCoral().until(() -> intake.coralPresent()));
+    NamedCommands.registerCommand(
+        "Intake", intake.intakeCoral().until(() -> intake.coralPresent()));
     NamedCommands.registerCommand("Outtake", intake.outtakeCoral().withTimeout(0.5));
     NamedCommands.registerCommand("StopIntake", Commands.runOnce(() -> intake.setOutput(0)));
     NamedCommands.registerCommand(

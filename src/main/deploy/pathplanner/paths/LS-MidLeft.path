@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5677933673469395,
-        "y": 6.319821428571429
+        "x": 2.572670454545454,
+        "y": 6.787130681818181
       },
       "isLocked": false,
       "linkedName": "LS"
     },
     {
       "anchor": {
-        "x": 3.447321428571429,
-        "y": 5.095758928571428
+        "x": 5.025681818181818,
+        "y": 5.700227272727273
       },
       "prevControl": {
-        "x": 2.753380102040816,
-        "y": 5.8195471938775505
+        "x": 4.076988636363636,
+        "y": 6.108437499999999
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "KAlgae"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -60.068488159492304
+    "rotation": 65.22485943116804
   },
   "reversed": false,
   "folder": null,

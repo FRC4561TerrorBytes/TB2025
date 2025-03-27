@@ -37,38 +37,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LS-J(removes algae)"
+            "pathName": "LS-I"
           }
         },
         {
-          "type": "sequential",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "L3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "WaitForArm"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Outtake"
-                }
-              }
-            ]
+            "name": "WaitForArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "J-LS"
+            "pathName": "I-LS"
           }
         },
         {
@@ -80,19 +67,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LS-I"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Outtake"
+            "pathName": "LS-MidLeft"
           }
         }
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": "Comp 1",
   "choreoAuto": false
 }

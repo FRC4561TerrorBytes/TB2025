@@ -19,5 +19,5 @@ public interface IntakeIO {
 
   public default void disableLimitSwitch() {}
 
-  public default void setOutput(double speed) {}  
+  public default void setOutput(double speed) {}
 }

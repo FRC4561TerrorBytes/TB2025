@@ -3,73 +3,59 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.872512755102041,
-        "y": 5.461383928571429
+        "x": 1.65,
+        "y": 7.26
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.957586486814769,
-        "y": 5.6964636175546985
+        "x": 2.163835227272727,
+        "y": 6.44809659090909
       },
       "isLocked": false,
-      "linkedName": "JAlgae"
+      "linkedName": "LS"
     },
     {
       "anchor": {
-        "x": 5.375948199944946,
-        "y": 6.088729146452334
+        "x": 2.3832102272727274,
+        "y": 5.760056818181818
       },
       "prevControl": {
-        "x": 4.937717545602862,
-        "y": 6.356124121983098
+        "x": 2.2635511363636365,
+        "y": 6.21875
       },
       "nextControl": {
-        "x": 5.699766333820112,
-        "y": 5.891145200359011
+        "x": 2.6525813955369046,
+        "y": 4.727467339835804
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.99,
-        "y": 5.22
+        "x": 3.1809375,
+        "y": 4.204488636363636
       },
       "prevControl": {
-        "x": 5.23568843586423,
-        "y": 5.404136076841828
+        "x": 2.2934659090909095,
+        "y": 4.942386363636363
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "J"
+      "linkedName": "A"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.0771812080536944,
-      "maxWaypointRelativePos": 2.0,
-      "constraints": {
-        "maxVelocity": 0.5,
-        "maxAcceleration": 0.25,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "L3",
-      "waypointRelativePos": 0.11744966442953078,
+      "name": "L2",
+      "waypointRelativePos": 1.8,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "L3"
+          "name": "L2"
         }
       }
     }
@@ -84,13 +70,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": 126.0
   },
   "useDefaultConstraints": true
 }

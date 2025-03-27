@@ -8,63 +8,43 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3390559358588856,
-        "y": 6.564093328658905
+        "x": 2.173806818181818,
+        "y": 6.148948863636362
       },
       "isLocked": false,
       "linkedName": "LS"
     },
     {
       "anchor": {
-        "x": 3.9248724489795923,
-        "y": 5.36438137755102
+        "x": 3.21,
+        "y": 3.869
       },
       "prevControl": {
-        "x": 3.6538261613287983,
-        "y": 5.768103422581303
+        "x": 2.612556818181818,
+        "y": 4.374005681818181
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "K"
+      "linkedName": "B"
     }
   ],
-  "rotationTargets": [],
-  "constraintZones": [
+  "rotationTargets": [
     {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.7382550335570481,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 0.4,
-        "maxAcceleration": 0.5,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
+      "waypointRelativePos": 0.33216476774758924,
+      "rotationDegrees": 129.0816112322041
     }
   ],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "L2",
-      "waypointRelativePos": 0.5436241610738263,
+      "waypointRelativePos": 0.9,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "L3"
-        }
-      }
-    },
-    {
-      "name": "SpinAlgae",
-      "waypointRelativePos": 0.8540268456375852,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "SpinAlgae"
+          "name": "L2"
         }
       }
     }
@@ -79,7 +59,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 119.99999999999999
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,

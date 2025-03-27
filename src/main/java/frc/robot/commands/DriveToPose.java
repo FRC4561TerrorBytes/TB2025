@@ -57,7 +57,7 @@ public class DriveToPose extends Command {
     pathCommand =
         AutoBuilder.pathfindToPose(
             AllianceFlipUtil.apply(drive.getSelectedScorePosition().scorePosition),
-            new PathConstraints(2, 2, 360, 360));
+            new PathConstraints(4.2, 3.5, 360, 360));
   }
 
   // Called every time the scheduler runs while the command is scheduled.

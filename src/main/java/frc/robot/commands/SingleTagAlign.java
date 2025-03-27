@@ -56,7 +56,7 @@ public class SingleTagAlign extends Command {
     Logger.recordOutput("AutoLineup/Target Pose", targetPose);
     Logger.recordOutput("AutoLineup/ReefOffsetX", drive.getAutoAlignOffsetX());
 
-    pathCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(1, 1, 180, 180));
+    pathCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(1.5, 1.5, 180, 180));
   }
 
   // Called every time the scheduler runs while the command is scheduled.

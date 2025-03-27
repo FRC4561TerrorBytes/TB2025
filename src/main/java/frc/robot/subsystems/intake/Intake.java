@@ -44,9 +44,12 @@ public class Intake extends SubsystemBase {
   }
 
   public Command intakeCoral() {
+    if (Constants.currentMode.equals(Mode.REAL)) {
+      io.enableLimitSwitch();
+    }
     return Commands.startEnd(
         () -> {
-          this.setOutput(0.6);
+          this.setOutput(0.75);
           Leds.getInstance().intakeRunning = true;
         },
         () -> {
@@ -64,9 +67,6 @@ public class Intake extends SubsystemBase {
         () -> this.setOutput(0.75),
         () -> {
           this.setOutput(0);
-          if (Constants.currentMode.equals(Mode.REAL)) {
-            io.enableLimitSwitch();
-          }
         },
         this);
   }
