@@ -7,6 +7,7 @@ package frc.robot.commands;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -53,6 +54,10 @@ public class SingleTagAlign extends Command {
                 + selectedPosition.getTranslation().getY(),
             selectedPosition.getRotation());
 
+    if (targetPose.getRotation().getDegrees() - Math.abs(drive.getRotation().getDegrees()) > 90) {
+      targetPose = targetPose.rotateAround(targetPose.getTranslation(), Rotation2d.k180deg);    
+    }
+
     Logger.recordOutput("AutoLineup/Target Pose", targetPose);
     Logger.recordOutput("AutoLineup/ReefOffsetX", drive.getAutoAlignOffsetX());
 
@@ -62,14 +67,14 @@ public class SingleTagAlign extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!Constants.currentMode.equals(Mode.SIM)) {
-      robotPose = vision.getFieldPoseUsingTag2(0, drive.getPose().getRotation());
-      Logger.recordOutput("AutoLineup/robotPose", robotPose);
+    // if (!Constants.currentMode.equals(Mode.SIM)) {
+    //   robotPose = vision.getFieldPoseUsingTag2(0, drive.getPose().getRotation());
+    //   Logger.recordOutput("AutoLineup/robotPose", robotPose);
 
-      // if (!robotPose.equals(new Pose2d())) drive.setPose(robotPose);
-    }
+       // if (!robotPose.equals(new Pose2d())) drive.setPose(robotPose);
+    // }
 
-    pathCommand.schedule();
+    pathCommand.withName("SingleTagAlign").schedule();
   }
 
   // Called once the command ends or is interrupted.
