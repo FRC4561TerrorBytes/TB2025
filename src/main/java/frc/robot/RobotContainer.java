@@ -489,23 +489,10 @@ public class RobotContainer {
                     new SingleTagAlign(drive, vision),
                     Commands.runOnce(
                         () -> elevator.setSetpoint(elevator.getRequestedElevatorPosition()),
-                        elevator)),
-                Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
-                intake.outtakeCoral().withTimeout(0.5)))
+                        elevator))))
         .onFalse(
             Commands.runOnce(() -> drive.stop(), drive)
-                .alongWith(
-                    Commands.sequence(
-                        Commands.runOnce(
-                            () -> elevator.setSetpoint(ElevatorPosition.L3RETURN), elevator),
-                        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
-                        Commands.runOnce(
-                            () -> elevator.setSetpoint(ElevatorPosition.L3RETURN2), elevator),
-                        Commands.waitUntil(() -> elevator.mechanismAtSetpoint())))
-                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
-                .alongWith(Commands.runOnce(() -> leds.autoScoring = false))
-                .andThen(
-                    Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
+            .alongWith(Commands.runOnce(() -> leds.autoScoring = false)));
 
     // Run algae bar when Y is held
     driverController.y().toggleOnTrue(algaeManipulator.runAlgaeManipulator(1));
