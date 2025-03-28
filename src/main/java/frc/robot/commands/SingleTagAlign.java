@@ -10,8 +10,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.Constants.Mode;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.Vision;
 import org.littletonrobotics.junction.Logger;
@@ -55,12 +53,12 @@ public class SingleTagAlign extends Command {
             selectedPosition.getRotation());
 
     if (targetPose.getRotation().getDegrees() - Math.abs(drive.getRotation().getDegrees()) > 90) {
-      targetPose = targetPose.rotateAround(targetPose.getTranslation(), Rotation2d.k180deg);    
+      targetPose = targetPose.rotateAround(targetPose.getTranslation(), Rotation2d.k180deg);
     }
 
     Logger.recordOutput("AutoLineup/Target Pose", targetPose);
     Logger.recordOutput("AutoLineup/ReefOffsetX", drive.getAutoAlignOffsetX());
-
+    
     pathCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(1.5, 1.5, 180, 180));
   }
 
@@ -71,7 +69,7 @@ public class SingleTagAlign extends Command {
     //   robotPose = vision.getFieldPoseUsingTag2(0, drive.getPose().getRotation());
     //   Logger.recordOutput("AutoLineup/robotPose", robotPose);
 
-       // if (!robotPose.equals(new Pose2d())) drive.setPose(robotPose);
+    // if (!robotPose.equals(new Pose2d())) drive.setPose(robotPose);
     // }
 
     pathCommand.withName("SingleTagAlign").schedule();

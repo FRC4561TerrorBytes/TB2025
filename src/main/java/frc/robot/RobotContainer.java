@@ -454,22 +454,10 @@ public class RobotContainer {
                         () -> elevator.setSetpoint(drive.getAlgaePosition()), elevator),
                     algaeManipulator.runAlgaeManipulator(1).withTimeout(3.0)),
                 Commands.runOnce(
-                    () -> elevator.setSetpoint(elevator.getRequestedElevatorPosition()), elevator),
-                Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
-                intake.outtakeCoral().withTimeout(0.5)))
-        .onFalse(
-            Commands.sequence(
-                    Commands.runOnce(
-                        () -> elevator.setSetpoint(ElevatorPosition.L3RETURN), elevator),
-                    Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
-                    Commands.runOnce(
-                        () -> elevator.setSetpoint(ElevatorPosition.L3RETURN2), elevator),
-                    Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
-                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
-                .alongWith(Commands.runOnce(() -> drive.stop(), drive))
-                .alongWith(Commands.runOnce(() -> leds.autoScoring = false))
-                .andThen(
-                    Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
+                    () -> elevator.setSetpoint(elevator.getRequestedElevatorPosition()), elevator)))
+            .onFalse(
+                Commands.runOnce(() -> drive.stop(), drive)
+                .alongWith(Commands.runOnce(() -> leds.autoScoring = false)));
 
     // Run lineup sequence when B is held
     driverController
@@ -492,7 +480,7 @@ public class RobotContainer {
                         elevator))))
         .onFalse(
             Commands.runOnce(() -> drive.stop(), drive)
-            .alongWith(Commands.runOnce(() -> leds.autoScoring = false)));
+                .alongWith(Commands.runOnce(() -> leds.autoScoring = false)));
 
     // Run algae bar when Y is held
     driverController.y().toggleOnTrue(algaeManipulator.runAlgaeManipulator(1));

@@ -59,12 +59,14 @@ public class DriveToPose extends Command {
 
     if (targetPosition.getRotation().getDegrees() - Math.abs(drive.getRotation().getDegrees())
         > 90) {
-      targetPosition = targetPosition.rotateAround(targetPosition.getTranslation(), Rotation2d.k180deg);
+      targetPosition =
+          targetPosition.rotateAround(targetPosition.getTranslation(), Rotation2d.k180deg);
     }
 
     Logger.recordOutput("Auto Lineup/Target Pose", targetPosition);
 
-    pathCommand = AutoBuilder.pathfindToPose(targetPosition, new PathConstraints(2, 2, 360, 360));
+    pathCommand =
+        AutoBuilder.pathfindToPose(targetPosition, new PathConstraints(4.7, 3, 360, 360), 1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
