@@ -39,6 +39,7 @@ public interface ElevatorIO {
     public double pivotFourSupplyCurrent = 0.0;
     public double pivotFourVoltage = 0.0;
     public double pivotFourSpeed = 0.0;
+    public boolean pivotEncoderConnected = false;
 
     public double pivotSpeed = 0.0;
     // carriage components

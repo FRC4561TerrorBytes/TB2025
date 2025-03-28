@@ -13,50 +13,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Outtake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "J-LS"
+            "name": "WaitForArm"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "LS-J(removes algae)"
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "L3"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Outtake"
-                }
-              }
-            ]
+            "name": "Outtake"
           }
         },
         {
@@ -80,7 +43,25 @@
         {
           "type": "named",
           "data": {
+            "name": "WaitForArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "I-LS"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
           }
         }
       ]

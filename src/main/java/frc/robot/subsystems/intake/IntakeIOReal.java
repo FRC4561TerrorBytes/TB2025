@@ -84,9 +84,4 @@ public class IntakeIOReal implements IntakeIO {
                 ResetMode.kNoResetSafeParameters,
                 PersistMode.kPersistParameters));
   }
-
-  @Override
-  public void setIfSpinning(boolean spin) {
-    spinning = spin;
-  }
 }

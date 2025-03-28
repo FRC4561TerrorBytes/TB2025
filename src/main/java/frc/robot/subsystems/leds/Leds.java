@@ -28,11 +28,11 @@ public class Leds extends VirtualSubsystem {
   public boolean endgameAlert = false;
   public boolean autoScoring = false;
   public boolean manualElevator = false;
-  public boolean lowBatteryAlert = false;
+  public boolean intakeRunning = false;
+  public boolean coralPresent = false;
+  public boolean algaeRunning = false;
   public boolean visionDisconnected = false;
   public ReefLevel autoScoringLevel = ReefLevel.L3;
-  public boolean firstPriorityBlocked = false;
-  public boolean secondPriorityBlocked = false;
   public Color hexColor = Color.kBlack;
   public Color secondaryHexColor = Color.kBlack;
 
@@ -51,12 +51,12 @@ public class Leds extends VirtualSubsystem {
   // Constants
   private static final boolean prideLeds = false;
   private static final int minLoopCycleCount = 10;
-  private static final int length = 32;
+  private static final int length = 36;
   private static final Section fullSection = new Section(0, length);
   private static final Section topSection = new Section(length / 2, length);
   private static final Section bottomSection = new Section(0, length / 2);
-  private static final Section topQuartSection = new Section(0, length / 4);
-  private static final Section bottomThreeQuartSection = new Section(length / 4, length);
+  private static final Section topQuartSection = new Section((length / 4) * 3, length);
+  private static final Section bottomThreeQuartSection = new Section(0, (length / 4) * 3);
   private static final double strobeDuration = 0.1;
   private static final double breathFastDuration = 0.5;
   private static final double breathSlowDuration = 1.0;
@@ -75,7 +75,7 @@ public class Leds extends VirtualSubsystem {
   private static final Color l4PriorityColor = Color.kBlack;
 
   private Leds() {
-    leds = new AddressableLED(9);
+    leds = new AddressableLED(0);
     buffer = new AddressableLEDBuffer(length);
     leds.setLength(length);
     leds.setData(buffer);
@@ -142,9 +142,6 @@ public class Leds extends VirtualSubsystem {
             Color.kDarkBlue,
             waveFastCycleLength,
             waveFastDuration);
-      } else if (lowBatteryAlert) {
-        // Low battery
-        solid(fullSection, Color.kOrangeRed);
       } else if (prideLeds) {
         // Pride stripes
         stripes(
@@ -181,14 +178,29 @@ public class Leds extends VirtualSubsystem {
       solid(topSection, hexColor);
       solid(bottomSection, secondaryHexColor);
 
-      // Auto scoring
-      if (autoScoring) {
-        rainbow(bottomThreeQuartSection, rainbowCycleLength, rainbowDuration);
-      }
-
       // Endgame alert
       if (endgameAlert) {
         strobe(fullSection, Color.kRed, Color.kGold, strobeDuration);
+      }
+
+      // Intake running
+      if (intakeRunning) {
+        strobe(bottomThreeQuartSection, Color.kBlack, Color.kBlue, strobeDuration);
+      }
+
+      // Coral in robot
+      if (coralPresent) {
+        solid(bottomThreeQuartSection, Color.kGreen);
+      }
+
+      // Algae manipulator running
+      if (algaeRunning) {
+        strobe(bottomThreeQuartSection, Color.kBlack, Color.kSeaGreen, strobeDuration);
+      }
+
+      // Auto scoring
+      if (autoScoring) {
+        rainbow(bottomThreeQuartSection, rainbowCycleLength, rainbowDuration);
       }
 
       if (manualElevator) {

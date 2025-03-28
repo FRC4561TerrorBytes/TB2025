@@ -7,7 +7,11 @@ package frc.robot.commands;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.Constants.Mode;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.Vision;
 import org.littletonrobotics.junction.Logger;
@@ -22,7 +26,7 @@ public class SingleTagAlign extends Command {
 
   private Pose2d targetPose;
   private Pose2d robotPose;
-  private double distanceAway = -0.55;
+  private double distanceAway = Units.inchesToMeters(-27.654);
 
   /** Creates a new goToPose. */
   public SingleTagAlign(Drive drive, Vision vision) {
@@ -50,21 +54,27 @@ public class SingleTagAlign extends Command {
                 + selectedPosition.getTranslation().getY(),
             selectedPosition.getRotation());
 
+    if (targetPose.getRotation().getDegrees() - Math.abs(drive.getRotation().getDegrees()) > 90) {
+      targetPose = targetPose.rotateAround(targetPose.getTranslation(), Rotation2d.k180deg);    
+    }
+
     Logger.recordOutput("AutoLineup/Target Pose", targetPose);
     Logger.recordOutput("AutoLineup/ReefOffsetX", drive.getAutoAlignOffsetX());
 
-    pathCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(1, 1, 180, 180));
+    pathCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(1.5, 1.5, 180, 180));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    robotPose = vision.getFieldPoseUsingTag2(0, drive.getPose().getRotation());
-    Logger.recordOutput("AutoLineup/robotPose", robotPose);
+    // if (!Constants.currentMode.equals(Mode.SIM)) {
+    //   robotPose = vision.getFieldPoseUsingTag2(0, drive.getPose().getRotation());
+    //   Logger.recordOutput("AutoLineup/robotPose", robotPose);
 
-    if (!robotPose.equals(new Pose2d())) drive.setPose(robotPose);
+       // if (!robotPose.equals(new Pose2d())) drive.setPose(robotPose);
+    // }
 
-    pathCommand.schedule();
+    pathCommand.withName("SingleTagAlign").schedule();
   }
 
   // Called once the command ends or is interrupted.

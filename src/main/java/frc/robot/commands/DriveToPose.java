@@ -6,6 +6,8 @@ package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotContainer.ReefScorePositions;
@@ -28,13 +30,12 @@ public class DriveToPose extends Command {
     this.drive = drive;
     this.vision = vision;
 
-    addRequirements();
+    addRequirements(drive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    drive.stop();
     seenEndTag = false;
     endTagId = drive.getSelectedScorePosition().aprilTagID;
 
@@ -54,10 +55,16 @@ public class DriveToPose extends Command {
       }
     }
 
-    pathCommand =
-        AutoBuilder.pathfindToPose(
-            AllianceFlipUtil.apply(drive.getSelectedScorePosition().scorePosition),
-            new PathConstraints(2, 2, 360, 360));
+    Pose2d targetPosition = drive.getSelectedPose();
+
+    if (targetPosition.getRotation().getDegrees() - Math.abs(drive.getRotation().getDegrees())
+        > 90) {
+      targetPosition = targetPosition.rotateAround(targetPosition.getTranslation(), Rotation2d.k180deg);
+    }
+
+    Logger.recordOutput("Auto Lineup/Target Pose", targetPosition);
+
+    pathCommand = AutoBuilder.pathfindToPose(targetPosition, new PathConstraints(2, 2, 360, 360));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -65,7 +72,7 @@ public class DriveToPose extends Command {
   public void execute() {
     seenEndTag = vision.seenTagId(endTagId, 0);
 
-    pathCommand.schedule();
+    pathCommand.withName("DriveToPose").schedule();
 
     Logger.recordOutput("Auto Lineup/Seen Tag", seenEndTag);
     Logger.recordOutput("Auto Lineup/Tag ID", endTagId);
@@ -84,7 +91,7 @@ public class DriveToPose extends Command {
       case REAL:
         return pathCommand.isFinished() || (seenEndTag && vision.getDistanceToTag(0) < 1);
       case SIM:
-        return pathCommand.isFinished() || seenEndTag;
+        return pathCommand.isFinished();
       case REPLAY:
         return true;
     }
