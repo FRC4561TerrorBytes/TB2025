@@ -3,40 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.07,
-        "y": 6.158811475409837
+        "x": 1.3823630136986302,
+        "y": 5.940774828767124
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.829965753424658,
-        "y": 6.24128852739726
+        "x": 1.9683647260273973,
+        "y": 5.38482448630137
       },
       "isLocked": false,
-      "linkedName": "SLL"
+      "linkedName": "GL"
     },
     {
       "anchor": {
-        "x": 4.99,
-        "y": 5.22
+        "x": 3.1809375,
+        "y": 4.204488636363636
       },
       "prevControl": {
-        "x": 5.505348987955839,
-        "y": 6.27840425309468
+        "x": 2.6144691780821914,
+        "y": 4.6335402397260275
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "J"
+      "linkedName": "A"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.37274549098196397,
+      "rotationDegrees": 180.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.87,
+      "minWaypointRelativePos": 0.8714285714285712,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 1.4,
+        "maxVelocity": 1.2,
+        "maxAcceleration": 1.75,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -47,13 +52,24 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "L2",
-      "waypointRelativePos": 0.7734899328859094,
+      "name": "L3Algae",
+      "waypointRelativePos": 0.29,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "L2"
+          "name": "L3Algae"
+        }
+      }
+    },
+    {
+      "name": "SpinAlgae",
+      "waypointRelativePos": 0.86,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SpinAlgae"
         }
       }
     }
@@ -68,13 +84,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Starting Line Paths",
+  "folder": "Ground Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": -154.29004621918878
   },
   "useDefaultConstraints": true
 }

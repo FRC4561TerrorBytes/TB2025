@@ -4,15 +4,18 @@
   "holonomicMode": true,
   "pathFolders": [
     "Algae to Score",
+    "Ground Pickup",
     "Left Source Pickup",
     "Left Source Score",
+    "Ground Score",
     "Push Auto",
     "Right Source Pickup",
     "Right Source Score",
     "Starting Line Paths"
   ],
   "autoFolders": [
-    "Comp 1"
+    "Comp 1",
+    "GroundAutos"
   ],
   "defaultMaxVel": 4.2,
   "defaultMaxAccel": 3.5,

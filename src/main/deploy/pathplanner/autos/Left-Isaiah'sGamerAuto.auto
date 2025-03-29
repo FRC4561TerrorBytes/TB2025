@@ -25,19 +25,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "J-LS"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
+            "pathName": "J-GL"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LS-I-L2"
+            "pathName": "GL-A(Remove Algae)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L3"
           }
         },
         {
@@ -55,19 +55,55 @@
         {
           "type": "path",
           "data": {
-            "pathName": "I-LS"
+            "pathName": "A-GM"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GM-B-L2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Intake"
+            "name": "WaitForArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "B-GR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GR-B-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Comp 1",
+  "folder": "GroundAutos",
   "choreoAuto": false
 }

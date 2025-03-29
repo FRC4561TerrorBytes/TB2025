@@ -8,47 +8,33 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.829965753424658,
-        "y": 6.24128852739726
+        "x": 3.8014982876712327,
+        "y": 6.1811857876712315
       },
       "isLocked": false,
       "linkedName": "SLL"
     },
     {
       "anchor": {
-        "x": 4.99,
-        "y": 5.22
+        "x": 3.1809375,
+        "y": 4.204488636363636
       },
       "prevControl": {
-        "x": 5.505348987955839,
-        "y": 6.27840425309468
+        "x": 2.6445205479452056,
+        "y": 4.798822773972603
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "J"
+      "linkedName": "A"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.87,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 1.4,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "L2",
-      "waypointRelativePos": 0.7734899328859094,
+      "waypointRelativePos": 0.77,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -68,7 +54,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Starting Line Paths",

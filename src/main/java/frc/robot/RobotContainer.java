@@ -322,6 +322,14 @@ public class RobotContainer {
             .andThen(
                 Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
     NamedCommands.registerCommand(
+        "Ground",
+        Commands.sequence(
+                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator),
+                Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
+            .onlyIf(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3))
+            .andThen(
+                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.GROUND), elevator)));
+    NamedCommands.registerCommand(
         "L3Algae",
         Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3ALGAE), elevator));
     NamedCommands.registerCommand(
