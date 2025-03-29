@@ -59,6 +59,12 @@ public final class Constants {
   public static final int CLIMBER_STATOR_CURRENT_LIMIT = 30;
   public static final int CLIMBER_SUPPLY_CURRENT_LIMIT = 25;
 
+  public static final int WRIST_ID = 51;
+  public static final int WRIST_CANCODER_ID = 50;
+  public static final double WRIST_GEAR_RATIO = 23.5;
+  public static final int WRIST_STATOR_CURRENT_LIMIT = 30;
+  public static final int WRIST_SUPPLY_CURRENT_LIMIT = 25;
+
   public static final int ALGAE_MANIPULATOR_MOTOR_ID = 61;
 
   public static final double SCORING_POSITION_OFFSET = 6.5;

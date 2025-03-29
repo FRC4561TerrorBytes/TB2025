@@ -63,6 +63,9 @@ import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.subsystems.wrist.Wrist;
+import frc.robot.subsystems.wrist.WristIO;
+import frc.robot.subsystems.wrist.WristIOReal;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.FieldConstants.ReefLevel;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -76,28 +79,31 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
 
   public enum ElevatorPosition {
-    STOW(0, 20.0),
-    SOURCE(0.2, 46),
-    CLIMBPREP(0.0, 50.0),
-    CLIMBFULL(0.2, 5),
-    ALGAEINTAKE(0.1, 15),
-    L1(0.1, 20.0),
-    L2(0.0, 90.0),
-    L2ALGAE(0, 90),
-    L2AUTOALIGN(0.15, 100),
-    L3(0.55, 90.0),
-    L3ALGAE(0.4, 90),
-    L3AUTOALIGN(0.55, 95),
-    L3RETURN(0.55, 65),
-    L3RETURN2(0.2, 65),
-    L4(0.5, 90.0);
+    STOW(0, 20.0, 0.0),
+    SOURCE(0.2, 46, 0.0),
+    CLIMBPREP(0.0, 50.0, 0.0),
+    CLIMBFULL(0.2, 5, 0.0),
+    ALGAEINTAKE(0.1, 15, 0.0),
+    L1(0.1, 20.0, 0.0),
+    L2(0.0, 90.0, 0.0),
+    L2ALGAE(0, 90, 0.0),
+    L2AUTOALIGN(0.15, 100, 0.0),
+    L3(0.55, 90.0, 0.0),
+    L3ALGAE(0.4, 90, 0.0),
+    L3AUTOALIGN(0.55, 95, 0.0),
+    L3RETURN(0.55, 65, 0.0),
+    L3RETURN2(0.2, 65, 0.0),
+    GROUND(0.5, 90.0, 0.0), //TODO: need to be determined(currently arbitrary)
+    L4(0.5, 90.0, 0.0);
 
     public double extensionPosition;
     public double pivotPosition;
+    public double wristPosition;
 
-    private ElevatorPosition(double extensionPosition, double pivotPosition) {
+    private ElevatorPosition(double extensionPosition, double pivotPosition, double wristPosition) {
       this.extensionPosition = extensionPosition;
       this.pivotPosition = pivotPosition;
+      this.wristPosition = wristPosition;
     }
   }
 
@@ -222,6 +228,7 @@ public class RobotContainer {
   private final AlgaeManipulator algaeManipulator;
   private final Leds leds = Leds.getInstance();
   private final Climber climber;
+  private final Wrist wrist;
 
   // Controller
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -255,6 +262,7 @@ public class RobotContainer {
                 new VisionIOLimelight(camera1Name, drive::getRotation));
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOReal());
         climber = new Climber(new ClimberIOReal());
+        wrist = new Wrist(new WristIOReal());
 
         break;
       case SIM:
@@ -271,6 +279,7 @@ public class RobotContainer {
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOSim());
         climber = new Climber(new ClimberIO() {});
+        wrist = new Wrist(new WristIO() {});
         break;
 
       default:
@@ -285,9 +294,9 @@ public class RobotContainer {
         intake = new Intake(new IntakeIO() {});
         elevator = new Elevator(new ElevatorIO() {});
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-
         algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIO() {});
         climber = new Climber(new ClimberIO() {});
+        wrist = new Wrist(new WristIO() {});
         break;
     }
 
@@ -492,7 +501,7 @@ public class RobotContainer {
                         elevator))))
         .onFalse(
             Commands.runOnce(() -> drive.stop(), drive)
-            .alongWith(Commands.runOnce(() -> leds.autoScoring = false)));
+                .alongWith(Commands.runOnce(() -> leds.autoScoring = false)));
 
     // Run algae bar when Y is held
     driverController.y().toggleOnTrue(algaeManipulator.runAlgaeManipulator(1));

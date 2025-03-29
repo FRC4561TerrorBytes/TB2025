@@ -59,7 +59,8 @@ public class DriveToPose extends Command {
 
     if (targetPosition.getRotation().getDegrees() - Math.abs(drive.getRotation().getDegrees())
         > 90) {
-      targetPosition = targetPosition.rotateAround(targetPosition.getTranslation(), Rotation2d.k180deg);
+      targetPosition =
+          targetPosition.rotateAround(targetPosition.getTranslation(), Rotation2d.k180deg);
     }
 
     Logger.recordOutput("Auto Lineup/Target Pose", targetPosition);
