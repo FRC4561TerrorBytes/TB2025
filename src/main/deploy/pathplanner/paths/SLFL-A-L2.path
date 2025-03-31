@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.07,
-        "y": 6.158811475409837
+        "x": 7.18063524590164,
+        "y": 7.5493852459016395
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8014982876712327,
-        "y": 6.1811857876712315
+        "x": 4.257236463811072,
+        "y": 7.397817764443694
       },
       "isLocked": false,
-      "linkedName": "SLL"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.1809375,
-        "y": 4.204488636363636
+        "x": 3.1878893488885067,
+        "y": 4.1791887825395255
       },
       "prevControl": {
-        "x": 2.6445205479452056,
-        "y": 4.798822773972603
+        "x": 2.0183208667661994,
+        "y": 4.802711049687138
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "L2",
-      "waypointRelativePos": 0.77,
+      "waypointRelativePos": 0.75,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -60,7 +60,7 @@
   "folder": "Starting Line Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

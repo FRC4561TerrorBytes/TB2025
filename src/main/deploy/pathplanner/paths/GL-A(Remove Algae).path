@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3823630136986302,
-        "y": 5.940774828767124
+        "x": 1.2946721311475409,
+        "y": 5.78719262295082
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9683647260273973,
-        "y": 5.38482448630137
+        "x": 1.880673843476308,
+        "y": 5.231242280485066
       },
       "isLocked": false,
       "linkedName": "GL"
     },
     {
       "anchor": {
-        "x": 3.1809375,
-        "y": 4.204488636363636
+        "x": 3.1878893488885067,
+        "y": 4.1791887825395255
       },
       "prevControl": {
-        "x": 2.6144691780821914,
-        "y": 4.6335402397260275
+        "x": 2.621421026970698,
+        "y": 4.608240385901917
       },
       "nextControl": null,
       "isLocked": false,
@@ -90,7 +90,7 @@
   "folder": "Ground Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -154.29004621918878
+    "rotation": 135.0
   },
   "useDefaultConstraints": true
 }

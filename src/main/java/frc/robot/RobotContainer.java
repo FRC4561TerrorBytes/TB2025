@@ -87,13 +87,15 @@ public class RobotContainer {
     L1(0.1, 20.0, 0.0),
     L2(0.0, 90.0, 0.0),
     L2ALGAE(0, 90, 0.0),
+    FLICKPREP(0.25, 90, 0.0),
+    FLICK(0.25, 90, 0.0),
     L2AUTOALIGN(0.15, 100, 0.0),
     L3(0.55, 90.0, 0.0),
     L3ALGAE(0.4, 90, 0.0),
     L3AUTOALIGN(0.55, 95, 0.0),
     L3RETURN(0.55, 65, 0.0),
     L3RETURN2(0.2, 65, 0.0),
-    GROUND(0.5, 90.0, 0.0), //TODO: need to be determined(currently arbitrary)
+    GROUND(0.5, 90.0, 0.0), // TODO: need to be determined(currently arbitrary)
     L4(0.5, 90.0, 0.0);
 
     public double extensionPosition;
@@ -302,7 +304,7 @@ public class RobotContainer {
 
     // Register NamedCommands for use in PathPlanner // TAKE INTAKE COMMAND TIMEOUT OUT (FOR SIM)
     NamedCommands.registerCommand(
-        "Intake", intake.intakeCoral().until(() -> intake.coralPresent()));
+        "Intake", intake.intakeCoral().until(() -> intake.coralPresent()).withTimeout(0.6));
     NamedCommands.registerCommand("Outtake", intake.outtakeCoral().withTimeout(0.5));
     NamedCommands.registerCommand("StopIntake", Commands.runOnce(() -> intake.setOutput(0)));
     NamedCommands.registerCommand(
@@ -329,6 +331,12 @@ public class RobotContainer {
             .onlyIf(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3))
             .andThen(
                 Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.GROUND), elevator)));
+    NamedCommands.registerCommand(
+        "L2Dealgae", 
+        Commands.sequence(
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.FLICKPREP), elevator, wrist),
+            Commands.waitUntil(() -> mechanismAtSetpoint()),
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.FLICK), elevator, wrist)));
     NamedCommands.registerCommand(
         "L3Algae",
         Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3ALGAE), elevator));
@@ -409,6 +417,14 @@ public class RobotContainer {
 
     Trigger L3AlgaeTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3ALGAE));
+
+    new Trigger(
+            () ->
+                DriverStation.isTeleopEnabled()
+                    && DriverStation.getMatchTime() > 0
+                    && DriverStation.getMatchTime() <= 2
+                    && elevator.getElevatorPosition().equals(ElevatorPosition.CLIMBPREP))
+        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBFULL), elevator));
 
     new Trigger(
             () ->
@@ -683,6 +699,15 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  private void setMechanismSetpoint(ElevatorPosition position) {
+    elevator.setSetpoint(position);
+    wrist.setSetpoint(position);
+  }
+
+  private boolean mechanismAtSetpoint() {
+    return elevator.elevatorAtSetpoint() && wrist.wristAtSetpoint(2);
   }
 
   private Command driverRumbleCommand() {

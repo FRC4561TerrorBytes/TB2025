@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 3.1809375,
-        "y": 4.204488636363636
+        "x": 3.1878893488885067,
+        "y": 4.1791887825395255
       },
       "prevControl": {
-        "x": 2.2934659090909095,
-        "y": 4.942386363636363
+        "x": 2.300417757979416,
+        "y": 4.917086509812252
       },
       "nextControl": null,
       "isLocked": false,
@@ -73,7 +73,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Left Source Score",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 126.0

@@ -3,6 +3,8 @@ package frc.robot.subsystems.wrist;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer.ElevatorPosition;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Wrist extends SubsystemBase {
@@ -26,11 +28,11 @@ public class Wrist extends SubsystemBase {
     io.setOutput(speed);
   }
 
-  public void setWristSetpoint(double position) {
-    io.setSetpoint(position);
+  public void setSetpoint(ElevatorPosition position) {
+    io.setSetpoint(position.wristPosition);
   }
 
-  public boolean WristAtSetpoint(double tolerance) {
+  public boolean wristAtSetpoint(double tolerance) {
     if (Math.abs(inputs.wristAngle - inputs.wristSetpoint) > tolerance) return false;
     else return true;
   }
