@@ -491,19 +491,20 @@ public class RobotContainer {
                         () -> elevator.setSetpoint(elevator.getRequestedElevatorPosition()),
                         elevator)),
                 Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
-                intake.outtakeCoral().withTimeout(0.5)))
+                intake.outtakeCoral().until(() -> !intake.coralPresent()),
+                Commands.sequence(
+                        Commands.runOnce(
+                            () -> elevator.setSetpoint(ElevatorPosition.L3RETURN), elevator),
+                        Commands.waitSeconds(0.5))
+                    .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
+                    .andThen(
+                        Commands.runOnce(
+                            () -> elevator.setSetpoint(ElevatorPosition.STOW), elevator))))
         .onFalse(
             Commands.sequence(
                 Commands.runOnce(() -> leds.autoScoring = false),
                 Commands.runOnce(() -> drive.stop(), drive),
-                Commands.sequence(
-                        Commands.runOnce(
-                            () -> elevator.setSetpoint(ElevatorPosition.L3RETURN), elevator),
-                        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
-                    .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
-                    .andThen(
-                        Commands.runOnce(
-                            () -> elevator.setSetpoint(ElevatorPosition.STOW), elevator))));
+                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
 
     // Run algae bar when Y is held
     driverController.y().toggleOnTrue(algaeManipulator.runAlgaeManipulator(1));
