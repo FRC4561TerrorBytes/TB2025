@@ -77,7 +77,7 @@ public class RobotContainer {
 
   public enum ElevatorPosition {
     STOW(0, 20.0),
-    SOURCE(0.2, 46),
+    SOURCE(0.0, 52),
     CLIMBPREP(0.0, 50.0),
     CLIMBFULL(0.2, 5),
     ALGAEINTAKE(0.1, 15),
@@ -87,7 +87,7 @@ public class RobotContainer {
     L2AUTOALIGN(0.15, 100),
     L3(0.55, 90.0),
     L3ALGAE(0.4, 90),
-    L3AUTOALIGN(0.55, 95),
+    L3AUTOALIGN(0.58, 97.5),
     L3RETURN(0.55, 65),
     L3RETURN2(0.2, 65),
     L4(0.5, 90.0);
@@ -493,19 +493,17 @@ public class RobotContainer {
                 Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
                 intake.outtakeCoral().withTimeout(0.5)))
         .onFalse(
-            Commands.runOnce(() -> drive.stop(), drive)
-                .alongWith(
-                    Commands.sequence(
+            Commands.sequence(
+                Commands.runOnce(() -> leds.autoScoring = false),
+                Commands.runOnce(() -> drive.stop(), drive),
+                Commands.sequence(
                         Commands.runOnce(
                             () -> elevator.setSetpoint(ElevatorPosition.L3RETURN), elevator),
-                        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+                        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
+                    .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
+                    .andThen(
                         Commands.runOnce(
-                            () -> elevator.setSetpoint(ElevatorPosition.L3RETURN2), elevator),
-                        Commands.waitUntil(() -> elevator.mechanismAtSetpoint())))
-                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
-                .alongWith(Commands.runOnce(() -> leds.autoScoring = false))
-                .andThen(
-                    Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
+                            () -> elevator.setSetpoint(ElevatorPosition.STOW), elevator))));
 
     // Run algae bar when Y is held
     driverController.y().toggleOnTrue(algaeManipulator.runAlgaeManipulator(1));
