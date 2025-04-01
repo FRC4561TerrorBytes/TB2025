@@ -332,9 +332,10 @@ public class RobotContainer {
             .andThen(
                 Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.GROUND), elevator)));
     NamedCommands.registerCommand(
-        "L2Dealgae", 
+        "L2Dealgae",
         Commands.sequence(
-            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.FLICKPREP), elevator, wrist),
+            Commands.runOnce(
+                () -> setMechanismSetpoint(ElevatorPosition.FLICKPREP), elevator, wrist),
             Commands.waitUntil(() -> mechanismAtSetpoint()),
             Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.FLICK), elevator, wrist)));
     NamedCommands.registerCommand(

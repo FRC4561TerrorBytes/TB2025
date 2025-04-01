@@ -1,0 +1,66 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.4725171232876713,
+        "y": 4.032512842465753
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.9773596938775513,
+        "y": 4.0585778061224485
+      },
+      "isLocked": false,
+      "linkedName": "GM"
+    },
+    {
+      "anchor": {
+        "x": 3.1878893488885067,
+        "y": 4.1791887825395255
+      },
+      "prevControl": {
+        "x": 2.6489158163265305,
+        "y": 4.185427295918367
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "A"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "L2",
+      "waypointRelativePos": 0.2833333333333334,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "L2"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.2,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Ground Score",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

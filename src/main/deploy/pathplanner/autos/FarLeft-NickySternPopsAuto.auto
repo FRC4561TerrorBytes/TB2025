@@ -1,0 +1,109 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SLFL-A-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "A-GM"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GM-B-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L2Dealgae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "B-GR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GR-B-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "B-GL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GL-A-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": false,
+  "folder": "GroundAutos",
+  "choreoAuto": false
+}
