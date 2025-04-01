@@ -79,7 +79,7 @@ public class RobotContainer {
     SOURCE(0.2, 46, 0.0),
     CLIMBPREP(0.0, 50.0, 0.0),
     CLIMBFULL(0.2, 5, 0.0),
-    ALGAEINTAKE(0.1, 15, -15),
+    ALGAEINTAKE(0.1, 15, -5),
     L1(0.1, 20.0, 0.0),
     L2FRONT(0.0, 50.0, 125.0),
     L2BACK(0.0, 90, 135),
@@ -234,6 +234,8 @@ public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
   private final CommandXboxController reefSelector = new CommandXboxController(2);
+
+  private final CommandXboxController TESTING = new CommandXboxController(3);
 
   // Manual elevator toggle (incase things go wrong)
   boolean manualElevatorToggle = false;
@@ -421,6 +423,23 @@ public class RobotContainer {
                 .finallyDo(() -> leds.endgameAlert = false)
                 .withName("Controller Endgame Al3rt"));
 
+    // TEST CONTROLS
+    TESTING
+        .x()
+        .onTrue(
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.GROUND), elevator, wrist));
+
+    TESTING
+        .a()
+        .onTrue(
+            Commands.runOnce(
+                () -> setMechanismSetpoint(ElevatorPosition.FLICKPREP), elevator, wrist));
+
+    TESTING
+        .b()
+        .onTrue(
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.FLICK), elevator, wrist));
+
     // Driver Controls
 
     // Reset gyro to 0° when RS and LS are pressed
@@ -449,9 +468,7 @@ public class RobotContainer {
         .toggleOnTrue(Commands.run(() -> intake.setOutput(0.75), intake));
 
     // Outtake coral while RT is held
-    driverController
-        .rightTrigger()
-        .whileTrue(intake.outtakeCoral());
+    driverController.rightTrigger().whileTrue(intake.outtakeCoral());
 
     // Automatically de-algaefy reef at selected position when RB is held
     driverController
@@ -465,7 +482,9 @@ public class RobotContainer {
                     Commands.runOnce(
                         () -> setMechanismSetpoint(drive.getAlgaePosition()), elevator),
                     Commands.runOnce(
-                        () -> setMechanismSetpoint(elevator.getRequestedElevatorPosition(scoreBack())),
+                        () ->
+                            setMechanismSetpoint(
+                                elevator.getRequestedElevatorPosition(scoreBack())),
                         elevator),
                     Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
                     intake.outtakeCoral().withTimeout(0.5))))
@@ -497,7 +516,9 @@ public class RobotContainer {
                 Commands.parallel(
                     new SingleTagAlign(drive, vision),
                     Commands.runOnce(
-                        () -> setMechanismSetpoint(elevator.getRequestedElevatorPosition(scoreBack())),
+                        () ->
+                            setMechanismSetpoint(
+                                elevator.getRequestedElevatorPosition(scoreBack())),
                         elevator)),
                 Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
                 intake.outtakeCoral().until(() -> !intake.coralPresent()),
@@ -526,11 +547,10 @@ public class RobotContainer {
         .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
     // Set elevator to ALGAEINTAKE when DPAD RIGHT is pressed
-    // driverController
-    //     .povRight()
-    //     .onTrue(
-    //         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.ALGAEINTAKE),
-    // elevator));
+    driverController
+        .povRight()
+        .onTrue(
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.ALGAEINTAKE), elevator));
 
     driverController
         .povUp()
@@ -625,7 +645,7 @@ public class RobotContainer {
     // Move elevator to L3 position when Y is pressed
     operatorController
         .y()
-        .onTrue(            
+        .onTrue(
             scoreBack()
                 ? Commands.runOnce(
                     () -> setMechanismSetpoint(ElevatorPosition.L3BACK), elevator, wrist)

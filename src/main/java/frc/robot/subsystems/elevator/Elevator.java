@@ -96,7 +96,8 @@ public class Elevator extends SubsystemBase {
   @AutoLogOutput(key = "Elevator/Selected Position")
   public ElevatorPosition getRequestedElevatorPosition(boolean scoreBack) {
     if (!scoreBack) {
-      if (selectedElevatorPosition.equals(ElevatorPosition.L2BACKAUTOALIGN)) selectedElevatorPosition = ElevatorPosition.L2FRONTAUTOALIGN;
+      if (selectedElevatorPosition.equals(ElevatorPosition.L2BACKAUTOALIGN))
+        selectedElevatorPosition = ElevatorPosition.L2FRONTAUTOALIGN;
       else selectedElevatorPosition = ElevatorPosition.L3FRONTAUTOALIGN;
     }
 

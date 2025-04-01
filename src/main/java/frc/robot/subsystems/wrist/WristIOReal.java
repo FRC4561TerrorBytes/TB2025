@@ -55,7 +55,7 @@ public class WristIOReal implements WristIO {
     // pivotPIDConfig.kS = 0.28;
     WristPIDConfig.kV = 0;
     WristPIDConfig.kA = 0;
-    WristPIDConfig.kP = 1;
+    WristPIDConfig.kP = 0.01;
     WristPIDConfig.kI = 0;
     WristPIDConfig.kD = 0;
 
