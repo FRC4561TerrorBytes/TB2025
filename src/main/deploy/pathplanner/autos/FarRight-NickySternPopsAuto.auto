@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SLFL-A-L2"
+            "pathName": "SLFR-B-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForArm"
           }
         },
         {
@@ -19,13 +25,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "A-GM"
+            "pathName": "B-GM"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "GM-B-L2"
+            "pathName": "GM-A-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForArm"
           }
         },
         {
@@ -43,7 +55,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "B-GR"
+            "pathName": "A-GL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GL-A-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "A-GR"
           }
         },
         {
@@ -55,19 +91,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Outtake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "B-GL"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "GL-A"
+            "name": "WaitForArm"
           }
         },
         {
@@ -79,7 +103,7 @@
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": "GroundAutos",
   "choreoAuto": false
 }

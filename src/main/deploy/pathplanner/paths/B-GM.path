@@ -3,41 +3,36 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.1878893488885067,
-        "y": 4.1791887825395255
+        "x": 3.21,
+        "y": 3.869
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.831780616011794,
-        "y": 4.548137646175889
+        "x": 2.3429846938775514,
+        "y": 3.8869579081632644
       },
       "isLocked": false,
-      "linkedName": "A"
+      "linkedName": "B"
     },
     {
       "anchor": {
-        "x": 1.2946721311475409,
-        "y": 5.78719262295082
+        "x": 1.4725171232876713,
+        "y": 4.032512842465753
       },
       "prevControl": {
-        "x": 1.8055454188187736,
-        "y": 5.336422075005615
+        "x": 2.3653698979591837,
+        "y": 3.9914221938775505
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "GL"
+      "linkedName": "GM"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.6993987975951903,
-      "rotationDegrees": 139.3698864114729
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.85,
+      "minWaypointRelativePos": 0.8549528301886793,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.0,
@@ -53,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "Ground",
-      "waypointRelativePos": 0.3023809523809521,
+      "waypointRelativePos": 0.3030660377358503,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -64,7 +59,7 @@
     },
     {
       "name": "Intake",
-      "waypointRelativePos": 0.75,
+      "waypointRelativePos": 0.8266509433962286,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -84,7 +79,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 135.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Ground Pickup",
