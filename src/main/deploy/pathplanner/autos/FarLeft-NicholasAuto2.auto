@@ -13,6 +13,12 @@
         {
           "type": "named",
           "data": {
+            "name": "WaitForArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Outtake"
           }
         },
@@ -26,6 +32,12 @@
           "type": "path",
           "data": {
             "pathName": "GM-B-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForArm"
           }
         },
         {
@@ -55,6 +67,12 @@
         {
           "type": "named",
           "data": {
+            "name": "WaitForArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Outtake"
           }
         },
@@ -68,6 +86,12 @@
           "type": "path",
           "data": {
             "pathName": "GL-A"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForArm"
           }
         },
         {
