@@ -186,8 +186,6 @@ public class Drive extends SubsystemBase {
       }
     }
 
-    Logger.recordOutput("testing", ElevatorPosition.L1.toString());
-
     // Log empty setpoint states when disabled
     if (DriverStation.isDisabled()) {
       Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
