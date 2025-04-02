@@ -86,13 +86,13 @@ public class RobotContainer {
     L2ALGAE(0, 90, 90),
     FLICKPREP(0.1, 90, 90),
     FLICK(0.1, 90, 0.0),
-    L2FRONTAUTOALIGN(0.15, 50, 135),
-    L2BACKAUTOALIGN(0.15, 100, 135),
+    L2FRONTAUTOALIGN(0.0, 50, 135),
+    L2BACKAUTOALIGN(0.0, 100, 135),
     L3FRONT(0.37, 60, 115),
     L3BACK(0.24, 90.0, 135),
     L3ALGAE(0.4, 90, 90),
-    L3FRONTAUTOALIGN(0.55, 95, 0.0),
-    L3BACKAUTOALIGN(0.55, 95, 0.0),
+    L3FRONTAUTOALIGN(0.37, 60, 115),
+    L3BACKAUTOALIGN(0.25, 95, 135),
     L3RETURN(0.55, 65, 0.0),
     GROUND(0.1, 4, 19),
     L4(0.5, 90.0, 0.0),
@@ -468,7 +468,7 @@ public class RobotContainer {
     driverController
         .povLeft()
         .and(algaePositionTrigger)
-        .whileTrue(Commands.run(() -> intake.setOutput(-0.75), intake));
+        .whileTrue(Commands.startEnd(() -> intake.setOutput(-1), ()-> intake.stopIntake(), intake));
 
     // Outtake coral while RT is held
     driverController.rightTrigger().whileTrue(intake.outtakeCoral());
@@ -640,13 +640,13 @@ public class RobotContainer {
     operatorController
         .b()
         .onTrue(
-            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2BACK), elevator, wrist));
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2BACKAUTOALIGN), elevator, wrist));
 
     // Move elevator to L3 position when Y is pressed
     operatorController
         .y()
         .onTrue(
-            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3BACK), elevator, wrist));
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3BACKAUTOALIGN), elevator, wrist));
 
     // Set requested auto score level to L2 when DPAD DOWN is pressed
     operatorController
