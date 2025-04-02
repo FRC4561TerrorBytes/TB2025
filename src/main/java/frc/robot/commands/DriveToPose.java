@@ -65,7 +65,7 @@ public class DriveToPose extends Command {
 
     Logger.recordOutput("Auto Lineup/Target Pose", targetPosition);
 
-    pathCommand = AutoBuilder.pathfindToPose(targetPosition, new PathConstraints(2, 2, 360, 360));
+    pathCommand = AutoBuilder.pathfindToPose(targetPosition, new PathConstraints(4.7, 3.5, 360, 360));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -90,7 +90,7 @@ public class DriveToPose extends Command {
   public boolean isFinished() {
     switch (Constants.currentMode) {
       case REAL:
-        return pathCommand.isFinished() || (seenEndTag && vision.getDistanceToTag(0) < 1);
+        return pathCommand.isFinished();
       case SIM:
         return pathCommand.isFinished();
       case REPLAY:

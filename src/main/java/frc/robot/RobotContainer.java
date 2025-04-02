@@ -528,17 +528,17 @@ public class RobotContainer {
                 intake.outtakeCoral().until(() -> !intake.coralPresent()),
                 Commands.sequence(
                         Commands.runOnce(
-                            () -> setMechanismSetpoint(ElevatorPosition.L3RETURN), elevator),
+                            () -> elevator.setSetpoint(ElevatorPosition.L3RETURN), elevator),
                         Commands.waitSeconds(0.5))
                     .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
                     .andThen(
                         Commands.runOnce(
-                            () -> setMechanismSetpoint(ElevatorPosition.STOW), elevator))))
+                            () -> elevator.setSetpoint(ElevatorPosition.STOW), elevator))))
         .onFalse(
             Commands.sequence(
                 Commands.runOnce(() -> leds.autoScoring = false),
                 Commands.runOnce(() -> drive.stop(), drive),
-                Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW), elevator)));
+                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
 
     // Pathfind to processor when X is held
     driverController

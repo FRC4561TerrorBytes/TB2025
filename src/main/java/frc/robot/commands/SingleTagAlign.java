@@ -24,7 +24,7 @@ public class SingleTagAlign extends Command {
 
   private Pose2d targetPose;
   private Pose2d robotPose;
-  private double distanceAway = Units.inchesToMeters(-27.654);
+  private double distanceAway = Units.inchesToMeters(-29.654);
 
   /** Creates a new goToPose. */
   public SingleTagAlign(Drive drive, Vision vision) {
@@ -78,6 +78,7 @@ public class SingleTagAlign extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    drive.stop();
     pathCommand.end(interrupted);
   }
 
