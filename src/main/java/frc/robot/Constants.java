@@ -61,7 +61,7 @@ public final class Constants {
 
   public static final int WRIST_ID = 51;
   public static final int WRIST_CANCODER_ID = 50;
-  public static final double WRIST_GEAR_RATIO = 23.5;
+  public static final double WRIST_GEAR_RATIO = 110.2;
   public static final int WRIST_STATOR_CURRENT_LIMIT = 30;
   public static final int WRIST_SUPPLY_CURRENT_LIMIT = 25;
 

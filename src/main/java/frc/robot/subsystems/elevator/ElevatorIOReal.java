@@ -94,7 +94,7 @@ public class ElevatorIOReal implements ElevatorIO {
     // pivotPIDConfig.kS = 0.28;
     pivotPIDConfig.kV = 0;
     pivotPIDConfig.kA = 0;
-    pivotPIDConfig.kP = 55;
+    pivotPIDConfig.kP = 60;
     pivotPIDConfig.kI = 3;
     pivotPIDConfig.kD = 0;
 

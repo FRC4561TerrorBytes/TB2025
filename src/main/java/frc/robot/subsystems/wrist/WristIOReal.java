@@ -19,6 +19,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -55,36 +56,35 @@ public class WristIOReal implements WristIO {
     // pivotPIDConfig.kS = 0.28;
     WristPIDConfig.kV = 0;
     WristPIDConfig.kA = 0;
-    WristPIDConfig.kP = 0.01;
+    WristPIDConfig.kP = 75;
     WristPIDConfig.kI = 0;
     WristPIDConfig.kD = 0;
 
     var cancoderConfig = new CANcoderConfiguration();
-    cancoderConfig.MagnetSensor.withMagnetOffset(0); // TODO: needs to be determined
+    cancoderConfig.MagnetSensor.withMagnetOffset(
+        0.428711 - 0.031250); // TODO: needs to be determined
     tryUntilOk(5, () -> wristEncoder.getConfigurator().apply(cancoderConfig, 0.25));
 
     var wristConfig = new TalonFXConfiguration();
     wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     wristConfig.Slot0 = WristPIDConfig;
-    wristConfig.Feedback.SensorToMechanismRatio = Constants.WRIST_GEAR_RATIO;
+    wristConfig.Feedback.RotorToSensorRatio = Constants.WRIST_GEAR_RATIO;
     wristConfig.Feedback.FeedbackRemoteSensorID = wristEncoder.getDeviceID();
     wristConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-    wristConfig.MotionMagic.MotionMagicCruiseVelocity = 3;
+    wristConfig.MotionMagic.MotionMagicCruiseVelocity = 100 / Constants.WRIST_GEAR_RATIO;
     wristConfig.MotionMagic.MotionMagicAcceleration =
         wristConfig.MotionMagic.MotionMagicCruiseVelocity / 0.050;
     wristConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * Constants.WRIST_GEAR_RATIO;
     wristConfig.MotionMagic.MotionMagicExpo_kA = 0.1;
     wristConfig.ClosedLoopGeneral.ContinuousWrap = false;
-    wristConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    wristConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     wristConfig.CurrentLimits.StatorCurrentLimit = Constants.WRIST_STATOR_CURRENT_LIMIT;
     wristConfig.CurrentLimits.SupplyCurrentLimit = Constants.WRIST_SUPPLY_CURRENT_LIMIT;
     wristConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     wristConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     tryUntilOk(5, () -> WristMotor.getConfigurator().apply(wristConfig, 0.25));
 
-    WristMotor.setPosition(0);
-
-    WristAngle = WristMotor.getPosition();
+    WristAngle = wristEncoder.getPosition();
     WristStatorCurrent = WristMotor.getStatorCurrent();
     WristSupplyCurrent = WristMotor.getSupplyCurrent();
     WristSpeed = WristMotor.getVelocity();
@@ -114,7 +114,7 @@ public class WristIOReal implements WristIO {
             WristVoltage,
             WristTemp);
 
-    inputs.wristAngle = wristEncoder.getPosition().getValueAsDouble();
+    inputs.wristAngle = WristAngle.getValueAsDouble();
 
     inputs.wristMotorConnected = WristStatus.isOK();
     inputs.wristEncoderConnected = wristEncoder.isConnected();
@@ -130,7 +130,7 @@ public class WristIOReal implements WristIO {
 
   @Override
   public void setSetpoint(double position) {
-    WristSetpoint = position;
+    WristSetpoint = Units.degreesToRotations(position);
     WristMotor.setControl(m_request_Wrist.withPosition(WristSetpoint));
   }
 

@@ -49,7 +49,7 @@ public class Intake extends SubsystemBase {
     }
     return Commands.startEnd(
         () -> {
-          this.setOutput(0.75);
+          this.setOutput(-1);
           Leds.getInstance().intakeRunning = true;
         },
         () -> {
