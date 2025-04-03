@@ -555,7 +555,8 @@ public class RobotContainer {
         .whileTrue(
             Commands.sequence(
                 Commands.runOnce(() -> leds.autoScoring = true),
-                new DriveToPose(drive, vision),
+                AutoBuilder.pathfindToPose(
+                    drive.getSelectedPose(), new PathConstraints(4.7, 3.5, 360, 360, 1.5)),
                 Commands.parallel(
                     new SingleTagAlign(drive, vision),
                     Commands.runOnce(
