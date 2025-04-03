@@ -7,7 +7,6 @@ package frc.robot.commands;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotContainer.ReefScorePositions;
@@ -36,6 +35,7 @@ public class DriveToPose extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    drive.stop();
     seenEndTag = false;
     endTagId = drive.getSelectedScorePosition().aprilTagID;
 
@@ -57,15 +57,10 @@ public class DriveToPose extends Command {
 
     Pose2d targetPosition = drive.getSelectedPose();
 
-    if (targetPosition.getRotation().getDegrees() - Math.abs(drive.getRotation().getDegrees())
-        > 90) {
-      targetPosition =
-          targetPosition.rotateAround(targetPosition.getTranslation(), Rotation2d.k180deg);
-    }
-
     Logger.recordOutput("Auto Lineup/Target Pose", targetPosition);
 
-    pathCommand = AutoBuilder.pathfindToPose(targetPosition, new PathConstraints(4.7, 3.5, 360, 360));
+    pathCommand =
+        AutoBuilder.pathfindToPose(targetPosition, new PathConstraints(4.7, 3.5, 360, 360));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -90,7 +85,7 @@ public class DriveToPose extends Command {
   public boolean isFinished() {
     switch (Constants.currentMode) {
       case REAL:
-        return pathCommand.isFinished();
+        return pathCommand.isFinished() || (seenEndTag && vision.getDistanceToTag(0) < 1);
       case SIM:
         return pathCommand.isFinished();
       case REPLAY:

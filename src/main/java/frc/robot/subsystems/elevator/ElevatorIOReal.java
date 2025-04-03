@@ -99,7 +99,7 @@ public class ElevatorIOReal implements ElevatorIO {
     pivotPIDConfig.kD = 0;
 
     var cancoderConfig = new CANcoderConfiguration();
-    cancoderConfig.MagnetSensor.withMagnetOffset(-0.267090);
+    cancoderConfig.MagnetSensor.withMagnetOffset(-0.267090 - 0.007812);
     tryUntilOk(5, () -> pivotEncoder.getConfigurator().apply(cancoderConfig, 0.25));
 
     var pivotConfig = new TalonFXConfiguration();

@@ -59,16 +59,30 @@ public class Intake extends SubsystemBase {
         this);
   }
 
-  public Command outtakeCoral() {
+  public Command outtakeCoralBack() {
     if (Constants.currentMode.equals(Mode.REAL)) {
       io.disableLimitSwitch();
     }
     return Commands.startEnd(
-        () -> this.setOutput(0.75),
-        () -> {
-          this.setOutput(0);
-        },
-        this);
+            () -> this.setOutput(0.75),
+            () -> {
+              this.setOutput(0);
+            },
+            this)
+        .withName("OuttakeBack");
+  }
+
+  public Command outtakeCoralFront() {
+    if (Constants.currentMode.equals(Mode.REAL)) {
+      io.disableLimitSwitch();
+    }
+    return Commands.startEnd(
+            () -> this.setOutput(-0.75),
+            () -> {
+              this.setOutput(0);
+            },
+            this)
+        .withName("OuttakeFront");
   }
 
   public Command outtakeL1Coral() {
