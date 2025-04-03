@@ -50,7 +50,7 @@ public class DriveToPose extends Command {
         endTagId -= 9;
       } else if (drive.getSelectedScorePosition().equals(ReefScorePositions.BACKRIGHT)
           || drive.getSelectedScorePosition().equals(ReefScorePositions.FRONTLEFT)
-          || drive.getSelectedScorePosition().equals(ReefScorePositions.PROCESSER)) {
+          || drive.getSelectedScorePosition().equals(ReefScorePositions.PROCESSOR)) {
         endTagId -= 13;
       }
     }

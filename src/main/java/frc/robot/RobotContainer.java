@@ -206,7 +206,7 @@ public class RobotContainer {
                 + reefFaces[7].getTranslation().getY(),
             reefFaces[7].getRotation()),
         13),
-    PROCESSER(
+    PROCESSOR(
         new Pose2d(
             Math.cos(reefFaces[8].getRotation().getRadians()) * distanceAway
                 + reefFaces[8].getTranslation().getX(),
@@ -543,7 +543,8 @@ public class RobotContainer {
         .whileTrue(
             Commands.sequence(
                 Commands.runOnce(() -> leds.autoScoring = true),
-                new DriveToPose(drive, vision),
+                AutoBuilder.pathfindToPose(
+                    drive.getSelectedPose(), new PathConstraints(4.7, 3.5, 360, 360, 1.5)),
                 Commands.parallel(
                     new SingleTagAlign(drive, vision),
                     Commands.runOnce(
@@ -572,7 +573,7 @@ public class RobotContainer {
         .x()
         .whileTrue(
             AutoBuilder.pathfindToPose(
-                AllianceFlipUtil.apply(ReefScorePositions.PROCESSER.scorePosition),
+                AllianceFlipUtil.apply(ReefScorePositions.PROCESSOR.scorePosition),
                 new PathConstraints(
                     1, 1, Units.degreesToRadians(360), Units.degreesToRadians(360))))
         .onFalse(Commands.runOnce(() -> drive.stop(), drive));
