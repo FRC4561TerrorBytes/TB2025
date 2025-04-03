@@ -62,7 +62,7 @@ public class WristIOReal implements WristIO {
 
     var cancoderConfig = new CANcoderConfiguration();
     cancoderConfig.MagnetSensor.withMagnetOffset(
-        0.428711 - 0.031250 - 0.067871 + 0.248779 - 0.024902 - 0.002441);
+        0.428711 - 0.031250 - 0.067871 + 0.248779 - 0.024902 - 0.002441 + 0.216064);
     tryUntilOk(5, () -> wristEncoder.getConfigurator().apply(cancoderConfig, 0.25));
 
     var wristConfig = new TalonFXConfiguration();
