@@ -47,6 +47,8 @@ public class Vision extends SubsystemBase {
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
 
+  private boolean tagUpdate = true;
+
   public static final Map<Integer, Pose2d> tagPoses2d = new HashMap<>();
 
   static {
@@ -135,7 +137,8 @@ public class Vision extends SubsystemBase {
                 || observation.pose().getX() < 0.0
                 || observation.pose().getX() > aprilTagLayout.getFieldLength()
                 || observation.pose().getY() < 0.0
-                || observation.pose().getY() > aprilTagLayout.getFieldWidth();
+                || observation.pose().getY() > aprilTagLayout.getFieldWidth()
+                || !tagUpdate;
 
         // Add pose to log
         robotPoses.add(observation.pose());
@@ -216,6 +219,14 @@ public class Vision extends SubsystemBase {
       if (tagId == id) return true;
     }
     return false;
+  }
+
+  public void blockTagUpdate() {
+    tagUpdate = false;
+  }
+
+  public void unblockTagUpdate() {
+    tagUpdate = true;
   }
 
   @AutoLogOutput(key = "Vision/Distance To Tag")

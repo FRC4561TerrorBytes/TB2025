@@ -103,7 +103,7 @@
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "GroundAutos",
   "choreoAuto": false
 }

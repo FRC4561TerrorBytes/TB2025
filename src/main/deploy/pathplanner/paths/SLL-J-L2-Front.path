@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.65,
-        "y": 7.26
+        "x": 7.07,
+        "y": 6.158811475409837
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7982128021753105,
-        "y": 6.544931083689913
+        "x": 5.829965753424658,
+        "y": 6.24128852739726
       },
       "isLocked": false,
-      "linkedName": "LS"
+      "linkedName": "SLL"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 5.28
       },
       "prevControl": {
-        "x": 4.584043367346939,
-        "y": 6.185478316326531
+        "x": 5.505348987955839,
+        "y": 6.338404253094681
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,11 +32,11 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.9,
+      "minWaypointRelativePos": 0.87,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.2,
-        "maxAcceleration": 1.75,
+        "maxVelocity": 1.0,
+        "maxAcceleration": 13.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -47,31 +47,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "L3Algae",
-      "waypointRelativePos": 0.2869127516778508,
+      "name": "L2",
+      "waypointRelativePos": 0.6,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "L3Algae"
-        }
-      }
-    },
-    {
-      "name": "SpinAlgae",
-      "waypointRelativePos": 0.8590604026845662,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "SpinAlgae"
+          "name": "L2Front"
         }
       }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.2,
-    "maxAcceleration": 3.5,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -82,10 +71,10 @@
     "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "Left Source Score",
+  "folder": "Starting Line Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 126.0
+    "rotation": -119.99999999999999
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

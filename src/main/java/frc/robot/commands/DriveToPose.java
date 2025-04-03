@@ -66,7 +66,7 @@ public class DriveToPose extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    seenEndTag = vision.seenTagId(endTagId, 0);
+    // seenEndTag = vision.seenTagId(endTagId, 0);
 
     pathCommand.withName("DriveToPose").schedule();
 
@@ -77,6 +77,7 @@ public class DriveToPose extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    drive.stop();
     pathCommand.end(interrupted);
   }
 

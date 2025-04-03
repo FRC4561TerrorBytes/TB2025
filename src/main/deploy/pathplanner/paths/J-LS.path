@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 4.99,
-        "y": 5.22
+        "y": 5.28
       },
       "prevControl": null,
       "nextControl": {
         "x": 4.221464646464646,
-        "y": 6.444065656565656
+        "y": 6.504065656565657
       },
       "isLocked": false,
       "linkedName": "J"
@@ -76,7 +76,7 @@
   "folder": "Left Source Pickup",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }

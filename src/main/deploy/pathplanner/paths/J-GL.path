@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 4.99,
-        "y": 5.22
+        "y": 5.28
       },
       "prevControl": null,
       "nextControl": {
         "x": 3.4709332191780824,
-        "y": 6.631956335616438
+        "y": 6.691956335616439
       },
       "isLocked": false,
       "linkedName": "J"
@@ -85,7 +85,7 @@
   "folder": "Ground Pickup",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }
