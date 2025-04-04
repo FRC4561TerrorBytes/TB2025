@@ -93,14 +93,17 @@ public class Elevator extends SubsystemBase {
     selectedElevatorPosition = position;
   }
 
-  @AutoLogOutput(key = "Elevator/Selected Position")
+  @AutoLogOutput(key = "TEST/elevator")
+  private ElevatorPosition getSetElevatorPosition() {
+    return selectedElevatorPosition;
+  }
+
   public ElevatorPosition getRequestedElevatorPosition(boolean scoreBack) {
     if (!scoreBack) {
       if (selectedElevatorPosition.equals(ElevatorPosition.L2BACKAUTOALIGN))
-        selectedElevatorPosition = ElevatorPosition.L2FRONTAUTOALIGN;
-      else selectedElevatorPosition = ElevatorPosition.L3FRONTAUTOALIGN;
+        return ElevatorPosition.L2FRONTAUTOALIGN;
+      return ElevatorPosition.L3FRONTAUTOALIGN;
     }
-
     return selectedElevatorPosition;
   }
 

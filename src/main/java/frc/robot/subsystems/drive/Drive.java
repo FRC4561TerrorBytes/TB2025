@@ -396,6 +396,10 @@ public class Drive extends SubsystemBase {
     selectedPosition = position;
   }
 
+  public void setSelectedPose(Pose2d pose) {
+    selectedPosition.scorePosition = pose;
+  }
+
   public ElevatorPosition getAlgaePosition() {
     if (selectedPosition.scorePosition.equals(ReefScorePositions.FRONT.scorePosition)
         || selectedPosition.scorePosition.equals(ReefScorePositions.BACKRIGHT.scorePosition)

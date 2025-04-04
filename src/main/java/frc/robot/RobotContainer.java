@@ -555,15 +555,7 @@ public class RobotContainer {
         .whileTrue(
             Commands.sequence(
                 Commands.runOnce(() -> leds.autoScoring = true),
-                AutoBuilder.pathfindToPose(
-                    drive.getSelectedPose(), new PathConstraints(4.7, 3.5, 360, 360, 1.5)),
-                Commands.parallel(
-                    new SingleTagAlign(drive, vision),
-                    Commands.runOnce(
-                        () ->
-                            setMechanismSetpoint(
-                                elevator.getRequestedElevatorPosition(scoreBack())),
-                        elevator)),
+                new DriveToPose(drive, vision, elevator, wrist),
                 Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
                 intake.outtakeCoralBack().until(() -> !intake.coralPresent()),
                 Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)))
@@ -771,10 +763,14 @@ public class RobotContainer {
 
   @AutoLogOutput(key = "TEST/Score back?")
   private boolean scoreBack() {
-    if (Math.abs(drive.getSelectedPose().getRotation().getDegrees())
-            - Math.abs(drive.getRotation().getDegrees())
-        > 90) return false;
-    else return true;
+    return Math.abs(
+                drive.getSelectedPose().getRotation().getDegrees()
+                    - drive.getRotation().getDegrees())
+            < 90
+        && Math.abs(
+                drive.getSelectedPose().getRotation().getDegrees()
+                    - drive.getRotation().getDegrees())
+            <= 270;
   }
 
   private boolean mechanismAtSetpoint() {
