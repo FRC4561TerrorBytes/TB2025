@@ -102,6 +102,9 @@ public class Drive extends SubsystemBase {
 
   private ReefScorePositions selectedPosition = ReefScorePositions.FRONT;
   private double autoAlignOffsetX = 0;
+  private double distanceAway = Units.inchesToMeters(-25.654);
+  private boolean scoreBack;
+  private boolean pathFinished;
 
   private Field2d field = new Field2d();
 
@@ -390,6 +393,41 @@ public class Drive extends SubsystemBase {
   @AutoLogOutput(key = "AutoLineup/Selected Pose")
   public Pose2d getSelectedPose() {
     return AllianceFlipUtil.apply(getSelectedScorePosition().scorePosition);
+  }
+
+  public Pose2d getFinalTargetPose() {
+    Pose2d targetPose =
+        new Pose2d(
+            Math.cos(getSelectedPose().getRotation().getRadians()) * distanceAway
+                - Math.sin(getSelectedPose().getRotation().getRadians()) * getAutoAlignOffsetX()
+                + getSelectedPose().getTranslation().getX(),
+            Math.sin(getSelectedPose().getRotation().getRadians()) * distanceAway
+                + Math.cos(getSelectedPose().getRotation().getRadians()) * getAutoAlignOffsetX()
+                + getSelectedPose().getTranslation().getY(),
+            getSelectedPose().getRotation());
+
+    if (Math.abs(targetPose.getRotation().getDegrees() - getRotation().getDegrees()) > 90
+        && Math.abs(targetPose.getRotation().getDegrees() - getRotation().getDegrees()) <= 270) {
+      targetPose = targetPose.rotateAround(targetPose.getTranslation(), Rotation2d.k180deg);
+      scoreBack = false;
+    } else {
+      scoreBack = true;
+    }
+
+    return targetPose;
+  }
+
+  public boolean getScoreBack() {
+    return scoreBack;
+  }
+
+  public void setPathFinished(boolean pathFinished) {
+    this.pathFinished = pathFinished;
+  }
+
+  @AutoLogOutput(key = "TEST/Path Finished")
+  public boolean getPathFinished() {
+    return this.pathFinished;
   }
 
   public void setSelectedScorePosition(ReefScorePositions position) {

@@ -46,7 +46,7 @@ public final class Constants {
 
   public static final int INTAKE_MOTOR_ID = 41;
   public static final int ALGAE_MANIPULATOR_ID = 42;
-  public static final int INTAKE_CURRENT_LIMIT = 20;
+  public static final int INTAKE_CURRENT_LIMIT = 10;
   public static final int LEFT_PIVOT_ID_1 = 31;
   public static final int LEFT_PIVOT_ID_2 = 32;
   public static final int RIGHT_PIVOT_ID_1 = 33;

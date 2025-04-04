@@ -16,6 +16,7 @@ public class Elevator extends SubsystemBase {
 
   private ElevatorPosition selectedElevatorPosition = ElevatorPosition.STOW;
   private ElevatorPosition lastElevatorPosition = ElevatorPosition.STOW;
+  private boolean scoreBack = true;
 
   public Elevator(ElevatorIO io) {
     this.io = io;
@@ -98,7 +99,12 @@ public class Elevator extends SubsystemBase {
     return selectedElevatorPosition;
   }
 
-  public ElevatorPosition getRequestedElevatorPosition(boolean scoreBack) {
+  public void setScoreBack(boolean scoreBack) {
+    this.scoreBack = scoreBack;
+  }
+
+  @AutoLogOutput(key = "Elevator/Requested Position")
+  public ElevatorPosition getRequestedElevatorPosition() {
     if (!scoreBack) {
       if (selectedElevatorPosition.equals(ElevatorPosition.L2BACKAUTOALIGN))
         return ElevatorPosition.L2FRONTAUTOALIGN;

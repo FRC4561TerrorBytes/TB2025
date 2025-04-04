@@ -76,8 +76,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
 
   public enum ElevatorPosition {
-    STOW(0, 20.0, 110.0),
-    SOURCE(0.0, 70, -5),
+    STOW(0, 20.0, 135.0),
+    SOURCE(0.0, 65, -5),
     CLIMBPREP(0.0, 50.0, 0.0),
     CLIMBFULL(0.2, 5, 0.0),
     ALGAEHOLD(0.1, 15, -5.0),
@@ -87,18 +87,20 @@ public class RobotContainer {
     L2ALGAE(0, 100, 90),
     FLICKPREP(0.18, 55, -5),
     FLICK(0.1, 55, 90),
-    L2FRONTAUTOALIGN(0.0, 50, 135),
+    L2FRONTAUTOALIGN(0.1, 40, 105),
     L2BACKAUTOALIGN(0.0, 100, 135),
     L3FRONT(0.36, 60, 85),
     L3BACK(0.36, 90.0, 135),
     L3ALGAE(0.4, 100, 90),
-    L3FRONTAUTOALIGN(0.37, 60, 115),
+    L3FRONTAUTOALIGN(0.47, 50, 110),
+    L3FRONTAUTOALIGNPREP(0.0, 65, 115),
     L3BACKAUTOALIGN(0.38, 95, 132),
     L3RETURN(0.55, 65, 0.0),
     GROUND(0.1, 2.0, 0.0),
     L4(0.5, 90.0, 0.0),
     WRISTTEST(0.0, 20.0, 0.0),
     WRISTTEST2(0.0, 20.0, 0.0);
+    // TODO: add an algae flick position for auto (L2BackAutoAlign - flick) should be close to current L3BackAutoAlign
 
     public double extensionPosition;
     public double pivotPosition;
@@ -410,11 +412,13 @@ public class RobotContainer {
     Trigger L3PositionTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3BACK));
 
-    Trigger L3AutoTrigger =
+    Trigger L3FrontAutoTrigger =
         new Trigger(
             () ->
-                elevator.getElevatorPosition().equals(ElevatorPosition.L3FRONTAUTOALIGN)
-                    || elevator.getElevatorPosition().equals(ElevatorPosition.L3BACKAUTOALIGN));
+                elevator.getRequestedElevatorPosition().equals(ElevatorPosition.L3FRONTAUTOALIGN));
+
+    Trigger L3BackAutoTrigger =
+        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3BACKAUTOALIGN));
 
     Trigger L3AlgaeTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3ALGAE));
@@ -555,7 +559,15 @@ public class RobotContainer {
         .whileTrue(
             Commands.sequence(
                 Commands.runOnce(() -> leds.autoScoring = true),
-                new DriveToPose(drive, vision, elevator, wrist),
+                Commands.parallel(
+                    new DriveToPose(drive, vision),
+                    Commands.sequence(
+                        Commands.runOnce(() -> elevator.setScoreBack(drive.getScoreBack())),
+                        Commands.waitSeconds(5),
+                        Commands.runOnce(
+                            () -> setMechanismSetpoint(elevator.getRequestedElevatorPosition()),
+                            elevator,
+                            wrist))),
                 Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
                 intake.outtakeCoralBack().until(() -> !intake.coralPresent()),
                 Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)))
@@ -647,7 +659,7 @@ public class RobotContainer {
             Commands.sequence(
                     Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2BACK), elevator),
                     Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
-                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
+                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3BackAutoTrigger))
                 .finallyDo(() -> setMechanismSetpoint(ElevatorPosition.STOW)));
 
     // Move elevator to L3 Algae removal when RT is pressed
@@ -676,19 +688,20 @@ public class RobotContainer {
         .rightBumper()
         .onTrue(
             Commands.runOnce(
-                () -> setMechanismSetpoint(ElevatorPosition.L3FRONT), elevator, wrist));
+                () -> setMechanismSetpoint(ElevatorPosition.L3FRONTAUTOALIGN), elevator, wrist));
 
     // Move elevator to L3 position when Y is pressed
     operatorController
         .y()
         .onTrue(
-            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3BACK), elevator, wrist));
+            Commands.runOnce(
+                () -> setMechanismSetpoint(ElevatorPosition.L3BACKAUTOALIGN), elevator, wrist));
 
     operatorController
         .leftBumper()
         .onTrue(
             Commands.runOnce(
-                () -> setMechanismSetpoint(ElevatorPosition.L2FRONT), elevator, wrist));
+                () -> setMechanismSetpoint(ElevatorPosition.L2FRONTAUTOALIGN), elevator, wrist));
 
     // Set requested auto score level to L2 when DPAD DOWN is pressed
     operatorController
