@@ -100,7 +100,8 @@ public class RobotContainer {
     L4(0.5, 90.0, 0.0),
     WRISTTEST(0.0, 20.0, 0.0),
     WRISTTEST2(0.0, 20.0, 0.0);
-    // TODO: add an algae flick position for auto (L2BackAutoAlign - flick) should be close to current L3BackAutoAlign
+    // TODO: add an algae flick position for auto (L2BackAutoAlign - flick) should be close to
+    // current L3BackAutoAlign
 
     public double extensionPosition;
     public double pivotPosition;
@@ -725,19 +726,19 @@ public class RobotContainer {
 
     // Set lineup position to I/J
     reefSelector
-        .a()
+        .button(5)
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKLEFT)));
 
     // Set lineup position to E/F
     reefSelector
-        .b()
+        .button(3)
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKRIGHT)));
 
     // Set lineup position to K/L
     reefSelector
-        .x()
+        .button(6)
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTLEFT)));
 
@@ -745,18 +746,18 @@ public class RobotContainer {
 
     // Set lineup position to C/D
     reefSelector
-        .y()
+        .button(2)
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTRIGHT)));
 
     // Set lineup position to G/H
     reefSelector
-        .povUp()
+        .button(4)
         .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACK)));
 
     // Set lineup position to A/B
     reefSelector
-        .povDown()
+        .button(1)
         .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT)));
   }
 
