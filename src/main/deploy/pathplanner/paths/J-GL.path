@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.4709332191780824,
-        "y": 6.691956335616439
+        "x": 4.038510101010101,
+        "y": 6.708333333333332
       },
       "isLocked": false,
       "linkedName": "J"
     },
     {
       "anchor": {
-        "x": 1.2946721311475409,
-        "y": 5.78719262295082
+        "x": 1.3551767676767679,
+        "y": 5.905366161616161
       },
       "prevControl": {
-        "x": 2.076007747585897,
-        "y": 6.268014540759038
+        "x": 2.208964646464647,
+        "y": 6.0375
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.6753507014028055,
-      "rotationDegrees": -154.44975735138632
+      "rotationDegrees": -163.4386493705307
     }
   ],
   "constraintZones": [
@@ -79,7 +79,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 135.0
+    "rotation": -162.0308602598431
   },
   "reversed": false,
   "folder": "Ground Pickup",

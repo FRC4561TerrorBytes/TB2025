@@ -85,8 +85,6 @@ public class RobotContainer {
     L2FRONT(0.0, 47.5, 95.0),
     L2BACK(0.0, 90, 135),
     L2ALGAE(0, 100, 90),
-    FLICKPREP(0.18, 55, -5),
-    FLICK(0.1, 55, 90),
     L2FRONTAUTOALIGN(0.1, 40, 105),
     L2BACKAUTOALIGN(0.0, 100, 135),
     L3FRONT(0.36, 60, 85),
@@ -99,7 +97,8 @@ public class RobotContainer {
     GROUND(0.1, 2.0, 0.0),
     L4(0.5, 90.0, 0.0),
     WRISTTEST(0.0, 20.0, 0.0),
-    WRISTTEST2(0.0, 20.0, 0.0);
+    WRISTTEST2(0.0, 20.0, 0.0),
+    AUTOWRISTFLICK(0.20, 100, 55);
     // TODO: add an algae flick position for auto (L2BackAutoAlign - flick) should be close to
     // current L3BackAutoAlign
 
@@ -308,7 +307,7 @@ public class RobotContainer {
     // Register NamedCommands for use in PathPlanner // TAKE INTAKE COMMAND TIMEOUT OUT (FOR SIM)
     NamedCommands.registerCommand(
         "Intake", intake.intakeCoral().until(() -> intake.coralPresent()));
-    NamedCommands.registerCommand("Outtake", intake.outtakeCoralBack().withTimeout(0.5));
+    NamedCommands.registerCommand("Outtake", intake.outtakeCoralBack().withTimeout(1.0));
     NamedCommands.registerCommand(
         "OuttakeFront", intake.outtakeCoralFront().until(() -> !intake.coralPresent()));
     NamedCommands.registerCommand("StopIntake", Commands.runOnce(() -> intake.setOutput(0)));
@@ -328,6 +327,10 @@ public class RobotContainer {
         "L3",
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3BACK), elevator, wrist));
     NamedCommands.registerCommand(
+        "L3DealgifyFlip",
+        Commands.runOnce(
+            () -> setMechanismSetpoint(ElevatorPosition.AUTOWRISTFLICK), elevator, wrist));
+    NamedCommands.registerCommand(
         "Source", Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.SOURCE), elevator));
     NamedCommands.registerCommand(
         "Stow", Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW), elevator));
@@ -339,11 +342,7 @@ public class RobotContainer {
         "UnblockTagUpdate", Commands.runOnce(() -> vision.unblockTagUpdate(), vision));
     NamedCommands.registerCommand(
         "L2Dealgae",
-        Commands.sequence(
-            Commands.runOnce(
-                () -> setMechanismSetpoint(ElevatorPosition.FLICKPREP), elevator, wrist),
-            Commands.waitUntil(() -> mechanismAtSetpoint()),
-            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.FLICK), elevator, wrist)));
+        Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3ALGAE), elevator));
     NamedCommands.registerCommand(
         "L3Algae",
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3ALGAE), elevator));
@@ -462,12 +461,7 @@ public class RobotContainer {
         .a()
         .onTrue(
             Commands.runOnce(
-                () -> setMechanismSetpoint(ElevatorPosition.FLICKPREP), elevator, wrist));
-
-    TESTING
-        .b()
-        .onTrue(
-            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.FLICK), elevator, wrist));
+                () -> setMechanismSetpoint(ElevatorPosition.AUTOWRISTFLICK), elevator, wrist));
 
     TESTING
         .povLeft()
