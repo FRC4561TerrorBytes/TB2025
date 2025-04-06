@@ -70,59 +70,11 @@
           "data": {
             "name": "Outtake"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "B-GR"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "GR-B-L3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "WaitForArm"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Outtake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "B-GL"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "GL-A-L3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "WaitForArm"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Outtake"
-          }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "GroundAutos",
   "choreoAuto": false
 }

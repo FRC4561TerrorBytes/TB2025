@@ -79,8 +79,8 @@ public class RobotContainer {
     STOW(0, 20.0, 135.0),
     SOURCE(0.0, 65, -5),
     CLIMBPREP(0.0, 50.0, 0.0),
-    CLIMBFULL(0.2, 5, 0.0),
-    ALGAEHOLD(0.1, 15, -5.0),
+    CLIMBFULL(0.11, 5, 100),
+    ALGAEHOLD(0.1, 13, -5.0),
     L1(0.1, 30.0, 0.0),
     L2FRONT(0.0, 47.5, 95.0),
     L2BACK(0.0, 90, 135),
@@ -94,8 +94,8 @@ public class RobotContainer {
     L3FRONTAUTOALIGNPREP(0.0, 65, 115),
     L3BACKAUTOALIGN(0.38, 95, 132),
     L3RETURN(0.55, 65, 0.0),
-    GROUND(0.1, 2.0, 0.0),
-    L4(0.5, 90.0, 0.0),
+    GROUND(0.1, 0.0, 0.0),
+    L4(0.5, 88.0, 0.0),
     WRISTTEST(0.0, 20.0, 0.0),
     WRISTTEST2(0.0, 20.0, 0.0),
     AUTOWRISTFLICK(0.20, 100, 55);
@@ -461,13 +461,13 @@ public class RobotContainer {
         .a()
         .onTrue(
             Commands.runOnce(
-                () -> setMechanismSetpoint(ElevatorPosition.AUTOWRISTFLICK), elevator, wrist));
+                () -> setMechanismSetpoint(ElevatorPosition.L2BACKAUTOALIGN), elevator, wrist));
 
     TESTING
         .povLeft()
         .onTrue(
             Commands.runOnce(
-                () -> setMechanismSetpoint(ElevatorPosition.WRISTTEST), elevator, wrist));
+                () -> setMechanismSetpoint(ElevatorPosition.L2BACKAUTOALIGN), elevator, wrist));
 
     TESTING
         .povRight()
@@ -569,8 +569,8 @@ public class RobotContainer {
         .onFalse(
             Commands.sequence(
                 Commands.runOnce(() -> leds.autoScoring = false),
-                Commands.runOnce(() -> drive.stop(), drive),
-                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
+                Commands.runOnce(() -> drive.stop(), drive)));
+    // Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
 
     // Pathfind to processor when X is held
     driverController

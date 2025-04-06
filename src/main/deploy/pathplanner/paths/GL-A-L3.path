@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3551767676767679,
-        "y": 5.905366161616161
+        "x": 1.3860511363565504,
+        "y": 5.760056818188861
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9411784800055352,
-        "y": 5.3494158191504075
+        "x": 1.9720528486853177,
+        "y": 5.2041064757231075
       },
       "isLocked": false,
-      "linkedName": "GL"
+      "linkedName": "AB-GL"
     },
     {
       "anchor": {
-        "x": 3.1878893488885067,
-        "y": 4.1791887825395255
+        "x": 3.07,
+        "y": 4.179
       },
       "prevControl": {
-        "x": 2.621421026970698,
-        "y": 4.608240385901917
+        "x": 2.503531678082191,
+        "y": 4.608051603362392
       },
       "nextControl": null,
       "isLocked": false,
@@ -74,7 +74,7 @@
   "folder": "Ground Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -162.0308602598431
+    "rotation": 141.34019174577233
   },
   "useDefaultConstraints": true
 }

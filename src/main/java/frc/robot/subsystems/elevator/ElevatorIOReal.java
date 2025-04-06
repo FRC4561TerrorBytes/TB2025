@@ -108,7 +108,7 @@ public class ElevatorIOReal implements ElevatorIO {
     pivotConfig.Feedback.RotorToSensorRatio = Constants.PIVOT_GEAR_RATIO;
     pivotConfig.Feedback.FeedbackRemoteSensorID = pivotEncoder.getDeviceID();
     pivotConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-    pivotConfig.MotionMagic.MotionMagicCruiseVelocity = 400.0 / Constants.PIVOT_GEAR_RATIO;
+    pivotConfig.MotionMagic.MotionMagicCruiseVelocity = 200.0 / Constants.PIVOT_GEAR_RATIO;
     pivotConfig.MotionMagic.MotionMagicAcceleration =
         pivotConfig.MotionMagic.MotionMagicCruiseVelocity / 0.85;
     pivotConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * Constants.PIVOT_GEAR_RATIO;

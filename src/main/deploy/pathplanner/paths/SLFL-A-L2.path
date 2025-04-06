@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 3.03,
-        "y": 4.1791887825395255
+        "x": 3.07,
+        "y": 4.179
       },
       "prevControl": {
-        "x": 1.8700819672066036,
-        "y": 5.355635245894957
+        "x": 1.9100819672066036,
+        "y": 5.355446463355432
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "AL2"
+      "linkedName": "A"
     }
   ],
   "rotationTargets": [],
@@ -47,7 +47,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "L2",
+      "name": "L2Back",
       "waypointRelativePos": 0.75,
       "endWaypointRelativePos": null,
       "command": {

@@ -52,6 +52,24 @@
           "data": {
             "pathName": "J-GL"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GL-J-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
         }
       ]
     }

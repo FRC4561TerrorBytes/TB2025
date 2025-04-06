@@ -40,7 +40,7 @@ public class VisionIOLimelight implements VisionIO {
   private final DoubleArraySubscriber megatag2Subscriber;
   private final DoubleArraySubscriber rawFiducialsSubscriber;
 
-  private final double[] tagOverrides = {6, 7, 8, 10, 11, 17, 18, 19, 20, 21, 22};
+  private final double[] tagOverrides = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
 
   /**
    * Creates a new VisionIOLimelight.

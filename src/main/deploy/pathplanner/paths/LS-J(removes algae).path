@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 4.99,
-        "y": 5.28
+        "x": 5.05,
+        "y": 5.34
       },
       "prevControl": {
-        "x": 4.584043367346939,
-        "y": 6.185478316326531
+        "x": 4.644043367346939,
+        "y": 6.245478316326531
       },
       "nextControl": null,
       "isLocked": false,
@@ -79,7 +79,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": 59.51714311812078
   },
   "reversed": false,
   "folder": "Left Source Score",

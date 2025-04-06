@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.21,
+        "x": 3.07,
         "y": 3.869
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.685245901639344,
+        "x": 2.545245901639344,
         "y": 4.480532786885246
       },
       "isLocked": false,
@@ -16,22 +16,22 @@
     },
     {
       "anchor": {
-        "x": 1.3551767676767679,
-        "y": 5.905366161616161
+        "x": 1.3860511363565504,
+        "y": 5.760056818188861
       },
       "prevControl": {
-        "x": 1.6990432621748586,
-        "y": 5.643894611537562
+        "x": 1.70514204544746,
+        "y": 5.500795454552496
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "GL"
+      "linkedName": "AB-GL"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5970149253731388,
-      "rotationDegrees": 135.0
+      "waypointRelativePos": 0.4864154250657247,
+      "rotationDegrees": 143.2543553882145
     }
   ],
   "constraintZones": [
@@ -53,7 +53,7 @@
   "eventMarkers": [
     {
       "name": "Ground",
-      "waypointRelativePos": 0.2,
+      "waypointRelativePos": 0.1603982300884982,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -84,7 +84,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -162.0308602598431
+    "rotation": 141.34019174577233
   },
   "reversed": false,
   "folder": "Ground Pickup",
