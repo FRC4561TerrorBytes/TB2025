@@ -48,15 +48,16 @@ public class Intake extends SubsystemBase {
       io.enableLimitSwitch();
     }
     return Commands.startEnd(
-        () -> {
-          this.setOutput(-1);
-          Leds.getInstance().intakeRunning = true;
-        },
-        () -> {
-          this.setOutput(0);
-          Leds.getInstance().intakeRunning = false;
-        },
-        this);
+            () -> {
+              this.setOutput(-1);
+              Leds.getInstance().intakeRunning = true;
+            },
+            () -> {
+              this.setOutput(0);
+              Leds.getInstance().intakeRunning = false;
+            },
+            this)
+        .withName("Intake");
   }
 
   public Command outtakeCoralBack() {

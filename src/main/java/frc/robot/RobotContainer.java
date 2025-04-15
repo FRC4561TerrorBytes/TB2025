@@ -98,7 +98,8 @@ public class RobotContainer {
     L4(0.5, 88.0, 0.0),
     WRISTTEST(0.0, 20.0, 0.0),
     WRISTTEST2(0.0, 20.0, 0.0),
-    AUTOWRISTFLICK(0.20, 100, 55);
+    AUTOWRISTFLICK(0.20, 100, 55),
+    ETHANSSPEED(0.0, 50.0, 135);
     // TODO: add an algae flick position for auto (L2BackAutoAlign - flick) should be close to
     // current L3BackAutoAlign
 
@@ -305,8 +306,7 @@ public class RobotContainer {
     }
 
     // Register NamedCommands for use in PathPlanner // TAKE INTAKE COMMAND TIMEOUT OUT (FOR SIM)
-    NamedCommands.registerCommand(
-        "Intake", intake.intakeCoral().until(() -> intake.coralPresent()));
+    NamedCommands.registerCommand("Intake", intake.intakeCoral().withTimeout(3));
     NamedCommands.registerCommand("Outtake", intake.outtakeCoralBack().withTimeout(1.0));
     NamedCommands.registerCommand(
         "OuttakeFront", intake.outtakeCoralFront().until(() -> !intake.coralPresent()));
@@ -448,6 +448,7 @@ public class RobotContainer {
 
     groundPositionTrigger
         .and(coralIntakeTrigger)
+        .and(() -> !DriverStation.isAutonomous())
         .onTrue(
             Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW), elevator, wrist));
 
@@ -455,13 +456,9 @@ public class RobotContainer {
     TESTING
         .x()
         .onTrue(
-            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.GROUND), elevator, wrist));
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.SOURCE), elevator, wrist));
 
-    TESTING
-        .a()
-        .onTrue(
-            Commands.runOnce(
-                () -> setMechanismSetpoint(ElevatorPosition.L2BACKAUTOALIGN), elevator, wrist));
+    TESTING.a().whileTrue(intake.intakeCoral());
 
     TESTING
         .povLeft()
@@ -500,8 +497,7 @@ public class RobotContainer {
     // Toggle algae intake when LT is pressed and arm is at algae intake position
     driverController
         .povLeft()
-        .whileTrue(
-            Commands.startEnd(() -> intake.setOutput(-1), () -> intake.setOutput(0), intake));
+        .whileTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.ETHANSSPEED)));
 
     // Outtake coral while RT is held
     driverController.rightTrigger().whileTrue(intake.outtakeCoralBack());

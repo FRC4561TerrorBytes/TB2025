@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2332070707070708,
-        "y": 5.8850378787878785
+        "x": 1.0071306818181818,
+        "y": 5.829857954545454
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.283494318181818,
-        "y": 6.408210227272726
+        "x": 2.057417929292929,
+        "y": 6.353030303030302
       },
       "isLocked": false,
       "linkedName": "GL"
@@ -46,6 +46,17 @@
   ],
   "pointTowardsZones": [],
   "eventMarkers": [
+    {
+      "name": "Stow",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Stow"
+        }
+      }
+    },
     {
       "name": "L3",
       "waypointRelativePos": 0.6459694989106759,

@@ -3,52 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.18063524590164,
-        "y": 7.5493852459016395
+        "x": 7.348,
+        "y": 4.013012295081967
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.829098360649228,
-        "y": 7.525409836058892
+        "x": 6.673780166946354,
+        "y": 3.560822406018877
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "SLM"
     },
     {
       "anchor": {
-        "x": 3.07,
-        "y": 4.179
+        "x": 5.32,
+        "y": 2.87
       },
       "prevControl": {
-        "x": 1.9100819672066036,
-        "y": 5.355446463355432
+        "x": 5.090650681988072,
+        "y": 2.7705068327599154
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "A"
+      "linkedName": "F"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.5958605664487904,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 1.5,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "L2Back",
-      "waypointRelativePos": 0.75,
+      "name": "L2",
+      "waypointRelativePos": 0.6,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -68,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -59.99999999999999
   },
   "reversed": false,
   "folder": "Starting Line Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
