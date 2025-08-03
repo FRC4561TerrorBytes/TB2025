@@ -1,0 +1,96 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.0071306818181818,
+        "y": 5.829857954545454
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.593132394146949,
+        "y": 5.2739076120797
+      },
+      "isLocked": false,
+      "linkedName": "GL"
+    },
+    {
+      "anchor": {
+        "x": 3.07,
+        "y": 4.179
+      },
+      "prevControl": {
+        "x": 2.503531678082191,
+        "y": 4.608051603362392
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "A"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.37274549098196397,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.8714285714285712,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.2,
+        "maxAcceleration": 13.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "L3Algae",
+      "waypointRelativePos": 0.29,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "L3Algae"
+        }
+      }
+    },
+    {
+      "name": "SpinAlgae",
+      "waypointRelativePos": 0.86,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "SpinAlgae"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.2,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Ground Score",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -171.67434966957322
+  },
+  "useDefaultConstraints": true
+}

@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SLL-J-L2-Front"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeFront"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": false,
+  "folder": "Pitt",
+  "choreoAuto": false
+}

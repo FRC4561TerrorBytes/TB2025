@@ -7,13 +7,11 @@ package frc.robot.commands;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.RobotContainer.ReefScorePositions;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.Vision;
-import frc.robot.util.AllianceFlipUtil;
 import org.littletonrobotics.junction.Logger;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -24,6 +22,10 @@ public class DriveToPose extends Command {
   private int endTagId;
   private boolean seenEndTag;
   private Command pathCommand;
+
+  private Pose2d targetPose;
+  private boolean scoreBack = true;
+  private double distanceAway = Units.inchesToMeters(-25.654);
 
   /** Creates a new DriveToPose. */
   public DriveToPose(Drive drive, Vision vision) {
@@ -36,44 +38,27 @@ public class DriveToPose extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    seenEndTag = false;
-    endTagId = drive.getSelectedScorePosition().aprilTagID;
+    drive.stop();
+    drive.setPathFinished(false);
 
-    if (AllianceFlipUtil.shouldFlip()) {
-      if (drive.getSelectedScorePosition().equals(ReefScorePositions.FRONT)
-          || drive.getSelectedScorePosition().equals(ReefScorePositions.BACK)
-          || drive.getSelectedScorePosition().equals(ReefScorePositions.LEFTSOURCE)
-          || drive.getSelectedScorePosition().equals(ReefScorePositions.RIGHTSOURCE)) {
-        endTagId -= 11;
-      } else if (drive.getSelectedScorePosition().equals(ReefScorePositions.BACKLEFT)
-          || drive.getSelectedScorePosition().equals(ReefScorePositions.FRONTRIGHT)) {
-        endTagId -= 9;
-      } else if (drive.getSelectedScorePosition().equals(ReefScorePositions.BACKRIGHT)
-          || drive.getSelectedScorePosition().equals(ReefScorePositions.FRONTLEFT)
-          || drive.getSelectedScorePosition().equals(ReefScorePositions.PROCESSER)) {
-        endTagId -= 13;
-      }
-    }
+    targetPose = drive.getFinalTargetPose();
 
-    Pose2d targetPosition = drive.getSelectedPose();
+    Logger.recordOutput("Auto Lineup/Target Pose", targetPose);
 
-    if (targetPosition.getRotation().getDegrees() - Math.abs(drive.getRotation().getDegrees())
-        > 90) {
-      targetPosition = targetPosition.rotateAround(targetPosition.getTranslation(), Rotation2d.k180deg);
-    }
-
-    Logger.recordOutput("Auto Lineup/Target Pose", targetPosition);
-
-    pathCommand = AutoBuilder.pathfindToPose(targetPosition, new PathConstraints(2, 2, 360, 360));
+    pathCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(3.5, 3, 360, 360), 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    seenEndTag = vision.seenTagId(endTagId, 0);
+    // seenEndTag = vision.seenTagId(endTagId, 0);
 
     pathCommand.withName("DriveToPose").schedule();
 
+    Logger.recordOutput("TEST/score back", scoreBack);
+    Logger.recordOutput(
+        "TEST/target dist",
+        drive.getPose().getTranslation().getDistance(targetPose.getTranslation()));
     Logger.recordOutput("Auto Lineup/Seen Tag", seenEndTag);
     Logger.recordOutput("Auto Lineup/Tag ID", endTagId);
   }
@@ -81,6 +66,8 @@ public class DriveToPose extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    drive.stop();
+    drive.setPathFinished(true);
     pathCommand.end(interrupted);
   }
 
@@ -89,7 +76,7 @@ public class DriveToPose extends Command {
   public boolean isFinished() {
     switch (Constants.currentMode) {
       case REAL:
-        return pathCommand.isFinished() || (seenEndTag && vision.getDistanceToTag(0) < 1);
+        return pathCommand.isFinished();
       case SIM:
         return pathCommand.isFinished();
       case REPLAY:

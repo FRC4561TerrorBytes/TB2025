@@ -1,0 +1,82 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.05,
+        "y": 5.34
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.098510101010101,
+        "y": 6.768333333333332
+      },
+      "isLocked": false,
+      "linkedName": "J"
+    },
+    {
+      "anchor": {
+        "x": 1.0071306818181818,
+        "y": 5.829857954545454
+      },
+      "prevControl": {
+        "x": 1.8609185606060632,
+        "y": 5.961991792929292
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "GL"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5740259740259723,
+      "rotationDegrees": -171.46093984363873
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Ground",
+      "waypointRelativePos": 0.1,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Ground"
+        }
+      }
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.7,
+      "endWaypointRelativePos": 0.98,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -171.67434966957322
+  },
+  "reversed": false,
+  "folder": "Ground Pickup",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 59.51714311812078
+  },
+  "useDefaultConstraints": false
+}

@@ -94,12 +94,12 @@ public class ElevatorIOReal implements ElevatorIO {
     // pivotPIDConfig.kS = 0.28;
     pivotPIDConfig.kV = 0;
     pivotPIDConfig.kA = 0;
-    pivotPIDConfig.kP = 55;
+    pivotPIDConfig.kP = 60;
     pivotPIDConfig.kI = 3;
     pivotPIDConfig.kD = 0;
 
     var cancoderConfig = new CANcoderConfiguration();
-    cancoderConfig.MagnetSensor.withMagnetOffset(-0.267090);
+    cancoderConfig.MagnetSensor.withMagnetOffset(-0.267090 - 0.007812);
     tryUntilOk(5, () -> pivotEncoder.getConfigurator().apply(cancoderConfig, 0.25));
 
     var pivotConfig = new TalonFXConfiguration();
@@ -108,7 +108,7 @@ public class ElevatorIOReal implements ElevatorIO {
     pivotConfig.Feedback.RotorToSensorRatio = Constants.PIVOT_GEAR_RATIO;
     pivotConfig.Feedback.FeedbackRemoteSensorID = pivotEncoder.getDeviceID();
     pivotConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-    pivotConfig.MotionMagic.MotionMagicCruiseVelocity = 400.0 / Constants.PIVOT_GEAR_RATIO;
+    pivotConfig.MotionMagic.MotionMagicCruiseVelocity = 200.0 / Constants.PIVOT_GEAR_RATIO;
     pivotConfig.MotionMagic.MotionMagicAcceleration =
         pivotConfig.MotionMagic.MotionMagicCruiseVelocity / 0.85;
     pivotConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * Constants.PIVOT_GEAR_RATIO;

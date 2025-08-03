@@ -38,10 +38,6 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPose;
 import frc.robot.commands.SingleTagAlign;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.algaeManipulator.AlgaeManipulator;
-import frc.robot.subsystems.algaeManipulator.AlgaeManipulatorIO;
-import frc.robot.subsystems.algaeManipulator.AlgaeManipulatorIOReal;
-import frc.robot.subsystems.algaeManipulator.AlgaeManipulatorIOSim;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberIO;
 import frc.robot.subsystems.climber.ClimberIOReal;
@@ -63,8 +59,12 @@ import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.subsystems.wrist.Wrist;
+import frc.robot.subsystems.wrist.WristIO;
+import frc.robot.subsystems.wrist.WristIOReal;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.FieldConstants.ReefLevel;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -76,28 +76,41 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
 
   public enum ElevatorPosition {
-    STOW(0, 20.0),
-    SOURCE(0.2, 46),
-    CLIMBPREP(0.0, 50.0),
-    CLIMBFULL(0.2, 5),
-    ALGAEINTAKE(0.1, 15),
-    L1(0.1, 20.0),
-    L2(0.0, 90.0),
-    L2ALGAE(0, 90),
-    L2AUTOALIGN(0.15, 100),
-    L3(0.55, 90.0),
-    L3ALGAE(0.4, 90),
-    L3AUTOALIGN(0.55, 95),
-    L3RETURN(0.55, 65),
-    L3RETURN2(0.2, 65),
-    L4(0.5, 90.0);
+    STOW(0, 20.0, 135.0),
+    SOURCE(0.0, 65, -5),
+    CLIMBPREP(0.0, 50.0, 0.0),
+    CLIMBFULL(0.11, 5, 100),
+    ALGAEHOLD(0.1, 13, -5.0),
+    L1(0.1, 30.0, 0.0),
+    L2FRONT(0.0, 47.5, 95.0),
+    L2BACK(0.0, 90, 135),
+    L2ALGAE(0, 100, 90),
+    L2FRONTAUTOALIGN(0.1, 40, 105),
+    L2BACKAUTOALIGN(0.0, 100, 135),
+    L3FRONT(0.36, 60, 85),
+    L3BACK(0.36, 90.0, 135),
+    L3ALGAE(0.4, 100, 90),
+    L3FRONTAUTOALIGN(0.47, 50, 110),
+    L3FRONTAUTOALIGNPREP(0.0, 65, 115),
+    L3BACKAUTOALIGN(0.38, 95, 132),
+    L3RETURN(0.55, 65, 0.0),
+    GROUND(0.1, 0.0, 0.0),
+    L4(0.5, 88.0, 0.0),
+    WRISTTEST(0.0, 20.0, 0.0),
+    WRISTTEST2(0.0, 20.0, 0.0),
+    AUTOWRISTFLICK(0.20, 100, 55),
+    ETHANSSPEED(0.0, 50.0, 135);
+    // TODO: add an algae flick position for auto (L2BackAutoAlign - flick) should be close to
+    // current L3BackAutoAlign
 
     public double extensionPosition;
     public double pivotPosition;
+    public double wristPosition;
 
-    private ElevatorPosition(double extensionPosition, double pivotPosition) {
+    private ElevatorPosition(double extensionPosition, double pivotPosition, double wristPosition) {
       this.extensionPosition = extensionPosition;
       this.pivotPosition = pivotPosition;
+      this.wristPosition = wristPosition;
     }
   }
 
@@ -196,7 +209,7 @@ public class RobotContainer {
                 + reefFaces[7].getTranslation().getY(),
             reefFaces[7].getRotation()),
         13),
-    PROCESSER(
+    PROCESSOR(
         new Pose2d(
             Math.cos(reefFaces[8].getRotation().getRadians()) * distanceAway
                 + reefFaces[8].getTranslation().getX(),
@@ -219,14 +232,16 @@ public class RobotContainer {
   private final Intake intake;
   private final Vision vision;
   private final Elevator elevator;
-  private final AlgaeManipulator algaeManipulator;
   private final Leds leds = Leds.getInstance();
   private final Climber climber;
+  private final Wrist wrist;
 
   // Controller
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
   private final CommandXboxController reefSelector = new CommandXboxController(2);
+
+  private final CommandXboxController TESTING = new CommandXboxController(3);
 
   // Manual elevator toggle (incase things go wrong)
   boolean manualElevatorToggle = false;
@@ -253,8 +268,8 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
-        algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOReal());
         climber = new Climber(new ClimberIOReal());
+        wrist = new Wrist(new WristIOReal());
 
         break;
       case SIM:
@@ -269,8 +284,8 @@ public class RobotContainer {
         intake = new Intake(new IntakeIOSim());
         elevator = new Elevator(new ElevatorIOSim());
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-        algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIOSim());
         climber = new Climber(new ClimberIO() {});
+        wrist = new Wrist(new WristIO() {});
         break;
 
       default:
@@ -285,46 +300,58 @@ public class RobotContainer {
         intake = new Intake(new IntakeIO() {});
         elevator = new Elevator(new ElevatorIO() {});
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-
-        algaeManipulator = new AlgaeManipulator(new AlgaeManipulatorIO() {});
         climber = new Climber(new ClimberIO() {});
+        wrist = new Wrist(new WristIO() {});
         break;
     }
 
     // Register NamedCommands for use in PathPlanner // TAKE INTAKE COMMAND TIMEOUT OUT (FOR SIM)
+    NamedCommands.registerCommand("Intake", intake.intakeCoral().withTimeout(3));
+    NamedCommands.registerCommand("Outtake", intake.outtakeCoralBack().withTimeout(1.0));
     NamedCommands.registerCommand(
-        "Intake", intake.intakeCoral().until(() -> intake.coralPresent()));
-    NamedCommands.registerCommand("Outtake", intake.outtakeCoral().withTimeout(0.5));
+        "OuttakeFront", intake.outtakeCoralFront().until(() -> !intake.coralPresent()));
     NamedCommands.registerCommand("StopIntake", Commands.runOnce(() -> intake.setOutput(0)));
     NamedCommands.registerCommand(
-        "L1", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L1), elevator));
+        "L1", Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L1), elevator, wrist));
     NamedCommands.registerCommand(
-        "L2", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator));
+        "L2",
+        Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2BACK), elevator, wrist));
     NamedCommands.registerCommand(
-        "L3", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3), elevator));
+        "L2Front",
+        Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2FRONT), elevator, wrist));
     NamedCommands.registerCommand(
-        "Source", Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.SOURCE), elevator));
+        "L2Back",
+        Commands.runOnce(
+            () -> setMechanismSetpoint(ElevatorPosition.L2BACKAUTOALIGN), elevator, wrist));
     NamedCommands.registerCommand(
-        "Stow",
-        Commands.sequence(
-                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator),
-                Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
-            .onlyIf(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3))
-            .andThen(
-                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
+        "L3",
+        Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3BACK), elevator, wrist));
+    NamedCommands.registerCommand(
+        "L3DealgifyFlip",
+        Commands.runOnce(
+            () -> setMechanismSetpoint(ElevatorPosition.AUTOWRISTFLICK), elevator, wrist));
+    NamedCommands.registerCommand(
+        "Source", Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.SOURCE), elevator));
+    NamedCommands.registerCommand(
+        "Stow", Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW), elevator));
+    NamedCommands.registerCommand(
+        "Ground", Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.GROUND), elevator));
+    NamedCommands.registerCommand(
+        "BlockTagUpdate", Commands.runOnce(() -> vision.blockTagUpdate(), vision));
+    NamedCommands.registerCommand(
+        "UnblockTagUpdate", Commands.runOnce(() -> vision.unblockTagUpdate(), vision));
+    NamedCommands.registerCommand(
+        "L2Dealgae",
+        Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3ALGAE), elevator));
     NamedCommands.registerCommand(
         "L3Algae",
-        Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3ALGAE), elevator));
+        Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3ALGAE), elevator));
     NamedCommands.registerCommand(
         "WaitForArm", Commands.waitUntil(() -> elevator.mechanismAtSetpoint()));
     NamedCommands.registerCommand(
         "L2Algae",
-        Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2ALGAE), elevator));
-    NamedCommands.registerCommand(
-        "SpinAlgae",
-        Commands.run(() -> algaeManipulator.setOutput(1.0), algaeManipulator)
-            // .withTimeout(2.5)
-            .andThen(Commands.runOnce(() -> algaeManipulator.setOutput(0), algaeManipulator)));
+        Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2ALGAE), elevator));
+
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -367,8 +394,6 @@ public class RobotContainer {
 
     // Default Commands
 
-    algaeManipulator.setDefaultCommand(algaeManipulator.stopAlgaeManipulator());
-
     // Triggers
     Trigger coralIntakeTrigger = new Trigger(() -> intake.coralPresent());
     coralIntakeTrigger.onTrue(
@@ -379,19 +404,35 @@ public class RobotContainer {
     coralIntakeTrigger.onFalse(Commands.runOnce(() -> Leds.getInstance().coralPresent = false));
 
     Trigger algaePositionTrigger =
-        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.ALGAEINTAKE));
+        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.ALGAEHOLD));
 
     Trigger L1PositionTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L1));
 
     Trigger L3PositionTrigger =
-        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3));
+        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3BACK));
 
-    Trigger L3AutoTrigger =
-        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3AUTOALIGN));
+    Trigger L3FrontAutoTrigger =
+        new Trigger(
+            () ->
+                elevator.getRequestedElevatorPosition().equals(ElevatorPosition.L3FRONTAUTOALIGN));
+
+    Trigger L3BackAutoTrigger =
+        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3BACKAUTOALIGN));
 
     Trigger L3AlgaeTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3ALGAE));
+
+    Trigger groundPositionTrigger =
+        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.GROUND));
+
+    new Trigger(
+            () ->
+                DriverStation.isTeleopEnabled()
+                    && DriverStation.getMatchTime() > 0
+                    && DriverStation.getMatchTime() <= 2
+                    && elevator.getElevatorPosition().equals(ElevatorPosition.CLIMBPREP))
+        .onTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.CLIMBFULL), elevator));
 
     new Trigger(
             () ->
@@ -404,6 +445,32 @@ public class RobotContainer {
                 .beforeStarting(() -> leds.endgameAlert = true)
                 .finallyDo(() -> leds.endgameAlert = false)
                 .withName("Controller Endgame Al3rt"));
+
+    groundPositionTrigger
+        .and(coralIntakeTrigger)
+        .and(() -> !DriverStation.isAutonomous())
+        .onTrue(
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW), elevator, wrist));
+
+    // TEST CONTROLS
+    TESTING
+        .x()
+        .onTrue(
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.SOURCE), elevator, wrist));
+
+    TESTING.a().whileTrue(intake.intakeCoral());
+
+    TESTING
+        .povLeft()
+        .onTrue(
+            Commands.runOnce(
+                () -> setMechanismSetpoint(ElevatorPosition.L2BACKAUTOALIGN), elevator, wrist));
+
+    TESTING
+        .povRight()
+        .onTrue(
+            Commands.runOnce(
+                () -> setMechanismSetpoint(ElevatorPosition.WRISTTEST2), elevator, wrist));
 
     // Driver Controls
 
@@ -422,60 +489,59 @@ public class RobotContainer {
     // Toggle coral intake when LT is pressed
     driverController
         .leftTrigger()
-        .and(algaePositionTrigger.negate())
-        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.SOURCE), elevator))
+        // .and(algaePositionTrigger.negate())
+        .onTrue(
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.GROUND), elevator, wrist))
         .toggleOnTrue(intake.intakeCoral().until(() -> intake.coralPresent()));
 
     // Toggle algae intake when LT is pressed and arm is at algae intake position
     driverController
-        .leftTrigger()
-        .and(algaePositionTrigger)
-        .toggleOnTrue(Commands.run(() -> intake.setOutput(-0.75), intake));
+        .povLeft()
+        .whileTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.ETHANSSPEED)));
 
     // Outtake coral while RT is held
-    driverController
-        .rightTrigger()
-        .and(L1PositionTrigger.negate())
-        .whileTrue(intake.outtakeCoral());
+    driverController.rightTrigger().whileTrue(intake.outtakeCoralBack());
 
-    // Outtake coral other way at L1 when RT is held
-    driverController.rightTrigger().and(L1PositionTrigger).whileTrue(intake.outtakeL1Coral());
+    driverController.rightBumper().whileTrue(intake.outtakeCoralFront());
 
     // Automatically de-algaefy reef at selected position when RB is held
-    driverController
-        .rightBumper()
-        .whileTrue(
-            Commands.sequence(
-                Commands.runOnce(() -> leds.autoScoring = true),
-                new DriveToPose(drive, vision),
-                Commands.parallel(
-                    new SingleTagAlign(drive, vision),
-                    Commands.runOnce(
-                        () -> elevator.setSetpoint(drive.getAlgaePosition()), elevator),
-                    algaeManipulator.runAlgaeManipulator(1).withTimeout(3.0)),
-                Commands.runOnce(
-                    () -> elevator.setSetpoint(elevator.getRequestedElevatorPosition()), elevator),
-                Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
-                intake.outtakeCoral().withTimeout(0.5)))
-        .onFalse(
-            Commands.sequence(
-                    Commands.runOnce(
-                        () -> elevator.setSetpoint(ElevatorPosition.L3RETURN), elevator),
-                    Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
-                    Commands.runOnce(
-                        () -> elevator.setSetpoint(ElevatorPosition.L3RETURN2), elevator),
-                    Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
-                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
-                .alongWith(Commands.runOnce(() -> drive.stop(), drive))
-                .alongWith(Commands.runOnce(() -> leds.autoScoring = false))
-                .andThen(
-                    Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
+    // driverController
+    //     .rightBumper()
+    //     .whileTrue(
+    //         Commands.sequence(
+    //             Commands.runOnce(() -> leds.autoScoring = true),
+    //             new DriveToPose(drive, vision),
+    //             Commands.parallel(
+    //                 new SingleTagAlign(drive, vision),
+    //                 Commands.runOnce(
+    //                     () -> setMechanismSetpoint(drive.getAlgaePosition()), elevator),
+    //                 Commands.runOnce(
+    //                     () ->
+    //                         setMechanismSetpoint(
+    //                             elevator.getRequestedElevatorPosition(scoreBack())),
+    //                     elevator),
+    //                 Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+    //                 intake.outtakeCoral().withTimeout(0.5))))
+    //     .onFalse(
+    //         Commands.sequence(
+    //                 Commands.runOnce(
+    //                     () -> setMechanismSetpoint(ElevatorPosition.L3RETURN), elevator),
+    //                 Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
+    //             .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
+    //             .alongWith(Commands.runOnce(() -> drive.stop(), drive))
+    //             .alongWith(Commands.runOnce(() -> leds.autoScoring = false))
+    //             .andThen(
+    //                 Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW),
+    // elevator)));
 
     // Run lineup sequence when B is held
     driverController
         .b()
         .whileTrue(
-            Commands.sequence(new DriveToPose(drive, vision), new SingleTagAlign(drive, vision)))
+            Commands.sequence(
+                AutoBuilder.pathfindToPose(
+                    drive.getSelectedPose(), new PathConstraints(4.7, 3.5, 360, 360, 1.5)),
+                new SingleTagAlign(drive, vision)))
         .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
     // Run automated scoring when LB is held
@@ -484,40 +550,48 @@ public class RobotContainer {
         .whileTrue(
             Commands.sequence(
                 Commands.runOnce(() -> leds.autoScoring = true),
-                new DriveToPose(drive, vision),
                 Commands.parallel(
-                    new SingleTagAlign(drive, vision),
-                    Commands.runOnce(
-                        () -> elevator.setSetpoint(elevator.getRequestedElevatorPosition()),
-                        elevator))))
+                    new DriveToPose(drive, vision),
+                    Commands.sequence(
+                        Commands.runOnce(() -> elevator.setScoreBack(drive.getScoreBack())),
+                        Commands.waitSeconds(5),
+                        Commands.runOnce(
+                            () -> setMechanismSetpoint(elevator.getRequestedElevatorPosition()),
+                            elevator,
+                            wrist))),
+                Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+                intake.outtakeCoralBack().until(() -> !intake.coralPresent()),
+                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)))
         .onFalse(
-            Commands.runOnce(() -> drive.stop(), drive)
-            .alongWith(Commands.runOnce(() -> leds.autoScoring = false)));
-
-    // Run algae bar when Y is held
-    driverController.y().toggleOnTrue(algaeManipulator.runAlgaeManipulator(1));
+            Commands.sequence(
+                Commands.runOnce(() -> leds.autoScoring = false),
+                Commands.runOnce(() -> drive.stop(), drive)));
+    // Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)));
 
     // Pathfind to processor when X is held
     driverController
         .x()
         .whileTrue(
             AutoBuilder.pathfindToPose(
-                AllianceFlipUtil.apply(ReefScorePositions.PROCESSER.scorePosition),
+                AllianceFlipUtil.apply(ReefScorePositions.PROCESSOR.scorePosition),
                 new PathConstraints(
                     1, 1, Units.degreesToRadians(360), Units.degreesToRadians(360))))
         .onFalse(Commands.runOnce(() -> drive.stop(), drive));
 
+    driverController
+        .a()
+        .onTrue(
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.SOURCE), elevator, wrist));
+
     // Set elevator to ALGAEINTAKE when DPAD RIGHT is pressed
-    // driverController
-    //     .povRight()
-    //     .onTrue(
-    //         Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.ALGAEINTAKE),
-    // elevator));
+    driverController
+        .povRight()
+        .onTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.ALGAEHOLD), elevator));
 
     driverController
         .povUp()
         .onTrue(
-            Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.CLIMBPREP), elevator)
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.CLIMBPREP), elevator)
                 .alongWith(Commands.runOnce(() -> climber.setClimberSetpoint(0.425), climber)));
 
     driverController
@@ -527,7 +601,7 @@ public class RobotContainer {
                 Commands.runOnce(() -> climber.setClimberSetpoint(0.18), climber),
                 Commands.waitUntil(() -> climber.climberAtSetpoint(0.05)),
                 Commands.runOnce(
-                    () -> elevator.setSetpoint(ElevatorPosition.CLIMBFULL), elevator)));
+                    () -> setMechanismSetpoint(ElevatorPosition.CLIMBFULL), elevator)));
 
     driverController
         .back()
@@ -574,42 +648,59 @@ public class RobotContainer {
         .x()
         .onTrue(
             Commands.sequence(
-                    Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2), elevator),
+                    Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2BACK), elevator),
                     Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
-                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
-                .finallyDo(() -> elevator.setSetpoint(ElevatorPosition.STOW)));
+                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3BackAutoTrigger))
+                .finallyDo(() -> setMechanismSetpoint(ElevatorPosition.STOW)));
 
     // Move elevator to L3 Algae removal when RT is pressed
     operatorController
         .rightTrigger()
-        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3ALGAE), elevator));
+        .onTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3ALGAE), elevator));
 
     // Move elevator to L2 Algae removal when LT is pressed
     operatorController
         .leftTrigger()
-        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L2ALGAE), elevator));
+        .onTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2ALGAE), elevator));
 
     // Move elevator to L1 position when A is pressed
     operatorController
         .a()
-        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L1)));
+        .onTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L1), elevator, wrist));
 
     // Move elevator to L2 position when B is pressed
     operatorController
         .b()
-        .onTrue(new InstantCommand(() -> elevator.setSetpoint(ElevatorPosition.L2)));
+        .onTrue(
+            Commands.runOnce(
+                () -> setMechanismSetpoint(ElevatorPosition.L2BACKAUTOALIGN), elevator, wrist));
+
+    operatorController
+        .rightBumper()
+        .onTrue(
+            Commands.runOnce(
+                () -> setMechanismSetpoint(ElevatorPosition.L3FRONTAUTOALIGN), elevator, wrist));
 
     // Move elevator to L3 position when Y is pressed
     operatorController
         .y()
-        .onTrue(Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.L3), elevator));
+        .onTrue(
+            Commands.runOnce(
+                () -> setMechanismSetpoint(ElevatorPosition.L3BACKAUTOALIGN), elevator, wrist));
+
+    operatorController
+        .leftBumper()
+        .onTrue(
+            Commands.runOnce(
+                () -> setMechanismSetpoint(ElevatorPosition.L2FRONTAUTOALIGN), elevator, wrist));
 
     // Set requested auto score level to L2 when DPAD DOWN is pressed
     operatorController
         .povDown()
         .onTrue(
             Commands.runOnce(
-                    () -> elevator.requestElevatorPosition(ElevatorPosition.L2AUTOALIGN), elevator)
+                    () -> elevator.requestElevatorPosition(ElevatorPosition.L2BACKAUTOALIGN),
+                    elevator)
                 .alongWith(Commands.runOnce(() -> leds.autoScoringLevel = ReefLevel.L2)));
 
     // Set requested auto score level to L3 when DPAD UP is pressed
@@ -617,26 +708,27 @@ public class RobotContainer {
         .povUp()
         .onTrue(
             Commands.runOnce(
-                    () -> elevator.requestElevatorPosition(ElevatorPosition.L3AUTOALIGN), elevator)
+                    () -> elevator.requestElevatorPosition(ElevatorPosition.L3BACKAUTOALIGN),
+                    elevator)
                 .alongWith(Commands.runOnce(() -> leds.autoScoringLevel = ReefLevel.L3)));
 
     // REEF SELECTION USING KEYBOARD
 
     // Set lineup position to I/J
     reefSelector
-        .a()
+        .button(5)
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKLEFT)));
 
     // Set lineup position to E/F
     reefSelector
-        .b()
+        .button(3)
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKRIGHT)));
 
     // Set lineup position to K/L
     reefSelector
-        .x()
+        .button(6)
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTLEFT)));
 
@@ -644,18 +736,18 @@ public class RobotContainer {
 
     // Set lineup position to C/D
     reefSelector
-        .y()
+        .button(2)
         .onTrue(
             Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTRIGHT)));
 
     // Set lineup position to G/H
     reefSelector
-        .povUp()
+        .button(4)
         .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACK)));
 
     // Set lineup position to A/B
     reefSelector
-        .povDown()
+        .button(1)
         .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT)));
   }
 
@@ -666,6 +758,27 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  private void setMechanismSetpoint(ElevatorPosition position) {
+    elevator.setSetpoint(position);
+    wrist.setSetpoint(position);
+  }
+
+  @AutoLogOutput(key = "TEST/Score back?")
+  private boolean scoreBack() {
+    return Math.abs(
+                drive.getSelectedPose().getRotation().getDegrees()
+                    - drive.getRotation().getDegrees())
+            < 90
+        && Math.abs(
+                drive.getSelectedPose().getRotation().getDegrees()
+                    - drive.getRotation().getDegrees())
+            <= 270;
+  }
+
+  private boolean mechanismAtSetpoint() {
+    return elevator.elevatorAtSetpoint() && wrist.wristAtSetpoint(2);
   }
 
   private Command driverRumbleCommand() {

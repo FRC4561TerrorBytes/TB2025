@@ -178,11 +178,6 @@ public class Leds extends VirtualSubsystem {
       solid(topSection, hexColor);
       solid(bottomSection, secondaryHexColor);
 
-      // Endgame alert
-      if (endgameAlert) {
-        strobe(fullSection, Color.kRed, Color.kGold, strobeDuration);
-      }
-
       // Intake running
       if (intakeRunning) {
         strobe(bottomThreeQuartSection, Color.kBlack, Color.kBlue, strobeDuration);
@@ -201,6 +196,11 @@ public class Leds extends VirtualSubsystem {
       // Auto scoring
       if (autoScoring) {
         rainbow(bottomThreeQuartSection, rainbowCycleLength, rainbowDuration);
+      }
+
+      // Endgame alert
+      if (endgameAlert) {
+        strobe(fullSection, Color.kRed, Color.kGold, strobeDuration);
       }
 
       if (manualElevator) {

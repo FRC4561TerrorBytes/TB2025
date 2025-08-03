@@ -7,11 +7,8 @@ package frc.robot.commands;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.Constants.Mode;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.Vision;
 import org.littletonrobotics.junction.Logger;
@@ -26,7 +23,7 @@ public class SingleTagAlign extends Command {
 
   private Pose2d targetPose;
   private Pose2d robotPose;
-  private double distanceAway = Units.inchesToMeters(-27.654);
+  private double distanceAway = Units.inchesToMeters(-25.654);
 
   /** Creates a new goToPose. */
   public SingleTagAlign(Drive drive, Vision vision) {
@@ -54,9 +51,10 @@ public class SingleTagAlign extends Command {
                 + selectedPosition.getTranslation().getY(),
             selectedPosition.getRotation());
 
-    if (targetPose.getRotation().getDegrees() - Math.abs(drive.getRotation().getDegrees()) > 90) {
-      targetPose = targetPose.rotateAround(targetPose.getTranslation(), Rotation2d.k180deg);    
-    }
+    // if (targetPose.getRotation().getDegrees() - Math.abs(drive.getRotation().getDegrees()) > 90)
+    // {
+    //   targetPose = targetPose.rotateAround(targetPose.getTranslation(), Rotation2d.k180deg);
+    // }
 
     Logger.recordOutput("AutoLineup/Target Pose", targetPose);
     Logger.recordOutput("AutoLineup/ReefOffsetX", drive.getAutoAlignOffsetX());
@@ -71,7 +69,7 @@ public class SingleTagAlign extends Command {
     //   robotPose = vision.getFieldPoseUsingTag2(0, drive.getPose().getRotation());
     //   Logger.recordOutput("AutoLineup/robotPose", robotPose);
 
-       // if (!robotPose.equals(new Pose2d())) drive.setPose(robotPose);
+    // if (!robotPose.equals(new Pose2d())) drive.setPose(robotPose);
     // }
 
     pathCommand.withName("SingleTagAlign").schedule();
@@ -80,6 +78,7 @@ public class SingleTagAlign extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    drive.stop();
     pathCommand.end(interrupted);
   }
 

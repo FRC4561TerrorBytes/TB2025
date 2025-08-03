@@ -22,6 +22,9 @@
 | ELEVATOR                 | Kraken X60         | 40  | TBD      |
 | END_EFFECTOR             | NEO 550            | 41  | TBD      |
 | ALGAE_MANIPULATOR        | NEO 550            | 42  | TBD      |
+| WRIST_CANCoder           | CANCoder vers. H   | 50  | TBD      |
+| WRIST_MOTOR              | Kraken X60         | 51  | TBD      |
+
 
 ## [Kraken Status Lights](https://docs.wcproducts.com/kraken-x60/kraken-x60-+-talonfx/status-lights)
 | LED State               | Description                                                                                     |

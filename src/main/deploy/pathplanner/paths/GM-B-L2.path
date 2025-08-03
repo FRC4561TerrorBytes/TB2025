@@ -3,35 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.65,
-        "y": 7.26
+        "x": 1.0,
+        "y": 4.032512842465753
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5677933673469395,
-        "y": 6.319821428571429
+        "x": 1.4958476027397258,
+        "y": 4.002461472602739
       },
       "isLocked": false,
-      "linkedName": "LS"
+      "linkedName": "GM"
     },
     {
       "anchor": {
-        "x": 3.447321428571429,
-        "y": 5.095758928571428
+        "x": 3.07,
+        "y": 3.869
       },
       "prevControl": {
-        "x": 2.753380102040816,
-        "y": 5.8195471938775505
+        "x": 2.5646232876712327,
+        "y": 3.912307363013699
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "KAlgae"
+      "linkedName": "B"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "L2Back",
+      "waypointRelativePos": 0.2833333333333334,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "L2Back"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.2,
     "maxAcceleration": 3.5,
@@ -42,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -60.068488159492304
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Ground Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 126.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

@@ -46,7 +46,7 @@ public final class Constants {
 
   public static final int INTAKE_MOTOR_ID = 41;
   public static final int ALGAE_MANIPULATOR_ID = 42;
-  public static final int INTAKE_CURRENT_LIMIT = 20;
+  public static final int INTAKE_CURRENT_LIMIT = 25;
   public static final int LEFT_PIVOT_ID_1 = 31;
   public static final int LEFT_PIVOT_ID_2 = 32;
   public static final int RIGHT_PIVOT_ID_1 = 33;
@@ -58,6 +58,12 @@ public final class Constants {
   public static final int CLIMBER_ID = 43;
   public static final int CLIMBER_STATOR_CURRENT_LIMIT = 30;
   public static final int CLIMBER_SUPPLY_CURRENT_LIMIT = 25;
+
+  public static final int WRIST_ID = 51;
+  public static final int WRIST_CANCODER_ID = 50;
+  public static final double WRIST_GEAR_RATIO = 110.2;
+  public static final int WRIST_STATOR_CURRENT_LIMIT = 30;
+  public static final int WRIST_SUPPLY_CURRENT_LIMIT = 25;
 
   public static final int ALGAE_MANIPULATOR_MOTOR_ID = 61;
 
