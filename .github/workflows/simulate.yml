@@ -1,0 +1,35 @@
+name: Simulate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Simulate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    container: wpilib/roborio-cross-ubuntu:2025-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        # Declares the repository safe and not under dubious ownership.
+      - name: Add repository to git safe directories
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+      - name: Grant execute permission
+        run: chmod +x gradlew
+      # Runs simulate Java and also grabs the current PID. If the PID is still running after 60 seconds, pass
+      - name: Simulate robot code
+        run: |
+          ./gradlew simulateJava &
+          SIM_PID=$!
+          sleep 60
+          if ps -p $SIM_PID > /dev/null; then
+            echo "Simulation still running after 60 seconds. Treating as success."
+            kill $SIM_PID || true
+            exit 0
+          else
+            echo "Simulation finished within 60 seconds."
+            wait $SIM_PID
+            exit $?
+          fi
