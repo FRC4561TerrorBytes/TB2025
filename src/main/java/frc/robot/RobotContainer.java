@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.FieldConstants.ReefLevel;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPose;
 import frc.robot.commands.SingleTagAlign;
@@ -63,7 +64,6 @@ import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.subsystems.wrist.WristIOReal;
 import frc.robot.util.AllianceFlipUtil;
-import frc.robot.util.FieldConstants.ReefLevel;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -500,39 +500,10 @@ public class RobotContainer {
         .whileTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.ETHANSSPEED)));
 
     // Outtake coral while RT is held
-    driverController.rightTrigger().whileTrue(intake.outtakeCoralBack());
+    // driverController.rightTrigger().whileTrue(intake.outtakeCoralBack());
+    driverController.rightTrigger().whileTrue(intake.outtakeCoralAuto(drive.getPose()));
 
     driverController.rightBumper().whileTrue(intake.outtakeCoralFront());
-
-    // Automatically de-algaefy reef at selected position when RB is held
-    // driverController
-    //     .rightBumper()
-    //     .whileTrue(
-    //         Commands.sequence(
-    //             Commands.runOnce(() -> leds.autoScoring = true),
-    //             new DriveToPose(drive, vision),
-    //             Commands.parallel(
-    //                 new SingleTagAlign(drive, vision),
-    //                 Commands.runOnce(
-    //                     () -> setMechanismSetpoint(drive.getAlgaePosition()), elevator),
-    //                 Commands.runOnce(
-    //                     () ->
-    //                         setMechanismSetpoint(
-    //                             elevator.getRequestedElevatorPosition(scoreBack())),
-    //                     elevator),
-    //                 Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
-    //                 intake.outtakeCoral().withTimeout(0.5))))
-    //     .onFalse(
-    //         Commands.sequence(
-    //                 Commands.runOnce(
-    //                     () -> setMechanismSetpoint(ElevatorPosition.L3RETURN), elevator),
-    //                 Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
-    //             .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3AutoTrigger))
-    //             .alongWith(Commands.runOnce(() -> drive.stop(), drive))
-    //             .alongWith(Commands.runOnce(() -> leds.autoScoring = false))
-    //             .andThen(
-    //                 Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW),
-    // elevator)));
 
     // Run lineup sequence when B is held
     driverController

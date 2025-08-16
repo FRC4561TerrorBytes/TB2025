@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.util.FieldConstants.ReefLevel;
+import frc.robot.FieldConstants.ReefLevel;
 import frc.robot.util.VirtualSubsystem;
 import java.util.List;
 import java.util.Optional;
