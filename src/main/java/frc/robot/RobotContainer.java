@@ -34,7 +34,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.FieldConstants.ReefLevel;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPose;
 import frc.robot.commands.SingleTagAlign;
@@ -64,6 +63,7 @@ import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.subsystems.wrist.WristIOReal;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.FieldConstants.ReefLevel;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -501,7 +501,7 @@ public class RobotContainer {
 
     // Outtake coral while RT is held
     // driverController.rightTrigger().whileTrue(intake.outtakeCoralBack());
-    driverController.rightTrigger().whileTrue(intake.outtakeCoralAuto(drive.getPose()));
+    driverController.rightTrigger().whileTrue(intake.outtakeCoralAuto(drive::getPose));
 
     driverController.rightBumper().whileTrue(intake.outtakeCoralFront());
 

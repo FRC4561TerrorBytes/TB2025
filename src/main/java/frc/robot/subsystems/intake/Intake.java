@@ -1,9 +1,12 @@
 package frc.robot.subsystems.intake;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -12,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.subsystems.leds.Leds;
+import frc.robot.util.AllianceFlipUtil;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -88,45 +93,31 @@ public class Intake extends SubsystemBase {
         .withName("OuttakeFront");
   }
 
-  public Command outtakeCoralAuto(Pose2d pose) {
-    System.out.println("Outtake Auto Command Running");
-    if (DriverStation.getAlliance().isPresent()
-        && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      // closest three sides to blue alliance wall
-      Logger.recordOutput("DriveX", pose.getX());
-      Logger.recordOutput("RotationINTAKE", pose.getRotation().getDegrees());
-      if (pose.getX() < 4.5) {
-        Logger.recordOutput("Reef Side", "BLUE CLOSE");
-        double degrees = pose.getRotation().getDegrees();
-        if (degrees > 160.0 && degrees <= -160.0) {
-          Logger.recordOutput("Outtake Direction", "FRONT");
-          return outtakeCoralFront();
-        } else if (degrees > -140.0 && degrees <= -90.0) {
-          Logger.recordOutput("Outtake Direction", "FRONT");
-          return outtakeCoralFront();
-        } else if (degrees > -90.0 && degrees <= -30.0) {
-          Logger.recordOutput("Outtake Direction", "BACK");
-          return outtakeCoralBack();
-        } else if (degrees > -30.0 && degrees <= 30.0) {
-          Logger.recordOutput("Outtake Direction", "BACK");
-          return outtakeCoralBack();
-        } else if (degrees > 30.0 && degrees <= 90.0) {
-          Logger.recordOutput("Outtake Direction", "BACK");
-          return outtakeCoralBack();
-        } else if (degrees > 90.0 && degrees <= 140.0) {
-          Logger.recordOutput("Outtake Direction", "FRONT");
-          return outtakeCoralFront();
-        }
-      }
-      // three blue faces furthest away from blue alliance wall
-      else {
-        Logger.recordOutput("Reef Side", "BLUE FAR");
-        return outtakeCoralFront();
-      }
-    } else {
+  public Command outtakeCoralAuto(Supplier<Pose2d> pose) {
+    Pose2d reef =
+        new Pose2d(
+            AllianceFlipUtil.apply(
+                new Translation2d(Units.inchesToMeters(176.746), Units.inchesToMeters(158.501))),
+            new Rotation2d());
+    Pose2d centerRobot = pose.get();
+    Transform2d forwardOffset = new Transform2d(new Translation2d(-0.38, 0.0), new Rotation2d());
+    Pose2d frontRobot = centerRobot.transformBy(forwardOffset);
+
+    double centerDistance = centerRobot.getTranslation().getDistance(reef.getTranslation());
+    double frontDistance = frontRobot.getTranslation().getDistance(reef.getTranslation());
+    Logger.recordOutput("Front Distance To Reef", frontDistance);
+    Logger.recordOutput("Center Distance To Reef", centerDistance);
+
+    if (centerDistance < frontDistance) {
+      Logger.recordOutput("Outtake Direction", "BACK");
+      return outtakeCoralBack();
+    } else if (frontDistance < centerDistance) {
+      Logger.recordOutput("Outtake Direction", "FRONT");
       return outtakeCoralFront();
+    } else {
+      Logger.recordOutput("Outtake Direction", "BACK");
+      return outtakeCoralBack();
     }
-    return outtakeCoralFront();
   }
 
   public Command outtakeL1Coral() {
