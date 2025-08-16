@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -94,30 +95,36 @@ public class Intake extends SubsystemBase {
   }
 
   public Command outtakeCoralAuto(Supplier<Pose2d> pose) {
-    Pose2d reef =
-        new Pose2d(
-            AllianceFlipUtil.apply(
-                new Translation2d(Units.inchesToMeters(176.746), Units.inchesToMeters(158.501))),
-            new Rotation2d());
-    Pose2d centerRobot = pose.get();
-    Transform2d forwardOffset = new Transform2d(new Translation2d(-0.38, 0.0), new Rotation2d());
-    Pose2d frontRobot = centerRobot.transformBy(forwardOffset);
+    return new InstantCommand(
+        () -> {
+          Pose2d reef =
+              new Pose2d(
+                  AllianceFlipUtil.apply(
+                      new Translation2d(
+                          Units.inchesToMeters(176.746), Units.inchesToMeters(158.501))),
+                  new Rotation2d());
+          Pose2d centerRobot = pose.get();
+          Logger.recordOutput("AutoOuttakePose", pose.get());
+          Transform2d forwardOffset =
+              new Transform2d(new Translation2d(-0.38, 0.0), new Rotation2d());
+          Pose2d frontRobot = centerRobot.transformBy(forwardOffset);
 
-    double centerDistance = centerRobot.getTranslation().getDistance(reef.getTranslation());
-    double frontDistance = frontRobot.getTranslation().getDistance(reef.getTranslation());
-    Logger.recordOutput("Front Distance To Reef", frontDistance);
-    Logger.recordOutput("Center Distance To Reef", centerDistance);
+          double centerDistance = centerRobot.getTranslation().getDistance(reef.getTranslation());
+          double frontDistance = frontRobot.getTranslation().getDistance(reef.getTranslation());
+          Logger.recordOutput("Front Distance To Reef", frontDistance);
+          Logger.recordOutput("Center Distance To Reef", centerDistance);
 
-    if (centerDistance < frontDistance) {
-      Logger.recordOutput("Outtake Direction", "BACK");
-      return outtakeCoralBack();
-    } else if (frontDistance < centerDistance) {
-      Logger.recordOutput("Outtake Direction", "FRONT");
-      return outtakeCoralFront();
-    } else {
-      Logger.recordOutput("Outtake Direction", "BACK");
-      return outtakeCoralBack();
-    }
+          if (centerDistance < frontDistance) {
+            Logger.recordOutput("Outtake Direction", "BACK");
+            outtakeCoralBack().schedule();
+          } else if (frontDistance < centerDistance) {
+            Logger.recordOutput("Outtake Direction", "FRONT");
+            outtakeCoralFront().schedule();
+          } else {
+            Logger.recordOutput("Outtake Direction", "BACK");
+            outtakeCoralBack().schedule();
+          }
+        });
   }
 
   public Command outtakeL1Coral() {
