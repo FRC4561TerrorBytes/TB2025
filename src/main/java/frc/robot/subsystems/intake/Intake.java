@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.subsystems.leds.Leds;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.FieldConstants.Reef;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
@@ -102,8 +103,10 @@ public class Intake extends SubsystemBase {
               new Transform2d(new Translation2d(-0.38, 0.0), new Rotation2d());
           Pose2d frontRobot = centerRobot.transformBy(forwardOffset);
 
-          double centerDistance = centerRobot.getTranslation().getDistance(Reef.center);
-          double frontDistance = frontRobot.getTranslation().getDistance(Reef.center);
+          double centerDistance =
+              centerRobot.getTranslation().getDistance(AllianceFlipUtil.apply(Reef.center));
+          double frontDistance =
+              frontRobot.getTranslation().getDistance(AllianceFlipUtil.apply(Reef.center));
           Logger.recordOutput("Front Distance To Reef", frontDistance);
           Logger.recordOutput("Center Distance To Reef", centerDistance);
 
