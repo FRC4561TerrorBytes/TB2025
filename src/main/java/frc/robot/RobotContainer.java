@@ -18,7 +18,6 @@ import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -36,7 +35,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPose;
-import frc.robot.commands.SingleTagAlign;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberIO;
@@ -62,7 +60,6 @@ import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.subsystems.wrist.WristIOReal;
-import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.FieldConstants.ReefLevel;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -489,50 +486,26 @@ public class RobotContainer {
     // Toggle coral intake when LT is pressed
     driverController
         .leftTrigger()
-        // .and(algaePositionTrigger.negate())
         .onTrue(
             Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.GROUND), elevator, wrist))
         .toggleOnTrue(intake.intakeCoral().until(() -> intake.coralPresent()));
-
-    // Toggle algae intake when LT is pressed and arm is at algae intake position
-    driverController
-        .povLeft()
-        .whileTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.ETHANSSPEED)));
 
     // Outtake coral while RT is held
     // driverController.rightTrigger().whileTrue(intake.outtakeCoralBack());
     driverController.rightTrigger().whileTrue(intake.outtakeCoralAuto(drive::getPose));
 
-    driverController.rightBumper().whileTrue(intake.outtakeCoralFront());
-
     // Run lineup sequence when B is held
     driverController
         .b()
-        .whileTrue(
-            Commands.sequence(
-                AutoBuilder.pathfindToPose(
-                    drive.getSelectedPose(), new PathConstraints(4.7, 3.5, 360, 360, 1.5)),
-                new SingleTagAlign(drive, vision)))
-        .onFalse(Commands.runOnce(() -> drive.stop(), drive));
+        .onTrue(
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2BACK), elevator, wrist));
 
     // Run automated scoring when LB is held
     driverController
-        .leftBumper()
+        .rightBumper()
         .whileTrue(
             Commands.sequence(
-                Commands.runOnce(() -> leds.autoScoring = true),
-                Commands.parallel(
-                    new DriveToPose(drive, vision),
-                    Commands.sequence(
-                        Commands.runOnce(() -> elevator.setScoreBack(drive.getScoreBack())),
-                        Commands.waitSeconds(5),
-                        Commands.runOnce(
-                            () -> setMechanismSetpoint(elevator.getRequestedElevatorPosition()),
-                            elevator,
-                            wrist))),
-                Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
-                intake.outtakeCoralBack().until(() -> !intake.coralPresent()),
-                Commands.runOnce(() -> elevator.setSetpoint(ElevatorPosition.STOW), elevator)))
+                Commands.runOnce(() -> leds.autoScoring = true), new DriveToPose(drive, vision)))
         .onFalse(
             Commands.sequence(
                 Commands.runOnce(() -> leds.autoScoring = false),
@@ -542,22 +515,27 @@ public class RobotContainer {
     // Pathfind to processor when X is held
     driverController
         .x()
-        .whileTrue(
-            AutoBuilder.pathfindToPose(
-                AllianceFlipUtil.apply(ReefScorePositions.PROCESSOR.scorePosition),
-                new PathConstraints(
-                    1, 1, Units.degreesToRadians(360), Units.degreesToRadians(360))))
-        .onFalse(Commands.runOnce(() -> drive.stop(), drive));
+        .onTrue(
+            Commands.sequence(
+                    Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2BACK), elevator),
+                    Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
+                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger).or(L3BackAutoTrigger))
+                .finallyDo(() -> setMechanismSetpoint(ElevatorPosition.STOW)));
 
     driverController
         .a()
-        .onTrue(
-            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.SOURCE), elevator, wrist));
+        .onTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L1), elevator, wrist));
 
     // Set elevator to ALGAEINTAKE when DPAD RIGHT is pressed
     driverController
         .povRight()
-        .onTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.ALGAEHOLD), elevator));
+        .whileTrue(Commands.run(() -> climber.setOutput(0.6), climber))
+        .onFalse(Commands.runOnce(() -> climber.setOutput(0), climber));
+
+    driverController
+        .povLeft()
+        .whileTrue(Commands.run(() -> climber.setOutput(-0.75), climber))
+        .onFalse(Commands.runOnce(() -> climber.setOutput(0), climber));
 
     driverController
         .povUp()
@@ -573,16 +551,6 @@ public class RobotContainer {
                 Commands.waitUntil(() -> climber.climberAtSetpoint(0.05)),
                 Commands.runOnce(
                     () -> setMechanismSetpoint(ElevatorPosition.CLIMBFULL), elevator)));
-
-    driverController
-        .back()
-        .whileTrue(Commands.run(() -> climber.setOutput(-0.75), climber))
-        .onFalse(Commands.runOnce(() -> climber.setOutput(0), climber));
-
-    driverController
-        .start()
-        .whileTrue(Commands.run(() -> climber.setOutput(0.6), climber))
-        .onFalse(Commands.runOnce(() -> climber.setOutput(0), climber));
 
     // Operator Controls
 
