@@ -526,6 +526,10 @@ public class RobotContainer {
         .a()
         .onTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L1), elevator, wrist));
 
+    driverController
+        .y()
+        .onTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3BACK)));
+
     // Set elevator to ALGAEINTAKE when DPAD RIGHT is pressed
     driverController
         .povRight()
