@@ -66,6 +66,7 @@ public class Elevator extends SubsystemBase {
     io.setTargetPosition(position);
   }
 
+  @AutoLogOutput(key = "Pivot/IO/Elevator Position")
   public ElevatorPosition getElevatorPosition() {
     return lastElevatorPosition;
   }
@@ -94,7 +95,7 @@ public class Elevator extends SubsystemBase {
     selectedElevatorPosition = position;
   }
 
-  @AutoLogOutput(key = "TEST/elevator")
+  @AutoLogOutput(key = "TEST/Selected elevator position")
   private ElevatorPosition getSetElevatorPosition() {
     return selectedElevatorPosition;
   }
