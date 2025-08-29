@@ -91,7 +91,7 @@ public class RobotContainer {
     L3FRONTAUTOALIGNPREP(0.0, 65, 115),
     L3BACKAUTOALIGN(0.38, 95, 132),
     L3RETURN(0.55, 65, 0.0),
-    GROUND(0.1, 0.0, 0.0),
+    GROUND(0.1, 3.0, 0.0),
     L4(0.5, 88.0, 0.0),
     WRISTTEST(0.0, 20.0, 0.0),
     WRISTTEST2(0.0, 20.0, 0.0),
