@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer.ElevatorPosition;
+import frc.robot.RobotContainer.ScoreLevel;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -17,6 +18,8 @@ public class Elevator extends SubsystemBase {
   private ElevatorPosition selectedElevatorPosition = ElevatorPosition.STOW;
   private ElevatorPosition lastElevatorPosition = ElevatorPosition.STOW;
   private boolean scoreBack = true;
+
+  private ScoreLevel requestedScoreLevel = ScoreLevel.L2;
 
   public Elevator(ElevatorIO io) {
     this.io = io;
@@ -66,7 +69,7 @@ public class Elevator extends SubsystemBase {
     io.setTargetPosition(position);
   }
 
-  @AutoLogOutput(key = "Pivot/IO/Elevator Position")
+  @AutoLogOutput(key = "Elevator/Elevator Position")
   public ElevatorPosition getElevatorPosition() {
     return lastElevatorPosition;
   }
@@ -93,6 +96,15 @@ public class Elevator extends SubsystemBase {
 
   public void requestElevatorPosition(ElevatorPosition position) {
     selectedElevatorPosition = position;
+  }
+
+  public void requestScoreLevel(ScoreLevel level) {
+    requestedScoreLevel = level;
+  }
+
+  @AutoLogOutput(key = "Elevator/Score Level")
+  public ScoreLevel getRequestedScoreLevel() {
+    return requestedScoreLevel;
   }
 
   @AutoLogOutput(key = "TEST/Selected elevator position")

@@ -7,32 +7,40 @@ package frc.robot.commands;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.RobotContainer.ElevatorPosition;
+import frc.robot.RobotContainer.ScoreLevel;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.wrist.Wrist;
+import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.FieldConstants.Reef;
 import org.littletonrobotics.junction.Logger;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DriveToPose extends Command {
 
   private Drive drive;
-  private Vision vision;
+  private Elevator elevator;
+  private Wrist wrist;
   private int endTagId;
   private boolean seenEndTag;
   private Command pathCommand;
 
   private Pose2d targetPose;
   private boolean scoreBack = true;
-  private double distanceAway = Units.inchesToMeters(-25.654);
 
   /** Creates a new DriveToPose. */
-  public DriveToPose(Drive drive, Vision vision) {
+  public DriveToPose(Drive drive, Elevator elevator, Wrist wrist) {
     this.drive = drive;
-    this.vision = vision;
+    this.elevator = elevator;
+    this.wrist = wrist;
 
-    addRequirements(drive);
+    addRequirements(drive, elevator, wrist);
   }
 
   // Called when the command is initially scheduled.
@@ -42,10 +50,42 @@ public class DriveToPose extends Command {
     drive.setPathFinished(false);
 
     targetPose = drive.getFinalTargetPose();
+    Pose2d centerRobot = drive.getPose();
+    Transform2d forwardOffset = new Transform2d(new Translation2d(-0.38, 0.0), new Rotation2d());
+    Pose2d frontRobot = centerRobot.transformBy(forwardOffset);
+
+    double centerDistance =
+        centerRobot.getTranslation().getDistance(AllianceFlipUtil.apply(Reef.center));
+    double backDistance =
+        frontRobot.getTranslation().getDistance(AllianceFlipUtil.apply(Reef.center));
+
+    // SCORE OUT BACK
+    if (centerDistance <= backDistance) {
+      // SCORE L2
+      if (elevator.getRequestedScoreLevel().equals(ScoreLevel.L2)) {
+        elevator.setSetpoint(ElevatorPosition.L2FRONT);
+      }
+      // SCORE L3
+      else if (elevator.getRequestedScoreLevel().equals(ScoreLevel.L3)) {
+        elevator.setSetpoint(ElevatorPosition.L3FRONT);
+      }
+    }
+    // SCORE OUT FRONT
+    else {
+      // SCORE L2
+      if (elevator.getRequestedScoreLevel().equals(ScoreLevel.L2)) {
+        elevator.setSetpoint(ElevatorPosition.L2BACK);
+      }
+      // SCORE L3
+      else if (elevator.getRequestedScoreLevel().equals(ScoreLevel.L3)) {
+        elevator.setSetpoint(ElevatorPosition.L3BACK);
+      }
+    }
 
     Logger.recordOutput("Auto Lineup/Target Pose", targetPose);
 
-    pathCommand = AutoBuilder.pathfindToPose(targetPose, new PathConstraints(3.5, 3, 360, 360), 0);
+    pathCommand =
+        AutoBuilder.pathfindToPose(targetPose, new PathConstraints(3.5, 3, Math.PI, Math.PI), 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

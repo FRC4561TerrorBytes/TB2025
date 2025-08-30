@@ -74,29 +74,25 @@ public class RobotContainer {
 
   public enum ElevatorPosition {
     STOW(0, 20.0, 135.0),
-    SOURCE(0.0, 65, -5),
+    SOURCE(0.0, 65, -5), // MAYBE REMOVE
     CLIMBPREP(0.0, 50.0, 0.0),
     CLIMBFULL(0.11, 5, 100),
     ALGAEHOLD(0.1, 13, -5.0),
     L1(0.1, 30.0, 0.0),
     L2FRONT(0.0, 47.5, 95.0),
     L2BACK(0.0, 90, 135),
-    L2ALGAE(0, 100, 90),
+    L2ALGAE(0, 100, 90), // FIX BC GAS SHOCK
     L2FRONTAUTOALIGN(0.1, 40, 105),
-    L2BACKAUTOALIGN(0.0, 100, 135),
+    L2BACKAUTOALIGN(0.0, 100, 135), // FIX BC GAS SHOCK
     L3FRONT(0.36, 60, 85),
     L3BACK(0.36, 90.0, 135),
-    L3ALGAE(0.4, 100, 90),
+    L3ALGAE(0.4, 100, 90), // FIX BC GAS SHOCK
     L3FRONTAUTOALIGN(0.47, 50, 110),
-    L3FRONTAUTOALIGNPREP(0.0, 65, 115),
-    L3BACKAUTOALIGN(0.38, 95, 132),
-    L3RETURN(0.55, 65, 0.0),
+    L3BACKAUTOALIGN(0.38, 95, 132), // FIX BC GAS SHOCK
     GROUND(0.1, 3.0, 0.0),
-    L4(0.5, 88.0, 0.0),
-    WRISTTEST(0.0, 20.0, 0.0),
     WRISTTEST2(0.0, 20.0, 0.0),
-    AUTOWRISTFLICK(0.20, 100, 55),
-    ETHANSSPEED(0.0, 50.0, 135);
+    AUTOWRISTFLICK(0.20, 100, 55); // FIX BC GAS SHOCK
+
     // TODO: add an algae flick position for auto (L2BackAutoAlign - flick) should be close to
     // current L3BackAutoAlign
 
@@ -109,6 +105,12 @@ public class RobotContainer {
       this.pivotPosition = pivotPosition;
       this.wristPosition = wristPosition;
     }
+  }
+
+  public enum ScoreLevel {
+    L1,
+    L2,
+    L3;
   }
 
   private static double distanceAway = 1.25;
@@ -498,14 +500,37 @@ public class RobotContainer {
     driverController
         .b()
         .onTrue(
-            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2BACK), elevator, wrist));
+            Commands.sequence(
+                Commands.runOnce(() -> elevator.requestScoreLevel(ScoreLevel.L2)),
+                Commands.runOnce(
+                    () -> setMechanismSetpoint(ElevatorPosition.L2BACK), elevator, wrist)));
 
     // Run automated scoring when LB is held
     driverController
         .rightBumper()
         .whileTrue(
             Commands.sequence(
-                Commands.runOnce(() -> leds.autoScoring = true), new DriveToPose(drive, vision)))
+                Commands.runOnce(() -> leds.autoScoring = true),
+                Commands.runOnce(
+                    () ->
+                        drive.setAutoAlignOffsetX(
+                            Units.inchesToMeters(Constants.SCORING_POSITION_OFFSET))),
+                new DriveToPose(drive, elevator, wrist)))
+        .onFalse(
+            Commands.sequence(
+                Commands.runOnce(() -> leds.autoScoring = false),
+                Commands.runOnce(() -> drive.stop(), drive)));
+
+    driverController
+        .leftBumper()
+        .whileTrue(
+            Commands.sequence(
+                Commands.runOnce(() -> leds.autoScoring = true),
+                Commands.runOnce(
+                    () ->
+                        drive.setAutoAlignOffsetX(
+                            Units.inchesToMeters(-Constants.SCORING_POSITION_OFFSET))),
+                new DriveToPose(drive, elevator, wrist)))
         .onFalse(
             Commands.sequence(
                 Commands.runOnce(() -> leds.autoScoring = false),
@@ -524,11 +549,18 @@ public class RobotContainer {
 
     driverController
         .a()
-        .onTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L1), elevator, wrist));
+        .onTrue(
+            Commands.sequence(
+                Commands.runOnce(() -> elevator.requestScoreLevel(ScoreLevel.L1)),
+                Commands.runOnce(
+                    () -> setMechanismSetpoint(ElevatorPosition.L1), elevator, wrist)));
 
     driverController
         .y()
-        .onTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3BACK)));
+        .onTrue(
+            Commands.sequence(
+                Commands.runOnce(() -> elevator.requestScoreLevel(ScoreLevel.L3)),
+                Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3BACK))));
 
     // Set elevator to ALGAEINTAKE when DPAD RIGHT is pressed
     driverController
