@@ -11,13 +11,11 @@ import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class IntakeIOReal implements IntakeIO {
   private final SparkBase intakeMotor =
       new SparkMax(Constants.INTAKE_MOTOR_ID, MotorType.kBrushless);
-  public boolean spinning = false;
 
   public IntakeIOReal() {
     var intakeConfig = new SparkMaxConfig();
@@ -46,9 +44,8 @@ public class IntakeIOReal implements IntakeIO {
     inputs.intakeCurrentAmps = intakeMotor.getOutputCurrent();
     inputs.intakeVoltage = intakeMotor.getBusVoltage();
     inputs.intakeConnected = !intakeMotor.hasActiveFault();
-    inputs.intakeLimitSwitch = intakeMotor.getForwardLimitSwitch().isPressed();
-
-    SmartDashboard.putBoolean("Intake Spinning", spinning);
+    inputs.intakeLimitSwitch =
+        intakeMotor.getForwardLimitSwitch().isPressed(); // CHANGE THIS TO USE CURRENT
   }
 
   public void setOutput(double speed) {
