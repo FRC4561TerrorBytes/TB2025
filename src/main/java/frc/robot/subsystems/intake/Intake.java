@@ -42,7 +42,7 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean coralPresent() {
-    return inputs.intakeLimitSwitch;
+    return inputs.coralPresent;
   }
 
   public Command stopIntake() {
@@ -52,9 +52,6 @@ public class Intake extends SubsystemBase {
   }
 
   public Command intakeCoral() {
-    if (Constants.currentMode.equals(Mode.REAL)) {
-      io.enableLimitSwitch();
-    }
     return Commands.startEnd(
             () -> {
               this.setOutput(-1);
@@ -69,9 +66,6 @@ public class Intake extends SubsystemBase {
   }
 
   public Command outtakeCoralBack() {
-    if (Constants.currentMode.equals(Mode.REAL)) {
-      io.disableLimitSwitch();
-    }
     return Commands.startEnd(
             () -> this.setOutput(0.75),
             () -> {
@@ -82,9 +76,6 @@ public class Intake extends SubsystemBase {
   }
 
   public Command outtakeCoralFront() {
-    if (Constants.currentMode.equals(Mode.REAL)) {
-      io.disableLimitSwitch();
-    }
     return Commands.startEnd(
             () -> this.setOutput(-0.75),
             () -> {

@@ -305,7 +305,8 @@ public class RobotContainer {
     }
 
     // Register NamedCommands for use in PathPlanner // TAKE INTAKE COMMAND TIMEOUT OUT (FOR SIM)
-    NamedCommands.registerCommand("Intake", intake.intakeCoral().withTimeout(3));
+    NamedCommands.registerCommand(
+        "Intake", intake.intakeCoral().until(() -> intake.coralPresent()));
     NamedCommands.registerCommand("Outtake", intake.outtakeCoralBack().withTimeout(1.0));
     NamedCommands.registerCommand(
         "OuttakeFront", intake.outtakeCoralFront().until(() -> !intake.coralPresent()));
