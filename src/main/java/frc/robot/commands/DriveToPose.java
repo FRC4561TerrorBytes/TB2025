@@ -43,8 +43,7 @@ public class DriveToPose extends Command {
   ProfiledPIDController yController =
       new ProfiledPIDController(15, 0, 0, new TrapezoidProfile.Constraints(2, 2));
   ProfiledPIDController thetaController =
-      new ProfiledPIDController(
-          15, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI));
+      new ProfiledPIDController(15, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI));
 
   /** Creates a new DriveToPose. */
   public DriveToPose(Drive drive, Elevator elevator, Wrist wrist) {
@@ -99,7 +98,7 @@ public class DriveToPose extends Command {
     Logger.recordOutput("Auto Lineup/Target Pose", targetPose);
     Logger.recordOutput("Auto Lineup/CenterDistanceAway", centerDistance);
 
-    if (centerDistance > 2) {
+    if (drive.getPose().getTranslation().getDistance(targetPose.getTranslation()) > 1) {
       pathCommand =
           AutoBuilder.pathfindToPose(targetPose, new PathConstraints(3.5, 3, Math.PI, Math.PI), 0);
 
@@ -133,10 +132,12 @@ public class DriveToPose extends Command {
       Logger.recordOutput("Auto Lineup/RunYVelocity", ySpeed);
       Logger.recordOutput("Auto Lineup/TargetPoseY", targetPose.getY());
       Logger.recordOutput("Auto Lineup/RunThetaVelocity", rotSpeed);
-      //Hi Ethan :)
+      // Hi Ethan :)
 
       // feed to chassis
-      ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotSpeed, drive.getPose().getRotation());
+      ChassisSpeeds speeds =
+          ChassisSpeeds.fromFieldRelativeSpeeds(
+              xSpeed, ySpeed, rotSpeed, drive.getPose().getRotation());
       drive.runVelocity(speeds);
     }
     Logger.recordOutput("TEST/score back", scoreBack);
