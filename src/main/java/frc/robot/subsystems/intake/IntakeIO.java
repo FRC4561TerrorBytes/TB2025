@@ -11,6 +11,7 @@ public interface IntakeIO {
     public double intakeVoltage = 0.0;
     public boolean intakeConnected = true;
     public boolean coralPresent = false;
+    public boolean canRangeConnected = true;
   }
 
   public default void updateInputs(IntakeIOInputs inputs) {}

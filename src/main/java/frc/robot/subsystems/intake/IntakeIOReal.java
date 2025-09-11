@@ -58,6 +58,7 @@ public class IntakeIOReal implements IntakeIO {
     inputs.intakeVoltage = intakeMotor.getBusVoltage();
     inputs.intakeConnected = !intakeMotor.hasActiveFault();
     inputs.coralPresent = canRange.getIsDetected().getValue();
+    inputs.canRangeConnected = canRange.isConnected();
   }
 
   public void setOutput(double speed) {

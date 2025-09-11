@@ -24,10 +24,12 @@ public class Intake extends SubsystemBase {
   private IntakeIO io;
   private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
   private final Alert intakeDisconnectedAlert;
+  private final Alert intakeSensorDisconnectedAlert;
 
   public Intake(IntakeIO io) {
     this.io = io;
     intakeDisconnectedAlert = new Alert("Intake Disconnected", AlertType.kError);
+    intakeSensorDisconnectedAlert = new Alert("Intake CANRange Disconnected", AlertType.kError);
   }
 
   @Override
@@ -35,6 +37,7 @@ public class Intake extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Intake/IO", inputs);
     intakeDisconnectedAlert.set(!inputs.intakeConnected);
+    intakeSensorDisconnectedAlert.set(!inputs.canRangeConnected);
   }
 
   public void setOutput(double speed) {
