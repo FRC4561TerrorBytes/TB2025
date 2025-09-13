@@ -323,7 +323,9 @@ public class ElevatorIOReal implements ElevatorIO {
     pivotTwoAlert.set(!inputs.pivotMotorTwoConnected);
     pivotThreeAlert.set(!inputs.pivotMotorThreeConnected);
     pivotFourAlert.set(!inputs.pivotMotorFourConnected);
-    pivotEncoderAlert.set(!inputs.pivotEncoderConnected || pivotEncoder.getMagnetHealth().getValue() == MagnetHealthValue.Magnet_Red);
+    pivotEncoderAlert.set(
+        !inputs.pivotEncoderConnected
+            || pivotEncoder.getMagnetHealth().getValue() == MagnetHealthValue.Magnet_Red);
     extensionAlert.set(!inputs.extensionMotorConnected);
   }
 

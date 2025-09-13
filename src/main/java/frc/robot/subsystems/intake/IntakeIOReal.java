@@ -29,6 +29,8 @@ public class IntakeIOReal implements IntakeIO {
     intakeConfig.voltageCompensation(12.0);
     intakeConfig.inverted(false);
     intakeConfig.smartCurrentLimit(Constants.INTAKE_CURRENT_LIMIT);
+    intakeConfig.limitSwitch.reverseLimitSwitchEnabled(false);
+    intakeConfig.limitSwitch.forwardLimitSwitchEnabled(false);
 
     CANrangeConfiguration config = new CANrangeConfiguration();
     config.ProximityParams.MinSignalStrengthForValidMeasurement = 2000;
