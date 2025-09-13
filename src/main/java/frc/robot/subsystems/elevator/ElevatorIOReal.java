@@ -15,6 +15,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MagnetHealthValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -322,7 +323,7 @@ public class ElevatorIOReal implements ElevatorIO {
     pivotTwoAlert.set(!inputs.pivotMotorTwoConnected);
     pivotThreeAlert.set(!inputs.pivotMotorThreeConnected);
     pivotFourAlert.set(!inputs.pivotMotorFourConnected);
-    pivotEncoderAlert.set(!inputs.pivotEncoderConnected);
+    pivotEncoderAlert.set(!inputs.pivotEncoderConnected || pivotEncoder.getMagnetHealth().getValue() == MagnetHealthValue.Magnet_Red);
     extensionAlert.set(!inputs.extensionMotorConnected);
   }
 

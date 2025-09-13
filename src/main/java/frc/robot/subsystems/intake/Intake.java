@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.Mode;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.FieldConstants.Reef;
@@ -118,16 +116,6 @@ public class Intake extends SubsystemBase {
   }
 
   public Command outtakeL1Coral() {
-    if (Constants.currentMode == Mode.REAL) {
-      io.disableLimitSwitch();
-    }
-    return new RunCommand(() -> this.setOutput(-0.75), this)
-        // .withTimeout(2.0)
-        .andThen(
-            () -> {
-              if (Constants.currentMode == Mode.REAL) {
-                io.enableLimitSwitch();
-              }
-            });
+    return new RunCommand(() -> this.setOutput(-0.75), this);
   }
 }
