@@ -123,6 +123,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "GroundAutos",
+  "folder": null,
   "choreoAuto": false
 }

@@ -695,19 +695,22 @@ public class RobotContainer {
     reefSelector
         .button(5)
         .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKLEFT)));
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKLEFT))
+                .ignoringDisable(true));
 
     // Set lineup position to E/F
     reefSelector
         .button(3)
         .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKRIGHT)));
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACKRIGHT))
+                .ignoringDisable(true));
 
     // Set lineup position to K/L
     reefSelector
         .button(6)
         .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTLEFT)));
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTLEFT))
+                .ignoringDisable(true));
 
     // HI MANBIR :D
 
@@ -715,17 +718,22 @@ public class RobotContainer {
     reefSelector
         .button(2)
         .onTrue(
-            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTRIGHT)));
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONTRIGHT))
+                .ignoringDisable(true));
 
     // Set lineup position to G/H
     reefSelector
         .button(4)
-        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACK)));
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.BACK))
+                .ignoringDisable(true));
 
     // Set lineup position to A/B
     reefSelector
         .button(1)
-        .onTrue(Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT)));
+        .onTrue(
+            Commands.runOnce(() -> drive.setSelectedScorePosition(ReefScorePositions.FRONT))
+                .ignoringDisable(true));
   }
 
   /**

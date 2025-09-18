@@ -100,7 +100,7 @@ public class DriveToPose extends Command {
 
     if (drive.getPose().getTranslation().getDistance(targetPose.getTranslation()) > 1) {
       pathCommand =
-          AutoBuilder.pathfindToPose(targetPose, new PathConstraints(3.5, 3, Math.PI, Math.PI), 0);
+          AutoBuilder.pathfindToPose(targetPose, new PathConstraints(2, 1.5, Math.PI, Math.PI), 0);
 
       pathCommand.withName("DriveToPose").schedule();
     } else {
