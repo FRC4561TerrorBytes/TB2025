@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AutoOuttakeDirection;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPose;
 import frc.robot.generated.TunerConstants;
@@ -495,7 +496,7 @@ public class RobotContainer {
 
     // Outtake coral while RT is held
     // driverController.rightTrigger().whileTrue(intake.outtakeCoralBack());
-    driverController.rightTrigger().whileTrue(intake.outtakeCoralAuto(drive::getPose));
+    driverController.rightTrigger().whileTrue(new AutoOuttakeDirection(intake, drive::getPose));
 
     // Run lineup sequence when B is held
     driverController
