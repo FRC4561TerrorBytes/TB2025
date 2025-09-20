@@ -136,8 +136,8 @@ public class Robot extends LoggedRobot {
     server2.setSource(limelightCamera2);
 
     // adding the camera feeds to the vision recorder
-    visionRecorder1 = new VisionRecorder(limelightCamera1, 5);
-    visionRecorder2 = new VisionRecorder(limelightCamera2, 5);
+    visionRecorder1 = new VisionRecorder(limelightCamera1, 5, 1);
+    visionRecorder2 = new VisionRecorder(limelightCamera2, 5, 2);
   }
 
   /** This function is called periodically during all modes. */
