@@ -20,7 +20,9 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.VideoSource;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -51,6 +53,8 @@ public class Robot extends LoggedRobot {
 
   private Thread visionRecordingThread;
   private volatile boolean visionRecordingActive = false;
+
+  private boolean lastEnabledAuto = false;
 
   public Robot() {
     PortForwarder.add(5801, "limelight.local", 5801);
@@ -162,17 +166,39 @@ public class Robot extends LoggedRobot {
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {
-    // set the active variable to false which terminates the thread
-    visionRecordingActive = false;
+    //if we are in a match then dont stop recording in the 2 second period where disabled
+    if(DriverStation.getMatchNumber() > 0){
+      if (visionRecordingThread != null && !lastEnabledAuto) {
+        try {
+          // waiting for the thread to shutdown after setting it to inactive
+          visionRecordingActive = false;
 
-    if (visionRecordingThread != null) {
-      try {
-        // waiting for the thread to shutdown after setting it to inactive
-        visionRecordingThread.join();
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
+          visionRecordingThread.join();
+
+          visionRecorder1.close();
+          visionRecorder2.close();
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+        }
       }
     }
+    //if we are just practicing then stop the recording
+    else{
+      if (visionRecordingThread != null) {
+        try {
+          // waiting for the thread to shutdown after setting it to inactive
+          visionRecordingActive = false;
+
+          visionRecordingThread.join();
+          
+          visionRecorder1.close();
+          visionRecorder2.close();
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+        }
+      }
+    }
+    
   }
 
   /** This function is called periodically when disabled. */
@@ -206,8 +232,6 @@ public class Robot extends LoggedRobot {
                   Thread.currentThread().interrupt();
                 }
               }
-              visionRecorder1.close();
-              visionRecorder2.close();
             });
     // start running the recording thread
     visionRecordingThread.start();
@@ -215,7 +239,9 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    lastEnabledAuto = true;
+  }
 
   /** This function is called once when teleop is enabled. */
   @Override
@@ -250,6 +276,8 @@ public class Robot extends LoggedRobot {
       // start running the recording thread
       visionRecordingThread.start();
     }
+
+    lastEnabledAuto = false;
   }
 
   /** This function is called periodically during operator control. */
