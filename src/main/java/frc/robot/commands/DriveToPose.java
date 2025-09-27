@@ -39,11 +39,11 @@ public class DriveToPose extends Command {
   private boolean scoreBack = true;
 
   ProfiledPIDController xController =
-      new ProfiledPIDController(15, 0, 0, new TrapezoidProfile.Constraints(2, 2));
+      new ProfiledPIDController(7, 0, 0, new TrapezoidProfile.Constraints(2, 2));
   ProfiledPIDController yController =
-      new ProfiledPIDController(15, 0, 0, new TrapezoidProfile.Constraints(2, 2));
+      new ProfiledPIDController(7, 0, 0, new TrapezoidProfile.Constraints(2, 2));
   ProfiledPIDController thetaController =
-      new ProfiledPIDController(15, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI));
+      new ProfiledPIDController(7, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI));
 
   /** Creates a new DriveToPose. */
   public DriveToPose(Drive drive, Elevator elevator, Wrist wrist) {
@@ -75,22 +75,22 @@ public class DriveToPose extends Command {
       if (centerDistance <= backDistance) {
         // SCORE L2
         if (elevator.getRequestedScoreLevel().equals(ScoreLevel.L2)) {
-          elevator.setSetpoint(ElevatorPosition.L2FRONT);
+          setMechanismSetpoint(ElevatorPosition.L2FRONT);
         }
         // SCORE L3
         else if (elevator.getRequestedScoreLevel().equals(ScoreLevel.L3)) {
-          elevator.setSetpoint(ElevatorPosition.L3FRONT);
+          setMechanismSetpoint(ElevatorPosition.L3FRONT);
         }
       }
       // SCORE OUT FRONT
       else {
         // SCORE L2
         if (elevator.getRequestedScoreLevel().equals(ScoreLevel.L2)) {
-          elevator.setSetpoint(ElevatorPosition.L2BACK);
+          setMechanismSetpoint(ElevatorPosition.L2BACK);
         }
         // SCORE L3
         else if (elevator.getRequestedScoreLevel().equals(ScoreLevel.L3)) {
-          elevator.setSetpoint(ElevatorPosition.L3BACK);
+          setMechanismSetpoint(ElevatorPosition.L3BACK);
         }
       }
     }
@@ -100,7 +100,7 @@ public class DriveToPose extends Command {
 
     if (drive.getPose().getTranslation().getDistance(targetPose.getTranslation()) > 1) {
       pathCommand =
-          AutoBuilder.pathfindToPose(targetPose, new PathConstraints(2, 1.5, Math.PI, Math.PI), 0);
+          AutoBuilder.pathfindToPose(targetPose, new PathConstraints(1.5, 1, Math.PI, Math.PI), 0);
 
       pathCommand.withName("DriveToPose").schedule();
     } else {
@@ -113,7 +113,7 @@ public class DriveToPose extends Command {
       yController.setTolerance(0.07);
       yController.reset(drive.getPose().getY());
       thetaController.setGoal(targetPose.getRotation().getRadians());
-      thetaController.setTolerance(Units.degreesToRadians(2));
+      thetaController.setTolerance(Units.degreesToRadians(0.2));
       thetaController.reset(drive.getPose().getRotation().getRadians());
     }
   }
@@ -175,5 +175,10 @@ public class DriveToPose extends Command {
     } else {
       return xController.atGoal() && yController.atGoal() && thetaController.atGoal();
     }
+  }
+
+  private void setMechanismSetpoint(ElevatorPosition position) {
+    elevator.setSetpoint(position);
+    wrist.setSetpoint(position);
   }
 }

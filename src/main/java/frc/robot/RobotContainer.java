@@ -20,6 +20,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -60,6 +62,8 @@ import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.subsystems.wrist.WristIOReal;
+import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.FieldConstants.Reef;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -76,10 +80,10 @@ public class RobotContainer {
     CLIMBPREP(0.0, 50.0, 0),
     CLIMBFULL(0.11, 5, 100),
     L1(0.1, 30.0, 0.0),
-    L2FRONT(0.0, 47.5, 95.0),
+    L2FRONT(0.07, 47.5, 100.0),
     L2BACK(0.0, 87, 135),
     L2ALGAE(0, 100, 90), // FIX BC GAS SHOCK
-    L3FRONT(0.36, 60, 85),
+    L3FRONT(0.41, 60, 95),
     L3BACK(0.36, 87.0, 135),
     L3ALGAE(0.4, 100, 90), // FIX BC GAS SHOCK
     GROUND(0.1, 0.0, 0.0);
@@ -322,13 +326,13 @@ public class RobotContainer {
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
-    /*
     autoChooser.addOption(
         "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+    /*
     autoChooser.addOption(
         "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
     autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
+        "Drive SysId (Quasistatic Forward)",2
         drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Quasistatic Reverse)",
@@ -445,7 +449,32 @@ public class RobotContainer {
             Commands.sequence(
                 Commands.runOnce(() -> elevator.requestScoreLevel(ScoreLevel.L2)),
                 Commands.runOnce(
-                    () -> setMechanismSetpoint(ElevatorPosition.L2BACK), elevator, wrist)));
+                    () -> {
+                      Pose2d centerRobot = drive.getPose();
+                      Transform2d forwardOffset =
+                          new Transform2d(new Translation2d(-0.38, 0.0), new Rotation2d());
+                      Pose2d frontRobot = centerRobot.transformBy(forwardOffset);
+
+                      double centerDistance =
+                          centerRobot
+                              .getTranslation()
+                              .getDistance(AllianceFlipUtil.apply(Reef.center));
+                      double backDistance =
+                          frontRobot
+                              .getTranslation()
+                              .getDistance(AllianceFlipUtil.apply(Reef.center));
+
+                      // SCORE OUT BACK
+                      if (centerDistance > 1.6) { // only moving arm if far enough away from reef
+                        if (centerDistance <= backDistance) {
+                          setMechanismSetpoint(ElevatorPosition.L2FRONT);
+                        }
+                        // SCORE OUT FRONT
+                        else {
+                          setMechanismSetpoint(ElevatorPosition.L2BACK);
+                        }
+                      }
+                    })));
 
     // Run automated scoring when LB is held
     driverController
@@ -502,7 +531,33 @@ public class RobotContainer {
         .onTrue(
             Commands.sequence(
                 Commands.runOnce(() -> elevator.requestScoreLevel(ScoreLevel.L3)),
-                Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3BACK))));
+                Commands.runOnce(
+                    () -> {
+                      Pose2d centerRobot = drive.getPose();
+                      Transform2d forwardOffset =
+                          new Transform2d(new Translation2d(-0.38, 0.0), new Rotation2d());
+                      Pose2d frontRobot = centerRobot.transformBy(forwardOffset);
+
+                      double centerDistance =
+                          centerRobot
+                              .getTranslation()
+                              .getDistance(AllianceFlipUtil.apply(Reef.center));
+                      double backDistance =
+                          frontRobot
+                              .getTranslation()
+                              .getDistance(AllianceFlipUtil.apply(Reef.center));
+
+                      // SCORE OUT BACK
+                      if (centerDistance > 1.6) { // only moving arm if far enough away from reef
+                        if (centerDistance <= backDistance) {
+                          setMechanismSetpoint(ElevatorPosition.L3FRONT);
+                        }
+                        // SCORE OUT FRONT
+                        else {
+                          setMechanismSetpoint(ElevatorPosition.L3BACK);
+                        }
+                      }
+                    })));
 
     // Set elevator to ALGAEINTAKE when DPAD RIGHT is pressed
     driverController

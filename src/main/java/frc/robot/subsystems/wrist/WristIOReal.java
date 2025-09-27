@@ -62,7 +62,7 @@ public class WristIOReal implements WristIO {
     WristPIDConfig.kD = 0;
 
     var cancoderConfig = new CANcoderConfiguration();
-    cancoderConfig.MagnetSensor.withMagnetOffset(-0.098877 + 0.064453);
+    cancoderConfig.MagnetSensor.withMagnetOffset(-0.098877 + 0.064453 + 0.096924 + 0.002197);
     cancoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
     tryUntilOk(5, () -> wristEncoder.getConfigurator().apply(cancoderConfig, 0.25));
 
