@@ -128,8 +128,14 @@ public class Robot extends LoggedRobot {
     FollowPathCommand.warmupCommand().schedule();
 
     // Start an MJPEG stream using the camera feeds on the limelights
-    limelightCamera1 = new HttpCamera("limelight1", "http://10.45.61:20:5801/stream.mjpg"); //FRONT LEFT (IDK IF THIS IP IS RIGHT)
-    limelightCamera2 = new HttpCamera("limelight2", "http://10.45.61.19:5802/stream.mjpg"); //BACK RIGHT (THIS HAS THE RIGHT IP)
+    limelightCamera1 =
+        new HttpCamera(
+            "limelight1",
+            "http://10.45.61:18:5800/stream.mjpg"); // FRONT LEFT (IDK IF THIS IP IS RIGHT)
+    limelightCamera2 =
+        new HttpCamera(
+            "limelight2",
+            "http://10.45.61.19:5800/stream.mjpg"); // BACK RIGHT (THIS HAS THE RIGHT IP)
 
     // OPTIONAL
     // Restreams out the limelight feed on port 1182 and 1183
