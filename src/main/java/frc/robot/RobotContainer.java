@@ -465,15 +465,13 @@ public class RobotContainer {
                               .getDistance(AllianceFlipUtil.apply(Reef.center));
 
                       // SCORE OUT BACK
-                      if (centerDistance > 1.6) { // only moving arm if far enough away from reef
-                        if (centerDistance <= backDistance) {
-                          setMechanismSetpoint(ElevatorPosition.L2FRONT);
-                        }
-                        // SCORE OUT FRONT
-                        else {
-                          setMechanismSetpoint(ElevatorPosition.L2BACK);
-                        }
-                      }
+                    if (centerDistance <= backDistance) {
+                        setMechanismSetpoint(ElevatorPosition.L2FRONT);
+                    }
+                    // SCORE OUT FRONT
+                    else {
+                        setMechanismSetpoint(ElevatorPosition.L2BACK);
+                    }
                     })));
 
     // Run automated scoring when LB is held
@@ -548,15 +546,13 @@ public class RobotContainer {
                               .getDistance(AllianceFlipUtil.apply(Reef.center));
 
                       // SCORE OUT BACK
-                      if (centerDistance > 1.6) { // only moving arm if far enough away from reef
-                        if (centerDistance <= backDistance) {
-                          setMechanismSetpoint(ElevatorPosition.L3FRONT);
-                        }
-                        // SCORE OUT FRONT
-                        else {
-                          setMechanismSetpoint(ElevatorPosition.L3BACK);
-                        }
-                      }
+                    if (centerDistance <= backDistance) {
+                        setMechanismSetpoint(ElevatorPosition.L3FRONT);
+                    }
+                    // SCORE OUT FRONT
+                    else {
+                        setMechanismSetpoint(ElevatorPosition.L3BACK);
+                    }
                     })));
 
     // Set elevator to ALGAEINTAKE when DPAD RIGHT is pressed
