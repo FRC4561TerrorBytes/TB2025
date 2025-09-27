@@ -51,9 +51,9 @@ public class AutoOuttakeDirection extends Command {
   @Override
   public void execute() {
     if (outtakeFront) {
-      intake.setOutput(-1);
-    } else {
       intake.setOutput(1);
+    } else {
+      intake.setOutput(-1);
     }
   }
 

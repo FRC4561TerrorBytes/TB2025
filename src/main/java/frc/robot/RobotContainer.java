@@ -29,10 +29,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoOuttakeDirection;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToPose;
@@ -61,7 +59,6 @@ import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.subsystems.wrist.WristIOReal;
-import frc.robot.util.FieldConstants.ReefLevel;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -74,9 +71,9 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
 
   public enum ElevatorPosition {
-    STOW(0, 20.0, 135.0),
-    CLIMBPREP(0.0, 50.0, 0.0),
-    CLIMBFULL(0.11, 5, 100),
+    STOW(0, 20.0, 0.0), // 135 wrist position
+    CLIMBPREP(0.0, 50.0, 0),
+    CLIMBFULL(0.11, 5, 0),
     L1(0.1, 30.0, 0.0),
     L2FRONT(0.0, 47.5, 95.0),
     L2BACK(0.0, 87, 135),
@@ -85,7 +82,6 @@ public class RobotContainer {
     L3BACK(0.36, 87.0, 135),
     L3ALGAE(0.4, 100, 90), // FIX BC GAS SHOCK
     GROUND(0.1, 0.0, 0.0);
-
 
     public double extensionPosition;
     public double pivotPosition;
@@ -298,12 +294,10 @@ public class RobotContainer {
     // Register NamedCommands for use in PathPlanner // TAKE INTAKE COMMAND TIMEOUT OUT (FOR SIM)
     NamedCommands.registerCommand(
         "Intake", intake.intakeCoral().until(() -> intake.coralPresent()));
-    NamedCommands.registerCommand(
-        "Outtake", intake.outtakeCoralBack().withTimeout(1.0));
+    NamedCommands.registerCommand("Outtake", intake.outtakeCoralBack().withTimeout(1.0));
     NamedCommands.registerCommand(
         "OuttakeFront", intake.outtakeCoralFront().until(() -> !intake.coralPresent()));
-    NamedCommands.registerCommand(
-        "StopIntake", Commands.runOnce(() -> intake.setOutput(0)));
+    NamedCommands.registerCommand("StopIntake", Commands.runOnce(() -> intake.setOutput(0)));
     NamedCommands.registerCommand(
         "L1", Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L1), elevator, wrist));
     NamedCommands.registerCommand(
@@ -427,7 +421,11 @@ public class RobotContainer {
     driverController
         .leftTrigger()
         .onTrue(
-            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.GROUND), elevator, wrist))
+            Commands.sequence(
+                    Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW), elevator),
+                    Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
+                .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger))
+                .finallyDo(() -> setMechanismSetpoint(ElevatorPosition.GROUND)))
         .toggleOnTrue(intake.intakeCoral().until(() -> intake.coralPresent()));
 
     // Outtake coral while RT is held
@@ -560,21 +558,15 @@ public class RobotContainer {
     operatorController
         .b()
         .onTrue(
-            Commands.runOnce(
-                () -> setMechanismSetpoint(ElevatorPosition.L2BACK), elevator, wrist));
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2BACK), elevator, wrist));
 
-      // Move elevator to L3 position when Y is pressed
+    // Move elevator to L3 position when Y is pressed
     operatorController
         .y()
         .onTrue(
-            Commands.runOnce(
-                () -> setMechanismSetpoint(ElevatorPosition.L3BACK), elevator, wrist));
+            Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3BACK), elevator, wrist));
 
-    operatorController
-        .rightTrigger()
-        .whileTrue(
-            Commands.runOnce(
-                () ->  intake.setOutput(-1)));
+    operatorController.rightTrigger().whileTrue(Commands.runOnce(() -> intake.setOutput(-1)));
 
     // REEF SELECTION USING KEYBOARD
 
