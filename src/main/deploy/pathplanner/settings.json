@@ -7,7 +7,9 @@
     "Ground Score",
     "Starting Line Paths"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Choreo Auto"
+  ],
   "defaultMaxVel": 4.2,
   "defaultMaxAccel": 3.5,
   "defaultMaxAngVel": 540.0,
