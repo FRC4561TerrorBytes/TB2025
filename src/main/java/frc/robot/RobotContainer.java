@@ -337,6 +337,10 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse)); */
+    autoChooser.addOption(
+        "LeaveAndStop",
+        Commands.run(() -> drive.runVelocity(new ChassisSpeeds(-0.25, 0, 0)), drive)
+            .withTimeout(4));
 
     SmartDashboard.putData(CommandScheduler.getInstance());
 
