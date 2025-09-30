@@ -465,13 +465,13 @@ public class RobotContainer {
                               .getDistance(AllianceFlipUtil.apply(Reef.center));
 
                       // SCORE OUT BACK
-                    if (centerDistance <= backDistance) {
+                      if (centerDistance <= backDistance) {
                         setMechanismSetpoint(ElevatorPosition.L2FRONT);
-                    }
-                    // SCORE OUT FRONT
-                    else {
+                      }
+                      // SCORE OUT FRONT
+                      else {
                         setMechanismSetpoint(ElevatorPosition.L2BACK);
-                    }
+                      }
                     })));
 
     // Run automated scoring when LB is held
@@ -546,13 +546,13 @@ public class RobotContainer {
                               .getDistance(AllianceFlipUtil.apply(Reef.center));
 
                       // SCORE OUT BACK
-                    if (centerDistance <= backDistance) {
+                      if (centerDistance <= backDistance) {
                         setMechanismSetpoint(ElevatorPosition.L3FRONT);
-                    }
-                    // SCORE OUT FRONT
-                    else {
+                      }
+                      // SCORE OUT FRONT
+                      else {
                         setMechanismSetpoint(ElevatorPosition.L3BACK);
-                    }
+                      }
                     })));
 
     // Set elevator to ALGAEINTAKE when DPAD RIGHT is pressed

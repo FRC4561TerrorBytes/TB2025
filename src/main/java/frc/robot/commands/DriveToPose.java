@@ -151,7 +151,11 @@ public class DriveToPose extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive.stop();
+    if(interrupted){
+      //stopping the drive since the path was cut short and therefore robot still moving 
+      //else the path has been completed and stopped by the path since end velocity is 0
+      drive.stop();
+    }
     drive.setPathFinished(true);
     if (pathCommand != null) {
       pathCommand.end(interrupted);
