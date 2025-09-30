@@ -76,16 +76,16 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
 
   public enum ElevatorPosition {
-    STOW(0, 20.0, 135), // 135 wrist position
+    STOW(0, 20.0, 135), 
     CLIMBPREP(0.0, 50.0, 0),
     CLIMBFULL(0.11, 5, 100),
     L1(0.1, 30.0, 0.0),
     L2FRONT(0.07, 47.5, 100.0),
-    L2BACK(0.0, 87, 135),
-    L2ALGAE(0, 100, 90), // FIX BC GAS SHOCK
+    L2BACK(0.0, 87.0, 135),
+    L2ALGAE(0, 87.0, 90),
     L3FRONT(0.41, 60, 95),
     L3BACK(0.36, 87.0, 135),
-    L3ALGAE(0.4, 100, 90), // FIX BC GAS SHOCK
+    L3ALGAE(0.4, 87.0, 90), 
     GROUND(0.1, 0.0, 0.0);
 
     public double extensionPosition;
