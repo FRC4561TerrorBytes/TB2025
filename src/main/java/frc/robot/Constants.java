@@ -68,7 +68,7 @@ public final class Constants {
 
   public static final int ALGAE_MANIPULATOR_MOTOR_ID = 61;
 
-  public static final double SCORING_POSITION_OFFSET = 5.5; // in inches
+  public static final double SCORING_POSITION_OFFSET = 6.47; // in inches
 
   public static final int EXTENSION_ID = 40;
   // Gears are 12:44:60 tooth gears in a line
