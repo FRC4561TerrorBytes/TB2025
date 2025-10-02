@@ -623,7 +623,10 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3BACK), elevator, wrist));
 
-    operatorController.rightTrigger().whileTrue(Commands.runOnce(() -> intake.setOutput(-1)));
+    operatorController
+        .rightTrigger()
+        .whileTrue(Commands.run(() -> intake.setOutput(1)))
+        .onFalse(Commands.runOnce(() -> intake.setOutput(0), intake));
 
     // REEF SELECTION USING KEYBOARD
 
