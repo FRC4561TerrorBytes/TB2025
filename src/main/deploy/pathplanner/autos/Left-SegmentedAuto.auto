@@ -75,6 +75,6 @@
     }
   },
   "resetOdom": false,
-  "folder": "GroundAutos",
+  "folder": null,
   "choreoAuto": false
 }

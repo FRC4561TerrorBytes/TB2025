@@ -19,6 +19,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -56,13 +57,13 @@ public class WristIOReal implements WristIO {
     // pivotPIDConfig.kS = 0.28;
     WristPIDConfig.kV = 0;
     WristPIDConfig.kA = 0;
-    WristPIDConfig.kP = 75;
+    WristPIDConfig.kP = 75; // 75
     WristPIDConfig.kI = 0;
     WristPIDConfig.kD = 0;
 
     var cancoderConfig = new CANcoderConfiguration();
-    cancoderConfig.MagnetSensor.withMagnetOffset(
-        0.428711 - 0.031250 - 0.067871 + 0.248779 - 0.024902 - 0.002441 + 0.216064);
+    cancoderConfig.MagnetSensor.withMagnetOffset(0.059571);
+    cancoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
     tryUntilOk(5, () -> wristEncoder.getConfigurator().apply(cancoderConfig, 0.25));
 
     var wristConfig = new TalonFXConfiguration();

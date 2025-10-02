@@ -15,6 +15,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MagnetHealthValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -94,12 +95,12 @@ public class ElevatorIOReal implements ElevatorIO {
     // pivotPIDConfig.kS = 0.28;
     pivotPIDConfig.kV = 0;
     pivotPIDConfig.kA = 0;
-    pivotPIDConfig.kP = 60;
+    pivotPIDConfig.kP = 67;
     pivotPIDConfig.kI = 3;
     pivotPIDConfig.kD = 0;
 
     var cancoderConfig = new CANcoderConfiguration();
-    cancoderConfig.MagnetSensor.withMagnetOffset(-0.267090 - 0.007812);
+    cancoderConfig.MagnetSensor.withMagnetOffset(-0.267090 - 0.007812 + 0.0061 + 0.005859);
     tryUntilOk(5, () -> pivotEncoder.getConfigurator().apply(cancoderConfig, 0.25));
 
     var pivotConfig = new TalonFXConfiguration();
@@ -322,7 +323,9 @@ public class ElevatorIOReal implements ElevatorIO {
     pivotTwoAlert.set(!inputs.pivotMotorTwoConnected);
     pivotThreeAlert.set(!inputs.pivotMotorThreeConnected);
     pivotFourAlert.set(!inputs.pivotMotorFourConnected);
-    pivotEncoderAlert.set(!inputs.pivotEncoderConnected);
+    pivotEncoderAlert.set(
+        !inputs.pivotEncoderConnected
+            || pivotEncoder.getMagnetHealth().getValue() == MagnetHealthValue.Magnet_Red);
     extensionAlert.set(!inputs.extensionMotorConnected);
   }
 

@@ -102,7 +102,7 @@ public class Drive extends SubsystemBase {
 
   private ReefScorePositions selectedPosition = ReefScorePositions.FRONT;
   private double autoAlignOffsetX = 0;
-  private double distanceAway = Units.inchesToMeters(-25.654);
+  private double distanceAway = Units.inchesToMeters(-29);
   private boolean scoreBack;
   private boolean pathFinished;
 

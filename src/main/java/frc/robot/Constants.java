@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public final class Constants {
 
-  public static final Mode simMode = Mode.REAL;
+  public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
   public static enum Mode {
@@ -46,7 +46,8 @@ public final class Constants {
 
   public static final int INTAKE_MOTOR_ID = 41;
   public static final int ALGAE_MANIPULATOR_ID = 42;
-  public static final int INTAKE_CURRENT_LIMIT = 25;
+  public static final int CANRANGE_ID = 21;
+  public static final int INTAKE_CURRENT_LIMIT = 35;
   public static final int LEFT_PIVOT_ID_1 = 31;
   public static final int LEFT_PIVOT_ID_2 = 32;
   public static final int RIGHT_PIVOT_ID_1 = 33;
@@ -67,7 +68,7 @@ public final class Constants {
 
   public static final int ALGAE_MANIPULATOR_MOTOR_ID = 61;
 
-  public static final double SCORING_POSITION_OFFSET = 6.5;
+  public static final double SCORING_POSITION_OFFSET = 6.47; // in inches
 
   public static final int EXTENSION_ID = 40;
   // Gears are 12:44:60 tooth gears in a line

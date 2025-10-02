@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer.ElevatorPosition;
+import frc.robot.RobotContainer.ScoreLevel;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -16,7 +17,8 @@ public class Elevator extends SubsystemBase {
 
   private ElevatorPosition selectedElevatorPosition = ElevatorPosition.STOW;
   private ElevatorPosition lastElevatorPosition = ElevatorPosition.STOW;
-  private boolean scoreBack = true;
+
+  private ScoreLevel requestedScoreLevel = ScoreLevel.L2;
 
   public Elevator(ElevatorIO io) {
     this.io = io;
@@ -66,6 +68,7 @@ public class Elevator extends SubsystemBase {
     io.setTargetPosition(position);
   }
 
+  @AutoLogOutput(key = "Elevator/Elevator Position")
   public ElevatorPosition getElevatorPosition() {
     return lastElevatorPosition;
   }
@@ -86,31 +89,13 @@ public class Elevator extends SubsystemBase {
     io.setExtensionVoltage(voltage);
   }
 
-  public double getCurrentSetpoint() {
-    return inputs.pivotAngle;
+  public void requestScoreLevel(ScoreLevel level) {
+    requestedScoreLevel = level;
   }
 
-  public void requestElevatorPosition(ElevatorPosition position) {
-    selectedElevatorPosition = position;
-  }
-
-  @AutoLogOutput(key = "TEST/elevator")
-  private ElevatorPosition getSetElevatorPosition() {
-    return selectedElevatorPosition;
-  }
-
-  public void setScoreBack(boolean scoreBack) {
-    this.scoreBack = scoreBack;
-  }
-
-  @AutoLogOutput(key = "Elevator/Requested Position")
-  public ElevatorPosition getRequestedElevatorPosition() {
-    if (!scoreBack) {
-      if (selectedElevatorPosition.equals(ElevatorPosition.L2BACKAUTOALIGN))
-        return ElevatorPosition.L2FRONTAUTOALIGN;
-      return ElevatorPosition.L3FRONTAUTOALIGN;
-    }
-    return selectedElevatorPosition;
+  @AutoLogOutput(key = "Elevator/Score Level")
+  public ScoreLevel getRequestedScoreLevel() {
+    return requestedScoreLevel;
   }
 
   @AutoLogOutput(key = "Elevator/At setpoint")

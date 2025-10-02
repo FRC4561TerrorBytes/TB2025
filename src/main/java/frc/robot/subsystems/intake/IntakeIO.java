@@ -10,14 +10,11 @@ public interface IntakeIO {
     public double intakeCurrentAmps = 0.0;
     public double intakeVoltage = 0.0;
     public boolean intakeConnected = true;
-    public boolean intakeLimitSwitch = false;
+    public boolean coralPresent = false;
+    public boolean canRangeConnected = true;
   }
 
   public default void updateInputs(IntakeIOInputs inputs) {}
-
-  public default void enableLimitSwitch() {}
-
-  public default void disableLimitSwitch() {}
 
   public default void setOutput(double speed) {}
 }
