@@ -625,7 +625,7 @@ public class RobotContainer {
 
     operatorController
         .rightTrigger()
-        .whileTrue(Commands.run(() -> intake.setOutput(1)))
+        .whileTrue(Commands.run(() -> intake.setOutput(-1)))
         .onFalse(Commands.runOnce(() -> intake.setOutput(0), intake));
 
     operatorController
