@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.0071306818181818,
-        "y": 5.829857954545454
+        "x": 1.2946721311475409,
+        "y": 5.78719262295082
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.593132394146949,
-        "y": 5.2739076120797
+        "x": 1.8806738434763082,
+        "y": 5.231242280485066
       },
       "isLocked": false,
       "linkedName": "GL"
@@ -90,7 +90,7 @@
   "folder": "Ground Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -171.67434966957322
+    "rotation": 135.0
   },
   "useDefaultConstraints": true
 }
