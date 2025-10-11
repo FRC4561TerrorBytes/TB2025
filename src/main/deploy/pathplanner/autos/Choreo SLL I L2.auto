@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SLR to C"
+            "pathName": "SLL to I"
           }
         },
         {
@@ -37,7 +37,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "C to GR"
+            "pathName": "I to GL"
           }
         }
       ]

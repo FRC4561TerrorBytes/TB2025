@@ -84,7 +84,7 @@ public class RobotContainer {
     L2BACK(0.0, 87.0, 135),
     L2ALGAE(0, 87.0, 90),
     L3FRONT(0.41, 60, 95),
-    L3BACK(0.36, 87.0, 135),
+    L3BACK(0.37, 87.0, 135),
     L3ALGAE(0.4, 87.0, 90),
     GROUND(0.1, 0.0, 0.0);
 
@@ -393,7 +393,11 @@ public class RobotContainer {
                     && DriverStation.getMatchTime() > 0
                     && DriverStation.getMatchTime() <= 2
                     && elevator.getElevatorPosition().equals(ElevatorPosition.CLIMBPREP))
-        .onTrue(Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.CLIMBFULL), elevator));
+        .onTrue(Commands.sequence(
+                    Commands.runOnce(() -> climber.setClimberSetpoint(0.18), climber),
+                    Commands.waitUntil(() -> climber.climberAtSetpoint(0.05)),
+                    Commands.runOnce(
+                        () -> setMechanismSetpoint(ElevatorPosition.CLIMBFULL), elevator)));
 
     new Trigger(
             () ->
@@ -625,7 +629,12 @@ public class RobotContainer {
 
     operatorController
         .rightTrigger()
-        .whileTrue(Commands.run(() -> intake.setOutput(1)))
+        .whileTrue(Commands.run(() -> intake.setOutput(-1)))
+        .onFalse(Commands.runOnce(() -> intake.setOutput(0), intake));
+
+    operatorController
+        .leftTrigger()
+        .whileTrue(Commands.run(() -> intake.setOutput(-0.2)))
         .onFalse(Commands.runOnce(() -> intake.setOutput(0), intake));
 
     // REEF SELECTION USING KEYBOARD
