@@ -393,11 +393,12 @@ public class RobotContainer {
                     && DriverStation.getMatchTime() > 0
                     && DriverStation.getMatchTime() <= 2
                     && elevator.getElevatorPosition().equals(ElevatorPosition.CLIMBPREP))
-        .onTrue(Commands.sequence(
-                    Commands.runOnce(() -> climber.setClimberSetpoint(0.18), climber),
-                    Commands.waitUntil(() -> climber.climberAtSetpoint(0.05)),
-                    Commands.runOnce(
-                        () -> setMechanismSetpoint(ElevatorPosition.CLIMBFULL), elevator)));
+        .onTrue(
+            Commands.sequence(
+                Commands.runOnce(() -> climber.setClimberSetpoint(0.18), climber),
+                Commands.waitUntil(() -> climber.climberAtSetpoint(0.05)),
+                Commands.runOnce(
+                    () -> setMechanismSetpoint(ElevatorPosition.CLIMBFULL), elevator)));
 
     new Trigger(
             () ->
