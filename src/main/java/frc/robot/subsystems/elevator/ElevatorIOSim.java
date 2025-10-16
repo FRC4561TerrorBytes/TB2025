@@ -5,9 +5,10 @@
 package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants;
@@ -34,8 +35,8 @@ public class ElevatorIOSim implements ElevatorIO {
 
   private boolean pivotClosedLoop = false;
   private boolean extensionClosedLoop = false;
-  private PIDController pivotController = new PIDController(PIVOT_KP, 0, PIVOT_KD);
-  private PIDController extensionController = new PIDController(EXTENSION_KP, 0, EXTENSION_KD);
+  private ProfiledPIDController pivotController = new ProfiledPIDController(PIVOT_KP, 0, PIVOT_KD, new Constraints(1, 3));
+  private ProfiledPIDController extensionController = new ProfiledPIDController(EXTENSION_KP, 0, EXTENSION_KD, new Constraints(1.5, 30));
   private double pivotAppliedVolts = 0.0;
   private double extensionAppliedVolts = 0.0;
 
@@ -81,21 +82,17 @@ public class ElevatorIOSim implements ElevatorIO {
   public void updateInputs(ElevatorIOInputs inputs) {
     if (pivotClosedLoop) {
       pivotAppliedVolts = pivotController.calculate(inputs.pivotAngle, pivotSetpoint);
-    } else {
-      pivotController.reset();
     }
 
     if (extensionClosedLoop) {
       extensionAppliedVolts =
           extensionController.calculate(inputs.extensionHeight, extensionSetpoint);
-    } else {
-      extensionController.reset();
     }
 
-    pivotMotorOneSim.setInputVoltage(MathUtil.clamp(pivotAppliedVolts, -12.0, 12.0));
-    pivotMotorTwoSim.setInputVoltage(MathUtil.clamp(pivotAppliedVolts, -12.0, 12.0));
-    pivotMotorThreeSim.setInputVoltage(MathUtil.clamp(pivotAppliedVolts, -12.0, 12.0));
-    pivotMotorFourSim.setInputVoltage(MathUtil.clamp(pivotAppliedVolts, -12.0, 12.0));
+    pivotMotorOneSim.setInputVoltage(MathUtil.clamp(-pivotAppliedVolts, -12.0, 12.0));
+    pivotMotorTwoSim.setInputVoltage(MathUtil.clamp(-pivotAppliedVolts, -12.0, 12.0));
+    pivotMotorThreeSim.setInputVoltage(MathUtil.clamp(-pivotAppliedVolts, -12.0, 12.0));
+    pivotMotorFourSim.setInputVoltage(MathUtil.clamp(-pivotAppliedVolts, -12.0, 12.0));
     extensionMotorSim.setInputVoltage(MathUtil.clamp(extensionAppliedVolts, -12.0, 12.0));
 
     pivotMotorOneSim.update(LOOP_PERIOD_SECS);
@@ -104,7 +101,8 @@ public class ElevatorIOSim implements ElevatorIO {
     pivotMotorFourSim.update(LOOP_PERIOD_SECS);
     extensionMotorSim.update(LOOP_PERIOD_SECS);
 
-    inputs.pivotAngle = pivotMotorOneSim.getAngularPositionRotations() / Constants.PIVOT_GEAR_RATIO;
+    inputs.pivotAngle =
+        -pivotMotorOneSim.getAngularPositionRotations() / Constants.PIVOT_GEAR_RATIO;
     inputs.extensionHeight =
         extensionMotorSim.getAngularPositionRotations() / Constants.EXTENSION_GEAR_RATIO;
 
@@ -124,7 +122,7 @@ public class ElevatorIOSim implements ElevatorIO {
     extensionClosedLoop = true;
     extensionSetpoint = position.extensionPosition;
     pivotClosedLoop = true;
-    pivotSetpoint = Units.degreesToRotations(position.pivotPosition * -1);
+    pivotSetpoint = Units.degreesToRotations(position.pivotPosition);
 
     lastPosition = position;
   }
