@@ -2,9 +2,7 @@ name: Simulate
 
 on:
   push:
-  pull request: 
-    - opened
-
+  pull request: [opened]
 jobs:
   build:
     name: Simulate
