@@ -2,8 +2,9 @@ name: Simulate
 
 on:
   push:
-  pull_request: [opened]
-  
+  pull_request: 
+    types: [opened]
+
 jobs:
   build:
     name: Simulate
