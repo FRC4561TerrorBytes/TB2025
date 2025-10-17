@@ -16,6 +16,8 @@ package frc.robot;
 import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
 import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
+import java.util.function.BooleanSupplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -227,6 +229,8 @@ public class RobotContainer {
   private final Climber climber;
   private final Wrist wrist;
 
+  private Boolean slowed = false;
+
   // Controller
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
@@ -365,7 +369,8 @@ public class RobotContainer {
             drive,
             () -> -driverController.getLeftY(),
             () -> -driverController.getLeftX(),
-            () -> -driverController.getRightX()));
+            () -> -driverController.getRightX(),
+            () -> (slowed)));
 
     // Default Commands
 
@@ -381,8 +386,20 @@ public class RobotContainer {
     Trigger L3PositionTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3BACK));
 
+    Trigger L3FrontPositionTrigger =
+        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3FRONT));
+
     Trigger L3AlgaeTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3ALGAE));
+    
+    Trigger L2PositionTrigger =
+        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L2BACK));
+
+    Trigger L2FrontPositionTrigger =
+        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L2FRONT));
+
+    Trigger L2AlgaeTrigger =
+        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L2ALGAE));
 
     Trigger groundPositionTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.GROUND));
@@ -417,6 +434,12 @@ public class RobotContainer {
         .and(() -> !DriverStation.isAutonomous())
         .onTrue(
             Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW), elevator, wrist));
+    
+    groundPositionTrigger
+        .or(L3PositionTrigger).or(L3AlgaeTrigger).or(L3FrontPositionTrigger)
+        .or(L2AlgaeTrigger).or(L2FrontPositionTrigger).or(L2PositionTrigger)
+        .onTrue(Commands.runOnce((() -> slowed = true)))
+        .onFalse(Commands.runOnce((() -> slowed = false)));
 
     // Driver Controls
 
