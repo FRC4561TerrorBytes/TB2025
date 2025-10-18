@@ -328,6 +328,7 @@ public class RobotContainer {
     // Set up SysId routines
     autoChooser.addOption(
         "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+    autoChooser.addOption("Bench Test Mode", testroutineCommand());
     /*
     autoChooser.addOption(
         "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
@@ -393,11 +394,12 @@ public class RobotContainer {
                     && DriverStation.getMatchTime() > 0
                     && DriverStation.getMatchTime() <= 2
                     && elevator.getElevatorPosition().equals(ElevatorPosition.CLIMBPREP))
-        .onTrue(Commands.sequence(
-                    Commands.runOnce(() -> climber.setClimberSetpoint(0.18), climber),
-                    Commands.waitUntil(() -> climber.climberAtSetpoint(0.05)),
-                    Commands.runOnce(
-                        () -> setMechanismSetpoint(ElevatorPosition.CLIMBFULL), elevator)));
+        .onTrue(
+            Commands.sequence(
+                Commands.runOnce(() -> climber.setClimberSetpoint(0.18), climber),
+                Commands.waitUntil(() -> climber.climberAtSetpoint(0.05)),
+                Commands.runOnce(
+                    () -> setMechanismSetpoint(ElevatorPosition.CLIMBFULL), elevator)));
 
     new Trigger(
             () ->
@@ -722,5 +724,26 @@ public class RobotContainer {
         () -> {
           driverController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
         });
+  }
+
+  private Command testroutineCommand() {
+    return Commands.sequence(
+        Commands.run(() -> drive.runVelocity(new ChassisSpeeds(2, 0, 0)), drive).withTimeout(5),
+        Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, 2, 0)), drive).withTimeout(5),
+        Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, 0, 2)), drive).withTimeout(5),
+        Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L1), elevator, wrist),
+        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+        Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2FRONT), elevator, wrist),
+        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+        Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3FRONT), elevator, wrist),
+        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+        Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.GROUND), elevator, wrist),
+        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+        intake.intakeCoral().until(() -> intake.coralPresent()),
+        Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW), elevator, wrist),
+        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+        intake.outtakeCoralAuto(drive::getPose),
+        Commands.runOnce(() -> climber.setClimberSetpoint(0.18), climber),
+        Commands.waitUntil(() -> climber.climberAtSetpoint(0.05)));
   }
 }
