@@ -24,6 +24,8 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -74,6 +76,18 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  private Alert wheelAlert = new Alert("Wheel no function move", AlertType.kWarning);
+  private Alert elevatorL1Alert = new Alert("Elevator can't go to L1", AlertType.kWarning);
+  private Alert elevatorL2FRONTAlert = new Alert("Elevator can't go to L2", AlertType.kWarning);
+  private Alert elevatorL3FRONTAlert = new Alert("Elevator can't go to L3", AlertType.kWarning);
+  private Alert elevatorGROUNDAlert =
+      new Alert("Elevator can't go to ground position", AlertType.kWarning);
+  private Alert intakeAlert = new Alert("Intake is not working", AlertType.kWarning);
+  private Alert elevatorSTOWAlert =
+      new Alert("Elevator can't go to stow position", AlertType.kWarning);
+  private Alert outtakeAlert = new Alert("Outtake is not working", AlertType.kWarning);
+  private Alert climberUpAlert = new Alert("Climber can't go up", AlertType.kWarning);
+  private Alert climberDownAlert = new Alert("Climber can't go down", AlertType.kWarning);
 
   public enum ElevatorPosition {
     STOW(0, 20.0, 135),
@@ -731,19 +745,65 @@ public class RobotContainer {
         Commands.run(() -> drive.runVelocity(new ChassisSpeeds(2, 0, 0)), drive).withTimeout(5),
         Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, 2, 0)), drive).withTimeout(5),
         Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, 0, 2)), drive).withTimeout(5),
+        Commands.runOnce(() -> drive.stop())
+            .handleInterrupt(
+                () -> {
+                  wheelAlert.set(true);
+                }),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L1), elevator, wrist),
-        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+        Commands.waitUntil(() -> elevator.mechanismAtSetpoint())
+            .handleInterrupt(
+                () -> {
+                  elevatorL1Alert.set(true);
+                }),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2FRONT), elevator, wrist),
-        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+        Commands.waitUntil(() -> elevator.mechanismAtSetpoint())
+            .handleInterrupt(
+                () -> {
+                  elevatorL2FRONTAlert.set(true);
+                }),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3FRONT), elevator, wrist),
-        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
+        Commands.waitUntil(() -> elevator.mechanismAtSetpoint())
+            .handleInterrupt(
+                () -> {
+                  elevatorL3FRONTAlert.set(true);
+                }),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.GROUND), elevator, wrist),
-        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
-        intake.intakeCoral().until(() -> intake.coralPresent()),
+        Commands.waitUntil(() -> elevator.mechanismAtSetpoint())
+            .handleInterrupt(
+                () -> {
+                  elevatorGROUNDAlert.set(true);
+                }),
+        intake
+            .intakeCoral()
+            .until(() -> intake.coralPresent())
+            .handleInterrupt(
+                () -> {
+                  intakeAlert.set(true);
+                }),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW), elevator, wrist),
-        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
-        intake.outtakeCoralAuto(drive::getPose),
+        Commands.waitUntil(() -> elevator.mechanismAtSetpoint())
+            .handleInterrupt(
+                () -> {
+                  elevatorSTOWAlert.set(true);
+                }),
+        intake
+            .outtakeCoralAuto(drive::getPose)
+            .handleInterrupt(
+                () -> {
+                  outtakeAlert.set(true);
+                }),
         Commands.runOnce(() -> climber.setClimberSetpoint(0.18), climber),
-        Commands.waitUntil(() -> climber.climberAtSetpoint(0.05)));
+        Commands.waitUntil(() -> climber.climberAtSetpoint(0.05))
+            .handleInterrupt(
+                () -> {
+                  climberUpAlert.set(true);
+                }),
+        Commands.runOnce(() -> climber.setClimberSetpoint(0.01)),
+        Commands.waitUntil(() -> climber.climberAtSetpoint(0.05))
+            .handleInterrupt(
+                () -> {
+                  climberDownAlert.set(true);
+                }));
   }
 }
