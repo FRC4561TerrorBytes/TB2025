@@ -721,6 +721,7 @@ public class RobotContainer {
         Commands.run(() -> drive.runVelocity(new ChassisSpeeds(2, 0, 0)), drive).withTimeout(5),
         Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, 2, 0)), drive).withTimeout(5),
         Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, 0, 2)), drive).withTimeout(5),
+        Commands.runOnce(() -> drive.stop()),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L1), elevator, wrist),
         Commands.waitUntil(() -> elevator.mechanismAtSetpoint()),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2FRONT), elevator, wrist),
