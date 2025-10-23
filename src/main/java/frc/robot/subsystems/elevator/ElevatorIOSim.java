@@ -35,8 +35,10 @@ public class ElevatorIOSim implements ElevatorIO {
 
   private boolean pivotClosedLoop = false;
   private boolean extensionClosedLoop = false;
-  private ProfiledPIDController pivotController = new ProfiledPIDController(PIVOT_KP, 0, PIVOT_KD, new Constraints(1, 3));
-  private ProfiledPIDController extensionController = new ProfiledPIDController(EXTENSION_KP, 0, EXTENSION_KD, new Constraints(1.5, 30));
+  private ProfiledPIDController pivotController =
+      new ProfiledPIDController(PIVOT_KP, 0, PIVOT_KD, new Constraints(1, 3));
+  private ProfiledPIDController extensionController =
+      new ProfiledPIDController(EXTENSION_KP, 0, EXTENSION_KD, new Constraints(1.5, 30));
   private double pivotAppliedVolts = 0.0;
   private double extensionAppliedVolts = 0.0;
 
