@@ -55,7 +55,7 @@ public class Intake extends SubsystemBase {
   public Command intakeCoral() {
     return Commands.startEnd(
             () -> {
-              this.setOutput(-1);
+              this.setOutput(1);
               Leds.getInstance().intakeRunning = true;
             },
             () -> {
@@ -68,7 +68,7 @@ public class Intake extends SubsystemBase {
 
   public Command outtakeCoralBack() {
     return Commands.startEnd(
-            () -> this.setOutput(0.75),
+            () -> this.setOutput(-0.75),
             () -> {
               this.setOutput(0);
             },
@@ -78,7 +78,7 @@ public class Intake extends SubsystemBase {
 
   public Command outtakeCoralFront() {
     return Commands.startEnd(
-            () -> this.setOutput(-0.75),
+            () -> this.setOutput(0.75),
             () -> {
               this.setOutput(0);
             },

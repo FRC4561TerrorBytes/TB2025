@@ -557,13 +557,17 @@ public class RobotContainer {
                     Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2BACK), elevator),
                     Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
                 .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger))
-                .finallyDo(() -> setMechanismSetpoint(ElevatorPosition.STOW)).onlyIf(() -> {
-                    Pose2d centerRobot = drive.getPose();
-                    double centerDistance =
-                        centerRobot.getTranslation().getDistance(AllianceFlipUtil.apply(Reef.center));
-  
-                    return centerDistance > 1.6;
-                  }));
+                .finallyDo(() -> setMechanismSetpoint(ElevatorPosition.STOW))
+                .onlyIf(
+                    () -> {
+                      Pose2d centerRobot = drive.getPose();
+                      double centerDistance =
+                          centerRobot
+                              .getTranslation()
+                              .getDistance(AllianceFlipUtil.apply(Reef.center));
+
+                      return centerDistance > 1.6;
+                    }));
 
     driverController
         .a()

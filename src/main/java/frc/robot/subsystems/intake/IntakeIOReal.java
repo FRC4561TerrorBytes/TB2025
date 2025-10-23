@@ -28,6 +28,7 @@ public class IntakeIOReal implements IntakeIO {
   private final StatusSignal<AngularVelocity> IntakeSpeed;
   private final StatusSignal<Voltage> IntakeVoltage;
   private final StatusSignal<Temperature> IntakeTemp;
+  private final StatusSignal<Boolean> CoralPresent;
 
   public IntakeIOReal() {
     var intakeConfig = new TalonFXConfiguration();
@@ -49,9 +50,16 @@ public class IntakeIOReal implements IntakeIO {
     IntakeSpeed = intakeMotor.getVelocity();
     IntakeVoltage = intakeMotor.getMotorVoltage();
     IntakeTemp = intakeMotor.getDeviceTemp();
+    CoralPresent = canRange.getIsDetected();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
-        50.0, IntakeStatorCurrent, IntakeSupplyCurrent, IntakeSpeed, IntakeVoltage, IntakeTemp);
+        50.0,
+        IntakeStatorCurrent,
+        IntakeSupplyCurrent,
+        IntakeSpeed,
+        IntakeVoltage,
+        IntakeTemp,
+        CoralPresent);
 
     ParentDevice.optimizeBusUtilizationForAll(intakeMotor, canRange);
   }
@@ -59,13 +67,18 @@ public class IntakeIOReal implements IntakeIO {
   public void updateInputs(IntakeIOInputs inputs) {
     var IntakeStatus =
         BaseStatusSignal.refreshAll(
-            IntakeStatorCurrent, IntakeSupplyCurrent, IntakeSpeed, IntakeVoltage, IntakeTemp);
+            IntakeStatorCurrent,
+            IntakeSupplyCurrent,
+            IntakeSpeed,
+            IntakeVoltage,
+            IntakeTemp,
+            CoralPresent);
 
     inputs.intakeVelocity = intakeMotor.getVelocity().getValueAsDouble();
     inputs.intakeCurrentAmps = IntakeStatorCurrent.getValueAsDouble();
     inputs.intakeVoltage = intakeMotor.getMotorVoltage().getValueAsDouble();
     inputs.intakeConnected = IntakeStatus.isOK();
-    inputs.coralPresent = canRange.getIsDetected().getValue();
+    inputs.coralPresent = CoralPresent.getValue();
     inputs.canRangeConnected = canRange.isConnected();
   }
 
