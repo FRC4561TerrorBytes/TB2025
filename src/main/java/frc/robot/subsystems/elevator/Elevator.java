@@ -39,28 +39,35 @@ public class Elevator extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Pivot/IO", inputs);
 
-    Logger.recordOutput(
-        "FinalComponentPoses",
-        new Pose3d[] {
-          new Pose3d(
-              0.03 - 0.2782,
-              0,
-              0.37 - 0.095,
-              new Rotation3d(0, Units.rotationsToRadians(inputs.pivotAngle), 0)),
-          new Pose3d(
-              0.03
-                  - 0.2782
-                  + Math.cos(Units.rotationsToRadians(inputs.pivotAngle))
-                      * (inputs.extensionHeight),
-              0,
-              0.37
-                  - 0.095
-                  - Math.sin(Units.rotationsToRadians(inputs.pivotAngle))
-                      * (inputs.extensionHeight),
-              new Rotation3d(0, Units.rotationsToRadians(inputs.pivotAngle), 0))
-        });
-
     SmartDashboard.putString("Auto Lineup/Score Level", selectedElevatorPosition.toString());
+  }
+
+  public Pose3d getPivotPose() {
+    return new Pose3d(
+        0.03 - 0.2782,
+        0,
+        0.37 - 0.095,
+        new Rotation3d(0, Units.rotationsToRadians(-inputs.pivotAngle), 0));
+  }
+
+  public Pose3d getExtensionPose() {
+    return new Pose3d(
+        0.03
+            - 0.2782
+            + Math.cos(Units.rotationsToRadians(-inputs.pivotAngle)) * (inputs.extensionHeight),
+        0,
+        0.37
+            - 0.095
+            - Math.sin(Units.rotationsToRadians(-inputs.pivotAngle)) * (inputs.extensionHeight),
+        new Rotation3d(0, Units.rotationsToRadians(-inputs.pivotAngle), 0));
+  }
+
+  public double getPivotPosition() {
+    return inputs.pivotAngle;
+  }
+
+  public double getExtensionPosition() {
+    return inputs.extensionHeight;
   }
 
   public void setSetpoint(ElevatorPosition position) {
