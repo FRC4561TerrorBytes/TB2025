@@ -12,15 +12,7 @@ import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.UpdateModeValue;
-import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
@@ -29,8 +21,7 @@ import frc.robot.Constants;
 
 public class IntakeIOReal implements IntakeIO {
 
-
-      private TalonFX intakeMotor = new TalonFX(Constants.INTAKE_MOTOR_ID);
+  private TalonFX intakeMotor = new TalonFX(Constants.INTAKE_MOTOR_ID);
   private final CANrange canRange = new CANrange(Constants.CANRANGE_ID);
   private final StatusSignal<Current> IntakeStatorCurrent;
   private final StatusSignal<Current> IntakeSupplyCurrent;
@@ -46,7 +37,6 @@ public class IntakeIOReal implements IntakeIO {
     intakeConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     intakeConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     tryUntilOk(5, () -> intakeMotor.getConfigurator().apply(intakeConfig, 0.25));
-    
 
     CANrangeConfiguration config = new CANrangeConfiguration();
     config.ProximityParams.MinSignalStrengthForValidMeasurement = 2000;
@@ -60,27 +50,16 @@ public class IntakeIOReal implements IntakeIO {
     IntakeVoltage = intakeMotor.getMotorVoltage();
     IntakeTemp = intakeMotor.getDeviceTemp();
 
-        BaseStatusSignal.setUpdateFrequencyForAll(
-        50.0,
-        IntakeStatorCurrent,
-        IntakeSupplyCurrent,
-        IntakeSpeed,
-        IntakeVoltage,
-        IntakeTemp);
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50.0, IntakeStatorCurrent, IntakeSupplyCurrent, IntakeSpeed, IntakeVoltage, IntakeTemp);
 
     ParentDevice.optimizeBusUtilizationForAll(intakeMotor, canRange);
-
-  
   }
 
   public void updateInputs(IntakeIOInputs inputs) {
     var IntakeStatus =
         BaseStatusSignal.refreshAll(
-            IntakeStatorCurrent,
-            IntakeSupplyCurrent,
-            IntakeSpeed,
-            IntakeVoltage,
-            IntakeTemp);
+            IntakeStatorCurrent, IntakeSupplyCurrent, IntakeSpeed, IntakeVoltage, IntakeTemp);
 
     inputs.intakeVelocity = intakeMotor.getVelocity().getValueAsDouble();
     inputs.intakeCurrentAmps = IntakeStatorCurrent.getValueAsDouble();

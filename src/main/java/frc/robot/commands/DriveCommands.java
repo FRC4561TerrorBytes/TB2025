@@ -49,6 +49,8 @@ public class DriveCommands {
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
 
+  private static final boolean slowRobot = true;
+
   private DriveCommands() {}
 
   private static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
@@ -80,18 +82,16 @@ public class DriveCommands {
       BooleanSupplier slowedSupplier) {
     return Commands.run(
         () -> {
-
           double x = xSupplier.getAsDouble();
           double y = ySupplier.getAsDouble();
 
-          if(slowedSupplier.getAsBoolean() == true){
+          if (slowedSupplier.getAsBoolean() == true && slowRobot) {
             x /= 2;
             y /= 2;
           }
 
           // Get linear velocity
-          Translation2d linearVelocity =
-              getLinearVelocityFromJoysticks(x, y);
+          Translation2d linearVelocity = getLinearVelocityFromJoysticks(x, y);
 
           // Apply rotation deadband
           double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);

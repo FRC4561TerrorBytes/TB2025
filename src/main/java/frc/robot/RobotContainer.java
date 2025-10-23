@@ -16,8 +16,6 @@ package frc.robot;
 import static frc.robot.subsystems.vision.VisionConstants.camera0Name;
 import static frc.robot.subsystems.vision.VisionConstants.camera1Name;
 
-import java.util.function.BooleanSupplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -230,13 +228,12 @@ public class RobotContainer {
   private final Wrist wrist;
 
   private Boolean slowed = false;
+  private Boolean farEnoughAwayFromReefToMoveArm = true;
 
   // Controller
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
   private final CommandXboxController reefSelector = new CommandXboxController(2);
-
-  private final CommandXboxController TESTING = new CommandXboxController(3);
 
   // Manual elevator toggle (incase things go wrong)
   boolean manualElevatorToggle = false;
@@ -391,7 +388,7 @@ public class RobotContainer {
 
     Trigger L3AlgaeTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3ALGAE));
-    
+
     Trigger L2PositionTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L2BACK));
 
@@ -429,15 +426,31 @@ public class RobotContainer {
                 .finallyDo(() -> leds.endgameAlert = false)
                 .withName("Controller Endgame Al3rt"));
 
+    Trigger farEnoughMoveArm =
+        new Trigger(
+                () -> {
+                  Pose2d centerRobot = drive.getPose();
+                  double centerDistance =
+                      centerRobot.getTranslation().getDistance(AllianceFlipUtil.apply(Reef.center));
+
+                  return centerDistance > 1.6;
+                })
+            .onTrue(Commands.runOnce(() -> farEnoughAwayFromReefToMoveArm = true))
+            .onFalse(Commands.runOnce(() -> farEnoughAwayFromReefToMoveArm = false));
+
     groundPositionTrigger
         .and(coralIntakeTrigger)
         .and(() -> !DriverStation.isAutonomous())
         .onTrue(
             Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW), elevator, wrist));
-    
+
     groundPositionTrigger
-        .or(L3PositionTrigger).or(L3AlgaeTrigger).or(L3FrontPositionTrigger)
-        .or(L2AlgaeTrigger).or(L2FrontPositionTrigger).or(L2PositionTrigger)
+        .or(L3PositionTrigger)
+        .or(L3AlgaeTrigger)
+        .or(L3FrontPositionTrigger)
+        .or(L2AlgaeTrigger)
+        .or(L2FrontPositionTrigger)
+        .or(L2PositionTrigger)
         .onTrue(Commands.runOnce((() -> slowed = true)))
         .onFalse(Commands.runOnce((() -> slowed = false)));
 
@@ -493,12 +506,14 @@ public class RobotContainer {
                               .getDistance(AllianceFlipUtil.apply(Reef.center));
 
                       // SCORE OUT BACK
-                      if (centerDistance <= backDistance) {
-                        setMechanismSetpoint(ElevatorPosition.L2FRONT);
-                      }
-                      // SCORE OUT FRONT
-                      else {
-                        setMechanismSetpoint(ElevatorPosition.L2BACK);
+                      if (centerDistance > 1.6) {
+                        if (centerDistance <= backDistance) {
+                          setMechanismSetpoint(ElevatorPosition.L2FRONT);
+                        }
+                        // SCORE OUT FRONT
+                        else {
+                          setMechanismSetpoint(ElevatorPosition.L2BACK);
+                        }
                       }
                     })));
 
@@ -542,7 +557,13 @@ public class RobotContainer {
                     Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2BACK), elevator),
                     Commands.waitUntil(() -> elevator.mechanismAtSetpoint()))
                 .onlyIf(L3PositionTrigger.or(L3AlgaeTrigger))
-                .finallyDo(() -> setMechanismSetpoint(ElevatorPosition.STOW)));
+                .finallyDo(() -> setMechanismSetpoint(ElevatorPosition.STOW)).onlyIf(() -> {
+                    Pose2d centerRobot = drive.getPose();
+                    double centerDistance =
+                        centerRobot.getTranslation().getDistance(AllianceFlipUtil.apply(Reef.center));
+  
+                    return centerDistance > 1.6;
+                  }));
 
     driverController
         .a()
@@ -574,12 +595,14 @@ public class RobotContainer {
                               .getDistance(AllianceFlipUtil.apply(Reef.center));
 
                       // SCORE OUT BACK
-                      if (centerDistance <= backDistance) {
-                        setMechanismSetpoint(ElevatorPosition.L3FRONT);
-                      }
-                      // SCORE OUT FRONT
-                      else {
-                        setMechanismSetpoint(ElevatorPosition.L3BACK);
+                      if (centerDistance > 1.6) {
+                        if (centerDistance <= backDistance) {
+                          setMechanismSetpoint(ElevatorPosition.L3FRONT);
+                        }
+                        // SCORE OUT FRONT
+                        else {
+                          setMechanismSetpoint(ElevatorPosition.L3BACK);
+                        }
                       }
                     })));
 
