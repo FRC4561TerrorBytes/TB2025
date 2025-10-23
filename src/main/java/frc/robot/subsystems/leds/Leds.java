@@ -29,6 +29,7 @@ public class Leds extends VirtualSubsystem {
   public boolean autoScoring = false;
   public boolean manualElevator = false;
   public boolean intakeRunning = false;
+  public boolean autoBenchtestFailed = false;
   public boolean coralPresent = false;
   public boolean algaeRunning = false;
   public boolean visionDisconnected = false;
@@ -193,6 +194,15 @@ public class Leds extends VirtualSubsystem {
         strobe(bottomThreeQuartSection, Color.kBlack, Color.kSeaGreen, strobeDuration);
       }
 
+      // Benchtest failed
+      if (autoBenchtestFailed){
+        solid(fullSection, Color.kOrangeRed);
+      }
+      
+      // Benchtest working
+      if(!autoBenchtestFailed){
+        solid(fullSection, Color.kDarkBlue);
+      }
       // Auto scoring
       if (autoScoring) {
         rainbow(bottomThreeQuartSection, rainbowCycleLength, rainbowDuration);

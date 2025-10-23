@@ -749,8 +749,10 @@ public class RobotContainer {
             .handleInterrupt(
                 () -> {
                   wheelAlert.set(true);
+                  Leds.getInstance().autoBenchtestFailed = true;
                 }),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L1), elevator, wrist),
+
         Commands.waitUntil(() -> elevator.mechanismAtSetpoint())
             .handleInterrupt(
                 () -> {
