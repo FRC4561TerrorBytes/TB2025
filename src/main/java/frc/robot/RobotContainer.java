@@ -64,8 +64,10 @@ import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.wrist.Wrist;
 import frc.robot.subsystems.wrist.WristIO;
 import frc.robot.subsystems.wrist.WristIOReal;
+import frc.robot.subsystems.wrist.WristIOSim;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.FieldConstants.Reef;
+import frc.robot.util.RobotVisualizer;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -290,7 +292,7 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOSim());
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         climber = new Climber(new ClimberIO() {});
-        wrist = new Wrist(new WristIO() {});
+        wrist = new Wrist(new WristIOSim());
         break;
 
       default:
@@ -365,6 +367,8 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
+    RobotVisualizer.initialize(elevator, wrist);
   }
 
   /**
