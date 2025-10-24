@@ -179,6 +179,16 @@ public class Leds extends VirtualSubsystem {
       solid(topSection, hexColor);
       solid(bottomSection, secondaryHexColor);
 
+       // Benchtest failed
+       if (autoBenchtestFailed){
+        solid(fullSection, Color.kOrangeRed);
+      }
+      
+      // Benchtest working
+      if(!autoBenchtestFailed){
+        solid(fullSection, Color.kDarkBlue);
+      }
+      
       // Intake running
       if (intakeRunning) {
         strobe(bottomThreeQuartSection, Color.kBlack, Color.kBlue, strobeDuration);
@@ -194,15 +204,6 @@ public class Leds extends VirtualSubsystem {
         strobe(bottomThreeQuartSection, Color.kBlack, Color.kSeaGreen, strobeDuration);
       }
 
-      // Benchtest failed
-      if (autoBenchtestFailed){
-        solid(fullSection, Color.kOrangeRed);
-      }
-      
-      // Benchtest working
-      if(!autoBenchtestFailed){
-        solid(fullSection, Color.kDarkBlue);
-      }
       // Auto scoring
       if (autoScoring) {
         rainbow(bottomThreeQuartSection, rainbowCycleLength, rainbowDuration);
