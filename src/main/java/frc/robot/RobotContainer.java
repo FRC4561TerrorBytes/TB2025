@@ -86,7 +86,7 @@ public class RobotContainer {
     L3FRONT(0.41, 60, 95),
     L3BACK(0.37, 87.0, 135),
     L3ALGAE(0.4, 87.0, 90),
-    GROUND(0.1, 0.0, 0.0);
+    GROUND(0.1, 1.3, -3);
 
     public double extensionPosition;
     public double pivotPosition;
