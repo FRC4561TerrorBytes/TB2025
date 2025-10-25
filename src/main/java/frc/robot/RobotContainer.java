@@ -380,6 +380,9 @@ public class RobotContainer {
 
     coralIntakeTrigger.onFalse(Commands.runOnce(() -> Leds.getInstance().coralPresent = false));
 
+    Trigger L1PositionTrigger =
+        new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L1));
+
     Trigger L3PositionTrigger =
         new Trigger(() -> elevator.getElevatorPosition().equals(ElevatorPosition.L3BACK));
 
@@ -479,9 +482,12 @@ public class RobotContainer {
                 .finallyDo(() -> setMechanismSetpoint(ElevatorPosition.GROUND)))
         .toggleOnTrue(intake.intakeCoral().until(() -> intake.coralPresent()));
 
-    // Outtake coral while RT is held
-    // driverController.rightTrigger().whileTrue(intake.outtakeCoralBack());
-    driverController.rightTrigger().whileTrue(new AutoOuttakeDirection(intake, drive::getPose));
+    // Outtake coral while RT is held, separate logic for L1
+    driverController
+        .rightTrigger()
+        .and(L1PositionTrigger.negate())
+        .whileTrue(new AutoOuttakeDirection(intake, drive::getPose));
+    driverController.rightTrigger().and(L1PositionTrigger).whileTrue(intake.outtakeCoralBack());
 
     // Run lineup sequence when B is held
     driverController
