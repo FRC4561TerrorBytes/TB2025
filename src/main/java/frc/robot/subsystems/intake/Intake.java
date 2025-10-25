@@ -85,9 +85,5 @@ public class Intake extends SubsystemBase {
             this)
         .withName("OuttakeFront");
   }
-
   
-  public Command outtakeL1Coral() {
-    return new RunCommand(() -> this.setOutput(-0.75), this);
-  }
 }

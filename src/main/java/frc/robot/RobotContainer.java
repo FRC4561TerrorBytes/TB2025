@@ -76,7 +76,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
 
   public enum ElevatorPosition {
-    STOW(0, 20.0, 135),
+    STOW(0, 45.0, 135),
     CLIMBPREP(0.0, 50.0, 0),
     CLIMBFULL(0.11, 5, 100),
     L1(0.1, 30.0, 0.0),
