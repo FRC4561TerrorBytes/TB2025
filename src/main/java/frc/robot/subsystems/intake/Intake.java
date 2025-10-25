@@ -86,35 +86,7 @@ public class Intake extends SubsystemBase {
         .withName("OuttakeFront");
   }
 
-  public Command outtakeCoralAuto(Supplier<Pose2d> pose) {
-    return new InstantCommand(
-        () -> {
-          Pose2d centerRobot = pose.get();
-          Logger.recordOutput("AutoOuttakePose", pose.get());
-          Transform2d forwardOffset =
-              new Transform2d(new Translation2d(-0.38, 0.0), new Rotation2d());
-          Pose2d frontRobot = centerRobot.transformBy(forwardOffset);
-
-          double centerDistance =
-              centerRobot.getTranslation().getDistance(AllianceFlipUtil.apply(Reef.center));
-          double frontDistance =
-              frontRobot.getTranslation().getDistance(AllianceFlipUtil.apply(Reef.center));
-          Logger.recordOutput("Front Distance To Reef", frontDistance);
-          Logger.recordOutput("Center Distance To Reef", centerDistance);
-
-          if (centerDistance < frontDistance) {
-            Logger.recordOutput("Outtake Direction", "BACK");
-            outtakeCoralBack().schedule();
-          } else if (frontDistance < centerDistance) {
-            Logger.recordOutput("Outtake Direction", "FRONT");
-            outtakeCoralFront().schedule();
-          } else {
-            Logger.recordOutput("Outtake Direction", "BACK");
-            outtakeCoralBack().schedule();
-          }
-        });
-  }
-
+  
   public Command outtakeL1Coral() {
     return new RunCommand(() -> this.setOutput(-0.75), this);
   }
