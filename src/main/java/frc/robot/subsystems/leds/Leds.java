@@ -173,21 +173,15 @@ public class Leds extends VirtualSubsystem {
             waveDisabledDuration);
       }
 
+    //Failed bench test
+    } else if (autoBenchtestFailed && DriverStation.isAutonomous()) {
+      solid(fullSection, Color.kOrangeRed);
+
     } else if (DriverStation.isAutonomous()) {
       wave(fullSection, Color.kGreen, Color.kPurple, waveFastCycleLength, waveFastDuration);
     } else {
       solid(topSection, hexColor);
       solid(bottomSection, secondaryHexColor);
-
-       // Benchtest failed
-       if (autoBenchtestFailed){
-        solid(fullSection, Color.kOrangeRed);
-      }
-      
-      // Benchtest working
-      if(!autoBenchtestFailed){
-        solid(fullSection, Color.kDarkBlue);
-      }
       
       // Intake running
       if (intakeRunning) {

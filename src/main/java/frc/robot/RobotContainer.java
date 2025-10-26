@@ -745,96 +745,66 @@ public class RobotContainer {
         Commands.run(() -> drive.runVelocity(new ChassisSpeeds(2, 0, 0)), drive).withTimeout(5),
         Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, 2, 0)), drive).withTimeout(5),
         Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, 0, 2)), drive).withTimeout(5),
-        Commands.runOnce(() -> drive.stop())
-            .handleInterrupt(
+        Commands.runOnce(() -> drive.stop()),
+        Commands.runOnce(
                 () -> {
                   wheelAlert.set(true);
                   Leds.getInstance().autoBenchtestFailed = true;
-                  Commands.waitSeconds(3);
-                  Leds.getInstance().autoBenchtestFailed = false;
-                }),
+                })
+            .onlyIf(() -> drive.getPose().equals(new Pose2d())),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L1), elevator, wrist),
-
-        Commands.waitUntil(() -> elevator.mechanismAtSetpoint())
-            .handleInterrupt(
+        Commands.waitUntil(() -> mechanismAtSetpoint()).withTimeout(5.0),
+        Commands.runOnce(
                 () -> {
                   elevatorL1Alert.set(true);
                   Leds.getInstance().autoBenchtestFailed = true;
-                  Commands.waitSeconds(3);
-                  Leds.getInstance().autoBenchtestFailed = false;
-                }),
+                })
+            .onlyIf(() -> !mechanismAtSetpoint()),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2FRONT), elevator, wrist),
-        Commands.waitUntil(() -> elevator.mechanismAtSetpoint())
-            .handleInterrupt(
+        Commands.waitUntil(() -> mechanismAtSetpoint()).withTimeout(5.0),
+        Commands.runOnce(
                 () -> {
                   elevatorL2FRONTAlert.set(true);
                   Leds.getInstance().autoBenchtestFailed = true;
-                  Commands.waitSeconds(3);
-                  Leds.getInstance().autoBenchtestFailed = false;
-                }),
+                })
+            .onlyIf(() -> !mechanismAtSetpoint()),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3FRONT), elevator, wrist),
-        Commands.waitUntil(() -> elevator.mechanismAtSetpoint())
-            .handleInterrupt(
+        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()).withTimeout(5.0),
+        Commands.runOnce(
                 () -> {
                   elevatorL3FRONTAlert.set(true);
                   Leds.getInstance().autoBenchtestFailed = true;
-                  Commands.waitSeconds(3);
-                  Leds.getInstance().autoBenchtestFailed = false;
-                }),
+                })
+            .onlyIf(() -> !mechanismAtSetpoint()),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.GROUND), elevator, wrist),
-        Commands.waitUntil(() -> elevator.mechanismAtSetpoint())
-            .handleInterrupt(
-                () -> {
-                  elevatorGROUNDAlert.set(true);
-                  Leds.getInstance().autoBenchtestFailed = true;
-                  Commands.waitSeconds(3);
-                  Leds.getInstance().autoBenchtestFailed = false;
-                }),
-        intake
-            .intakeCoral()
-            .until(() -> intake.coralPresent())
-            .handleInterrupt(
-                () -> {
-                  intakeAlert.set(true);
-                  Leds.getInstance().autoBenchtestFailed = true;
-                  Commands.waitSeconds(3);
-                  Leds.getInstance().autoBenchtestFailed = false;
-                }),
+        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()).withTimeout(5.0),
+        Commands.runOnce(
+            () -> {
+              elevatorGROUNDAlert.set(true);
+              Leds.getInstance().autoBenchtestFailed = true;
+            }).onlyIf(() -> !mechanismAtSetpoint()),
+        intake.intakeCoral().until(() -> intake.coralPresent()),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW), elevator, wrist),
-        Commands.waitUntil(() -> elevator.mechanismAtSetpoint())
-            .handleInterrupt(
-                () -> {
-                  elevatorSTOWAlert.set(true);
-                  Leds.getInstance().autoBenchtestFailed = true;
-                  Commands.waitSeconds(3);
-                  Leds.getInstance().autoBenchtestFailed = false;
-                }),
-        intake
-            .outtakeCoralAuto(drive::getPose)
-            .handleInterrupt(
-                () -> {
-                  outtakeAlert.set(true);
-                  Leds.getInstance().autoBenchtestFailed = true;
-                  Commands.waitSeconds(3);
-                  Leds.getInstance().autoBenchtestFailed = false;
-                }),
+        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()).withTimeout(5.0),
+        Commands.runOnce(
+            () -> {
+              elevatorSTOWAlert.set(true);
+              Leds.getInstance().autoBenchtestFailed = true;
+            }).onlyIf(() -> !mechanismAtSetpoint()),
+        intake.outtakeCoralAuto(drive::getPose),
         Commands.runOnce(() -> climber.setClimberSetpoint(0.18), climber),
-        Commands.waitUntil(() -> climber.climberAtSetpoint(0.05))
-            .handleInterrupt(
-                () -> {
-                  climberUpAlert.set(true);
-                  Leds.getInstance().autoBenchtestFailed = true;
-                  Commands.waitSeconds(3);
-                  Leds.getInstance().autoBenchtestFailed = false;
-                }),
+        Commands.waitUntil(() -> climber.climberAtSetpoint(0.05)).withTimeout(5.0),
+        Commands.runOnce(
+            () -> {
+              climberUpAlert.set(true);
+              Leds.getInstance().autoBenchtestFailed = true;
+            }).onlyIf(() -> !climber.climberAtSetpoint(0.005)),
         Commands.runOnce(() -> climber.setClimberSetpoint(0.01)),
-        Commands.waitUntil(() -> climber.climberAtSetpoint(0.05))
-            .handleInterrupt(
-                () -> {
-                  climberDownAlert.set(true);
-                  Leds.getInstance().autoBenchtestFailed = true;
-                  Commands.waitSeconds(3);
-                  Leds.getInstance().autoBenchtestFailed = false;
-                }));
+        Commands.waitUntil(() -> climber.climberAtSetpoint(0.05)).withTimeout(5.0),
+        Commands.runOnce(
+            () -> {
+              climberUpAlert.set(true);
+              Leds.getInstance().autoBenchtestFailed = true;
+            }).onlyIf(() -> !climber.climberAtSetpoint(0.005)));
   }
 }
