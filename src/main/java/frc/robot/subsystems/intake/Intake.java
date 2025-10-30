@@ -1,21 +1,12 @@
 package frc.robot.subsystems.intake;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.leds.Leds;
-import frc.robot.util.AllianceFlipUtil;
-import frc.robot.util.FieldConstants.Reef;
-import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -55,7 +46,7 @@ public class Intake extends SubsystemBase {
   public Command intakeCoral() {
     return Commands.startEnd(
             () -> {
-              this.setOutput(-1);
+              this.setOutput(1);
               Leds.getInstance().intakeRunning = true;
             },
             () -> {
@@ -68,7 +59,7 @@ public class Intake extends SubsystemBase {
 
   public Command outtakeCoralBack() {
     return Commands.startEnd(
-            () -> this.setOutput(0.75),
+            () -> this.setOutput(-0.75),
             () -> {
               this.setOutput(0);
             },
@@ -78,44 +69,11 @@ public class Intake extends SubsystemBase {
 
   public Command outtakeCoralFront() {
     return Commands.startEnd(
-            () -> this.setOutput(-0.75),
+            () -> this.setOutput(0.75),
             () -> {
               this.setOutput(0);
             },
             this)
         .withName("OuttakeFront");
-  }
-
-  public Command outtakeCoralAuto(Supplier<Pose2d> pose) {
-    return new InstantCommand(
-        () -> {
-          Pose2d centerRobot = pose.get();
-          Logger.recordOutput("AutoOuttakePose", pose.get());
-          Transform2d forwardOffset =
-              new Transform2d(new Translation2d(-0.38, 0.0), new Rotation2d());
-          Pose2d frontRobot = centerRobot.transformBy(forwardOffset);
-
-          double centerDistance =
-              centerRobot.getTranslation().getDistance(AllianceFlipUtil.apply(Reef.center));
-          double frontDistance =
-              frontRobot.getTranslation().getDistance(AllianceFlipUtil.apply(Reef.center));
-          Logger.recordOutput("Front Distance To Reef", frontDistance);
-          Logger.recordOutput("Center Distance To Reef", centerDistance);
-
-          if (centerDistance < frontDistance) {
-            Logger.recordOutput("Outtake Direction", "BACK");
-            outtakeCoralBack().schedule();
-          } else if (frontDistance < centerDistance) {
-            Logger.recordOutput("Outtake Direction", "FRONT");
-            outtakeCoralFront().schedule();
-          } else {
-            Logger.recordOutput("Outtake Direction", "BACK");
-            outtakeCoralBack().schedule();
-          }
-        });
-  }
-
-  public Command outtakeL1Coral() {
-    return new RunCommand(() -> this.setOutput(-0.75), this);
   }
 }
