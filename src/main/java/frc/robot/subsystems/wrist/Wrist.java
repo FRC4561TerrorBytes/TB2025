@@ -1,5 +1,8 @@
 package frc.robot.subsystems.wrist;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,6 +24,22 @@ public class Wrist extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Wrist/Io", inputs);
     WristDisconnectedAlert.set(!inputs.wristMotorConnected);
+  }
+
+  public Pose3d getWristPose(double pivotAngle, double extensionHeight) {
+    double extensionLength = 0.685;
+    double offsetDown = 0.043;
+    return new Pose3d(
+        0.03
+            - 0.2782
+            + Math.cos(Units.rotationsToRadians(-pivotAngle)) * (extensionHeight + extensionLength)
+            - Math.sin(Units.rotationsToRadians(-pivotAngle)) * offsetDown,
+        0,
+        0.37
+            - 0.095
+            - Math.sin(Units.rotationsToRadians(-pivotAngle)) * (extensionHeight + extensionLength)
+            - Math.cos(Units.rotationsToRadians(-pivotAngle)) * offsetDown,
+        new Rotation3d(0, Units.rotationsToRadians(-pivotAngle - inputs.wristAngle), 0));
   }
 
   public void setOutput(double speed) {
