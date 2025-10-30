@@ -81,10 +81,10 @@ public class RobotContainer {
     CLIMBFULL(0.11, 5, 100),
     L1(0.1, 30.0, 0.0),
     L2FRONT(0.07, 47.5, 100.0),
-    L2BACK(0.0, 87.0, 135),
+    L2BACK(0.0, 88.0, 135),
     L2ALGAE(0.1, 45.0, 0.0),
     L3FRONT(0.41, 60, 95),
-    L3BACK(0.37, 87.0, 135),
+    L3BACK(0.37, 87.0, 130),
     L3ALGAE(0.4, 57.0, -10.0),
     GROUND(0.1, 1.3, -3);
 
