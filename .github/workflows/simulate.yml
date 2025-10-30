@@ -2,7 +2,8 @@ name: Simulate
 
 on:
   push:
-  pull_request:
+  pull_request: 
+    types: [opened]
 
 jobs:
   build:
@@ -13,11 +14,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
         # Declares the repository safe and not under dubious ownership.
       - name: Add repository to git safe directories
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
       - name: Grant execute permission
         run: chmod +x gradlew
+
       # Runs simulate Java and also grabs the current PID. If the PID is still running after 60 seconds, pass
       - name: Simulate robot code
         run: |
