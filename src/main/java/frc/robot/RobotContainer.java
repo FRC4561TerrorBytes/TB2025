@@ -368,8 +368,8 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -driverController.getLeftY(),
-            () -> -driverController.getLeftX(),
+            () -> driverController.getLeftY(),
+            () -> driverController.getLeftX(),
             () -> -driverController.getRightX(),
             () -> (slowed)));
 
@@ -451,6 +451,12 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW), elevator, wrist));
 
+    Trigger climbTrigger =
+        new Trigger(
+            () ->
+                elevator.getElevatorPosition().equals(ElevatorPosition.CLIMBPREP)
+                    || elevator.getElevatorPosition().equals(ElevatorPosition.CLIMBFULL));
+
     groundPositionTrigger
         .or(L3PositionTrigger)
         .or(L3AlgaeTrigger)
@@ -458,6 +464,7 @@ public class RobotContainer {
         .or(L2AlgaeTrigger)
         .or(L2FrontPositionTrigger)
         .or(L2PositionTrigger)
+        .or(climbTrigger)
         .onTrue(Commands.runOnce((() -> slowed = true)))
         .onFalse(Commands.runOnce((() -> slowed = false)));
 
