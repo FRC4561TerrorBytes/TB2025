@@ -17,6 +17,9 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import com.pathplanner.lib.commands.FollowPathCommand;
+import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.cscore.MjpegServer;
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.RobotVisualizer;
 import frc.robot.util.VirtualSubsystem;
+import frc.robot.util.VisionRecorder;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -40,6 +44,14 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
+
+  private VideoSource limelightCamera1;
+  private VideoSource limelightCamera2;
+  private VisionRecorder visionRecorder1;
+  private VisionRecorder visionRecorder2;
+
+  private Thread visionRecordingThread;
+  private volatile boolean visionRecordingActive = false;
 
   public Robot() {
     PortForwarder.add(5801, "limelight.local", 5801);
@@ -112,6 +124,21 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotInit() {
     FollowPathCommand.warmupCommand().schedule();
+
+    // Start an MJPEG stream using the camera feeds on the limelights
+    limelightCamera1 = new HttpCamera("limelight1", "http://limelight.local:5801/stream.mjpg");
+    limelightCamera2 = new HttpCamera("limelight2", "http://limelight.local.5802/stream.mjpg");
+
+    // OPTIONAL
+    // Restreams out the limelight feed on port 1182 and 1183
+    MjpegServer server1 = new MjpegServer("serve_ll1", 1182);
+    MjpegServer server2 = new MjpegServer("serve_ll2", 1183);
+    server1.setSource(limelightCamera1);
+    server2.setSource(limelightCamera2);
+
+    // adding the camera feeds to the vision recorder
+    visionRecorder1 = new VisionRecorder(limelightCamera1, 5);
+    visionRecorder2 = new VisionRecorder(limelightCamera2, 5);
   }
 
   /** This function is called periodically during all modes. */
@@ -137,7 +164,19 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    // set the active variable to false which terminates the thread
+    visionRecordingActive = false;
+
+    if (visionRecordingThread != null) {
+      try {
+        // waiting for the thread to shutdown after setting it to inactive
+        visionRecordingThread.join();
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
+    }
+  }
 
   /** This function is called periodically when disabled. */
   @Override
@@ -152,6 +191,29 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
+
+    // start the vision recording
+    visionRecordingActive = true;
+    // creating a new thread so the command schduler is ideally not affected by this running
+    visionRecordingThread =
+        new Thread(
+            () -> {
+              while (visionRecordingActive) {
+                visionRecorder1.update();
+                visionRecorder2.update();
+                try {
+                  // stopping thread for 10 milliseconds so it does not run as fast as it possibly
+                  // can
+                  Thread.sleep(10);
+                } catch (InterruptedException e) {
+                  Thread.currentThread().interrupt();
+                }
+              }
+              visionRecorder1.close();
+              visionRecorder2.close();
+            });
+    // start running the recording thread
+    visionRecordingThread.start();
   }
 
   /** This function is called periodically during autonomous. */
