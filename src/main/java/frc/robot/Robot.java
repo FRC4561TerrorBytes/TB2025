@@ -230,6 +230,29 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
+    if (visionRecordingThread == null) {
+      visionRecordingActive = true;
+      visionRecordingThread =
+          new Thread(
+              () -> {
+                while (visionRecordingActive) {
+                  visionRecorder1.update();
+                  visionRecorder2.update();
+                  try {
+                    // stopping thread for 10 milliseconds so it does not run as fast as it possibly
+                    // can
+                    Thread.sleep(10);
+                  } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                  }
+                }
+                visionRecorder1.close();
+                visionRecorder2.close();
+              });
+      // start running the recording thread
+      visionRecordingThread.start();
+    }
   }
 
   /** This function is called periodically during operator control. */
