@@ -20,7 +20,6 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.VideoSource;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Threads;
@@ -130,8 +129,8 @@ public class Robot extends LoggedRobot {
     FollowPathCommand.warmupCommand().schedule();
 
     // Start an MJPEG stream using the camera feeds on the limelights
-    limelightCamera1 = new HttpCamera("limelight1", "http://limelight.local:5801/stream.mjpg");
-    limelightCamera2 = new HttpCamera("limelight2", "http://limelight.local.5802/stream.mjpg");
+    limelightCamera1 = new HttpCamera("limelight1", "http://10.45.61:20:5801/stream.mjpg"); //FRONT LEFT (IDK IF THIS IP IS RIGHT)
+    limelightCamera2 = new HttpCamera("limelight2", "http://10.45.61.19:5802/stream.mjpg"); //BACK RIGHT (THIS HAS THE RIGHT IP)
 
     // OPTIONAL
     // Restreams out the limelight feed on port 1182 and 1183
@@ -169,8 +168,8 @@ public class Robot extends LoggedRobot {
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {
-    //if we are in a match then dont stop recording in the 2 second period where disabled
-    if(DriverStation.getMatchNumber() > 0){
+    // if we are in a match then dont stop recording in the 2 second period where disabled
+    if (DriverStation.getMatchNumber() > 0) {
       if (visionRecordingThread != null && !lastEnabledAuto) {
         try {
           // waiting for the thread to shutdown after setting it to inactive
@@ -185,15 +184,15 @@ public class Robot extends LoggedRobot {
         }
       }
     }
-    //if we are just practicing then stop the recording
-    else{
+    // if we are just practicing then stop the recording
+    else {
       if (visionRecordingThread != null) {
         try {
           // waiting for the thread to shutdown after setting it to inactive
           visionRecordingActive = false;
 
           visionRecordingThread.join();
-          
+
           visionRecorder1.close();
           visionRecorder2.close();
         } catch (InterruptedException e) {
@@ -201,7 +200,6 @@ public class Robot extends LoggedRobot {
         }
       }
     }
-    
   }
 
   /** This function is called periodically when disabled. */
