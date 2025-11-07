@@ -59,7 +59,7 @@ public class Intake extends SubsystemBase {
 
   public Command outtakeCoralBack() {
     return Commands.startEnd(
-            () -> this.setOutput(-0.75),
+            () -> this.setOutput(-0.25),
             () -> {
               this.setOutput(0);
             },
@@ -69,7 +69,7 @@ public class Intake extends SubsystemBase {
 
   public Command outtakeCoralFront() {
     return Commands.startEnd(
-            () -> this.setOutput(0.75),
+            () -> this.setOutput(0.25),
             () -> {
               this.setOutput(0);
             },
