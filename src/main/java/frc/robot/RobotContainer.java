@@ -385,8 +385,8 @@ public class RobotContainer {
             drive,
             () -> -driverController.getLeftY(),
             () -> -driverController.getLeftX(),
-            () -> -driverController.getRightX(),
-            () -> (slowed)));
+            () -> -driverController.getRightX()
+            ));
 
     // Default Commands
 
@@ -712,7 +712,7 @@ public class RobotContainer {
 
     operatorController
         .rightTrigger()
-        .whileTrue(Commands.run(() -> intake.setOutput(-1)))
+        .whileTrue(Commands.run(() -> intake.setOutput(-.25)))
         .onFalse(Commands.runOnce(() -> intake.setOutput(0), intake));
 
     operatorController
