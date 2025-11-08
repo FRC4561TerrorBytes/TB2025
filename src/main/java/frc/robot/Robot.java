@@ -16,12 +16,10 @@ package frc.robot;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
-import com.pathplanner.lib.commands.FollowPathCommand;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.net.PortForwarder;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -126,13 +124,13 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-    FollowPathCommand.warmupCommand().schedule();
+    // FollowPathCommand.warmupCommand().schedule();
 
     // Start an MJPEG stream using the camera feeds on the limelights
     limelightCamera1 =
         new HttpCamera(
             "limelight1",
-            "http://10.45.61:18:5800/stream.mjpg"); // FRONT LEFT (IDK IF THIS IP IS RIGHT)
+            "http://10.45.61.18:5800/stream.mjpg"); // FRONT LEFT (IDK IF THIS IP IS RIGHT)
     limelightCamera2 =
         new HttpCamera(
             "limelight2",
@@ -148,6 +146,28 @@ public class Robot extends LoggedRobot {
     // adding the camera feeds to the vision recorder
     visionRecorder1 = new VisionRecorder(limelightCamera1, 5, 1);
     visionRecorder2 = new VisionRecorder(limelightCamera2, 5, 2);
+
+    // creating a new thread so the command schduler is ideally not affected by this running
+    visionRecordingThread =
+        new Thread(
+            () -> {
+              visionRecorder1.start();
+              visionRecorder2.start();
+              System.out.println("RECORDING IN THE THREAD");
+              while (visionRecordingActive) {
+                visionRecorder1.update();
+                visionRecorder2.update();
+                try {
+                  // stopping thread for 10 milliseconds so it does not run as fast as it possibly
+                  // can
+                  Thread.sleep(10);
+                } catch (InterruptedException e) {
+                  Thread.currentThread().interrupt();
+                }
+              }
+            });
+
+    visionRecordingThread.start();
   }
 
   /** This function is called periodically during all modes. */
@@ -172,40 +192,47 @@ public class Robot extends LoggedRobot {
   }
 
   /** This function is called once when the robot is disabled. */
+  // @Override
+  // public void disabledInit() {
+  //   // if we are in a match then dont stop recording in the 2 second period where disabled
+  //   if (DriverStation.getMatchNumber() > 0) {
+  //     if (!lastEnabledAuto) {
+  //       visionRecordingActive = false;
+  //       // try {
+  //       //   // waiting for the thread to shutdown after setting it to inactive
+  //       //   visionRecordingActive = false;
+
+  //       //   //visionRecordingThread.join();
+
+  //       //   // visionRecorder1.close();
+  //       //   // visionRecorder2.close();
+  //       // } catch (InterruptedException e) {
+  //       //   Thread.currentThread().interrupt();
+  //       // }
+  //     }
+  //   }
+  //   // if we are just practicing then stop the recording
+  //   else {
+  //     visionRecordingActive = false;
+  //     visionRecorder1.close();
+  //     visionRecorder2.close();
+  //     // try {
+  //     //   // waiting for the thread to shutdown after setting it to inactive
+  //     //   visionRecordingActive = false;
+
+  //     //   //visionRecordingThread.join();
+
+  //     // } catch (InterruptedException e) {
+  //     //   Thread.currentThread().interrupt();
+  //     // }
+  //   }
+  // }
+
   @Override
-  public void disabledInit() {
-    // if we are in a match then dont stop recording in the 2 second period where disabled
-    if (DriverStation.getMatchNumber() > 0) {
-      if (visionRecordingThread != null && !lastEnabledAuto) {
-        try {
-          // waiting for the thread to shutdown after setting it to inactive
-          visionRecordingActive = false;
-
-          visionRecordingThread.join();
-
-          visionRecorder1.close();
-          visionRecorder2.close();
-        } catch (InterruptedException e) {
-          Thread.currentThread().interrupt();
-        }
-      }
-    }
-    // if we are just practicing then stop the recording
-    else {
-      if (visionRecordingThread != null) {
-        try {
-          // waiting for the thread to shutdown after setting it to inactive
-          visionRecordingActive = false;
-
-          visionRecordingThread.join();
-
-          visionRecorder1.close();
-          visionRecorder2.close();
-        } catch (InterruptedException e) {
-          Thread.currentThread().interrupt();
-        }
-      }
-    }
+  public void teleopExit() {
+    visionRecordingActive = false;
+    visionRecorder1.close();
+    visionRecorder2.close();
   }
 
   /** This function is called periodically when disabled. */
@@ -215,33 +242,17 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    autonomousCommand = robotContainer.getAutonomousCommand();
+    // autonomousCommand = robotContainer.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
-    if (autonomousCommand != null) {
-      autonomousCommand.schedule();
-    }
+    // // schedule the autonomous command (example)
+    // if (autonomousCommand != null) {
+    //   autonomousCommand.schedule();
+    // }
 
-    // start the vision recording
-    visionRecordingActive = true;
-    // creating a new thread so the command schduler is ideally not affected by this running
-    visionRecordingThread =
-        new Thread(
-            () -> {
-              while (visionRecordingActive) {
-                visionRecorder1.update();
-                visionRecorder2.update();
-                try {
-                  // stopping thread for 10 milliseconds so it does not run as fast as it possibly
-                  // can
-                  Thread.sleep(10);
-                } catch (InterruptedException e) {
-                  Thread.currentThread().interrupt();
-                }
-              }
-            });
-    // start running the recording thread
-    visionRecordingThread.start();
+    // // start the vision recording
+    // visionRecordingActive = true;
+    // // start running the recording thread
+    // visionRecordingThread.start();
   }
 
   /** This function is called periodically during autonomous. */
@@ -261,28 +272,10 @@ public class Robot extends LoggedRobot {
       autonomousCommand.cancel();
     }
 
-    if (visionRecordingThread == null) {
-      visionRecordingActive = true;
-      visionRecordingThread =
-          new Thread(
-              () -> {
-                while (visionRecordingActive) {
-                  visionRecorder1.update();
-                  visionRecorder2.update();
-                  try {
-                    // stopping thread for 10 milliseconds so it does not run as fast as it possibly
-                    // can
-                    Thread.sleep(10);
-                  } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                  }
-                }
-                visionRecorder1.close();
-                visionRecorder2.close();
-              });
-      // start running the recording thread
-      visionRecordingThread.start();
-    }
+    visionRecordingActive = true;
+    // visionRecordingThread.start();
+    visionRecorder1.start();
+    visionRecorder2.start();
 
     lastEnabledAuto = false;
   }

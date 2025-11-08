@@ -16,13 +16,20 @@ public class VisionRecorder {
   private CvSink cvSink;
   private VideoWriter writer;
   private String filename;
+  private int cameraNumber;
+  private int fps;
 
   public VisionRecorder(VideoSource camera, int fps, int cameraNumber) {
     cvSink = new CvSink("opencv_sink");
     cvSink.setSource(camera);
+    this.cameraNumber = cameraNumber;
+    this.fps = fps;
 
     // Match Number > 0 means that robot is at comp
 
+  }
+
+  public void start() {
     // Path on USB stick plugged into RIO
     if (DriverStation.getMatchNumber() > 0) {
       if (cameraNumber == 1) {
@@ -69,6 +76,7 @@ public class VisionRecorder {
   }
 
   public void update() {
+    System.out.println("RECORDING VISION");
     Mat frame = new Mat();
     if (cvSink.grabFrame(frame) > 0) {
       Mat resized = new Mat();
