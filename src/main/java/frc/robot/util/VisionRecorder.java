@@ -72,7 +72,7 @@ public class VisionRecorder {
             filename,
             VideoWriter.fourcc('M', 'J', 'P', 'G'),
             fps,
-            new org.opencv.core.Size(320, 240));
+            new org.opencv.core.Size(320, 200));
   }
 
   public void update() {
@@ -80,7 +80,7 @@ public class VisionRecorder {
     Mat frame = new Mat();
     if (cvSink.grabFrame(frame) > 0) {
       Mat resized = new Mat();
-      Imgproc.resize(frame, resized, new Size(320, 240));
+      Imgproc.resize(frame, resized, new Size(320, 200));
 
       // writing the resized image to the video file
       writer.write(resized);
