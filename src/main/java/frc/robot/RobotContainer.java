@@ -78,7 +78,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private Alert wheelAlert = new Alert("Wheel no function move :( big sad das not good", AlertType.kWarning);
+  private Alert wheelAlert =
+      new Alert("Wheel no function move :( big sad das not good", AlertType.kWarning);
   private Alert elevatorL1Alert = new Alert("Elevator can't go to L1", AlertType.kWarning);
   private Alert elevatorL2FRONTAlert = new Alert("Elevator can't go to L2", AlertType.kWarning);
   private Alert elevatorL3FRONTAlert = new Alert("Elevator can't go to L3", AlertType.kWarning);
@@ -817,23 +818,27 @@ public class RobotContainer {
                   wheelAlert.set(true);
                   Leds.getInstance().autoBenchtestFailed = true;
                 })
-            .onlyIf(() -> drive.getPose().equals(new Pose2d())), // only if the robot doesn't move, this is true
+            .onlyIf(
+                () ->
+                    drive
+                        .getPose()
+                        .equals(new Pose2d())), // only if the robot doesn't move, this is true
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L1), elevator, wrist),
-        Commands.waitUntil(() -> mechanismAtSetpoint()).withTimeout(5.0),
+        Commands.waitUntil(elevator::mechanismAtSetpoint).withTimeout(5.0),
         Commands.runOnce(
                 () -> {
                   elevatorL1Alert.set(true);
                   Leds.getInstance().autoBenchtestFailed = true;
                 })
-            .onlyIf(() -> !mechanismAtSetpoint()),
+            .onlyIf(() -> !(elevator.mechanismAtSetpoint())),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L2FRONT), elevator, wrist),
-        Commands.waitUntil(() -> mechanismAtSetpoint()).withTimeout(5.0),
+        Commands.waitUntil(() -> elevator.mechanismAtSetpoint()).withTimeout(5.0),
         Commands.runOnce(
                 () -> {
                   elevatorL2FRONTAlert.set(true);
                   Leds.getInstance().autoBenchtestFailed = true;
                 })
-            .onlyIf(() -> !mechanismAtSetpoint()),
+            .onlyIf(() -> !elevator.mechanismAtSetpoint()),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.L3FRONT), elevator, wrist),
         Commands.waitUntil(() -> elevator.mechanismAtSetpoint()).withTimeout(5.0),
         Commands.runOnce(
@@ -841,7 +846,7 @@ public class RobotContainer {
                   elevatorL3FRONTAlert.set(true);
                   Leds.getInstance().autoBenchtestFailed = true;
                 })
-            .onlyIf(() -> !mechanismAtSetpoint()),
+            .onlyIf(() -> !elevator.mechanismAtSetpoint()),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.GROUND), elevator, wrist),
         Commands.waitUntil(() -> elevator.mechanismAtSetpoint()).withTimeout(5.0),
         Commands.runOnce(
@@ -849,7 +854,7 @@ public class RobotContainer {
                   elevatorGROUNDAlert.set(true);
                   Leds.getInstance().autoBenchtestFailed = true;
                 })
-            .onlyIf(() -> !mechanismAtSetpoint()),
+            .onlyIf(() -> !elevator.mechanismAtSetpoint()),
         intake.intakeCoral().until(() -> intake.coralPresent()).withTimeout(5.0),
         Commands.runOnce(() -> setMechanismSetpoint(ElevatorPosition.STOW), elevator, wrist),
         Commands.waitUntil(() -> elevator.mechanismAtSetpoint()).withTimeout(5.0),

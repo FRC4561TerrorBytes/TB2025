@@ -173,7 +173,7 @@ public class Leds extends VirtualSubsystem {
             waveDisabledDuration);
       }
 
-    //Failed bench test
+      // Failed bench test
     } else if (autoBenchtestFailed && DriverStation.isAutonomous()) {
       solid(fullSection, Color.kOrangeRed);
 
@@ -182,7 +182,7 @@ public class Leds extends VirtualSubsystem {
     } else {
       solid(topSection, hexColor);
       solid(bottomSection, secondaryHexColor);
-      
+
       // Intake running
       if (intakeRunning) {
         strobe(bottomThreeQuartSection, Color.kBlack, Color.kBlue, strobeDuration);
