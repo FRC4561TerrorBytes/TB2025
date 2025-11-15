@@ -151,8 +151,6 @@ public class Robot extends LoggedRobot {
     visionRecordingThread =
         new Thread(
             () -> {
-              visionRecorder1.start();
-              visionRecorder2.start();
               while (!Thread.currentThread().isInterrupted()) {
 
                 if (visionRecordingActive) {
@@ -247,15 +245,18 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     // autonomousCommand = robotContainer.getAutonomousCommand();
 
-    // // schedule the autonomous command (example)
-    // if (autonomousCommand != null) {
-    //   autonomousCommand.schedule();
-    // }
+    // schedule the autonomous command (example)
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
+    }
 
     // // start the vision recording
     // visionRecordingActive = true;
     // // start running the recording thread
     // visionRecordingThread.start();
+    visionRecordingActive = true;
+    visionRecorder1.start();
+    visionRecorder2.start();
   }
 
   /** This function is called periodically during autonomous. */
@@ -275,9 +276,11 @@ public class Robot extends LoggedRobot {
       autonomousCommand.cancel();
     }
 
-    visionRecordingActive = true;
-    visionRecorder1.start();
-    visionRecorder2.start();
+    if (!visionRecordingActive) {
+      visionRecordingActive = true;
+      visionRecorder1.start();
+      visionRecorder2.start();
+    }
 
     lastEnabledAuto = false;
   }
