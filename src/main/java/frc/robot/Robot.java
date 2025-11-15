@@ -151,13 +151,11 @@ public class Robot extends LoggedRobot {
     visionRecordingThread =
         new Thread(
             () -> {
-              System.out.println("VISION RECORDING STARTED");
               visionRecorder1.start();
               visionRecorder2.start();
               while (!Thread.currentThread().isInterrupted()) {
 
                 if (visionRecordingActive) {
-                  System.out.println("CURRENTLY RECORDING VISION");
                   visionRecorder1.update();
                   visionRecorder2.update();
                 }
@@ -172,7 +170,6 @@ public class Robot extends LoggedRobot {
               }
               visionRecorder1.close();
               visionRecorder2.close();
-              System.out.println("VISION RECORDING THREAD KILLED");
             });
 
     visionRecordingThread.start();
@@ -279,6 +276,8 @@ public class Robot extends LoggedRobot {
     }
 
     visionRecordingActive = true;
+    visionRecorder1.start();
+    visionRecorder2.start();
 
     lastEnabledAuto = false;
   }
