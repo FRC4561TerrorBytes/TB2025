@@ -807,7 +807,7 @@ public class RobotContainer {
         });
   }
 
-  private Command testroutineCommand() {
+  public Command testroutineCommand() {
     return Commands.sequence(
         Commands.run(() -> drive.runVelocity(new ChassisSpeeds(1, 0, 0)), drive).withTimeout(5),
         Commands.run(() -> drive.runVelocity(new ChassisSpeeds(0, 1, 0)), drive).withTimeout(5),
@@ -872,7 +872,7 @@ public class RobotContainer {
                   climberUpAlert.set(true);
                   Leds.getInstance().autoBenchtestFailed = true;
                 })
-            .onlyIf(() -> !climber.climberAtSetpoint(0.005)),
+            .onlyIf(() -> !climber.climberAtSetpoint(0.05)),
         Commands.runOnce(() -> climber.setClimberSetpoint(0.01)),
         Commands.waitUntil(() -> climber.climberAtSetpoint(0.05)).withTimeout(5.0),
         Commands.runOnce(
@@ -880,6 +880,11 @@ public class RobotContainer {
                   climberUpAlert.set(true);
                   Leds.getInstance().autoBenchtestFailed = true;
                 })
-            .onlyIf(() -> !climber.climberAtSetpoint(0.005)));
+            .onlyIf(() -> !climber.climberAtSetpoint(0.05)),
+        Commands.runOnce(
+                () -> {
+                  Leds.getInstance().autoBenchtestPassed = true;
+                })
+            .onlyIf(() -> climber.climberAtSetpoint(0.05)));
   }
 }

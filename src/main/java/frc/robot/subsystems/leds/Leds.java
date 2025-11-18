@@ -33,6 +33,7 @@ public class Leds extends VirtualSubsystem {
   public boolean coralPresent = false;
   public boolean algaeRunning = false;
   public boolean visionDisconnected = false;
+  public boolean autoBenchtestPassed = false;
   public ReefLevel autoScoringLevel = ReefLevel.L3;
   public Color hexColor = Color.kBlack;
   public Color secondaryHexColor = Color.kBlack;
@@ -174,8 +175,11 @@ public class Leds extends VirtualSubsystem {
       }
 
       // Failed bench test
-    } else if (autoBenchtestFailed && DriverStation.isAutonomous()) {
+    } else if (autoBenchtestFailed && (DriverStation.isAutonomous() || DriverStation.isTest())) {
       solid(fullSection, Color.kOrangeRed);
+
+    } else if (autoBenchtestPassed && (DriverStation.isAutonomous() || DriverStation.isTest())) {
+      solid(fullSection, Color.kGreen);
 
     } else if (DriverStation.isAutonomous()) {
       wave(fullSection, Color.kGreen, Color.kPurple, waveFastCycleLength, waveFastDuration);
